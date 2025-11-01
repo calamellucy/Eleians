@@ -37,7 +37,8 @@ public class NormalMonster : MonoBehaviour
 
     private void OnEnable()
     {
-        target = GameManager.instance.Circle.GetComponent<Rigidbody2D>();
+        // target = GameManager.instance.Circle.GetComponent<Rigidbody2D>();
+        target = GameManager.instance.player.GetComponent<Rigidbody2D>();
     }
 
 }
