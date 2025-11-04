@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class BulletGh : MonoBehaviour
 {
     public float damage;
     public int per;

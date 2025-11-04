@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class skill4 : MonoBehaviour
+public class skill4Gh : MonoBehaviour
 {
     public int prefabId;
     public float speed = 8f;
@@ -25,12 +25,12 @@ public class skill4 : MonoBehaviour
 
     IEnumerator Loop()
     {
-        if (GameM.instance == null || GameM.instance.pool == null || GameM.instance.player == null)
+        if (GameManagerGh.instance == null || GameManagerGh.instance.pool == null || GameManagerGh.instance.player == null)
         {
-            Debug.LogError("GameM / PoolM / Player reference missing");
+            Debug.LogError("GameManagerGh / PoolManagerGh / PlayerGh reference missing");
             yield break;
         }
-        if (prefabId < 0 || prefabId >= GameM.instance.pool.prefabs.Length)
+        if (prefabId < 0 || prefabId >= GameManagerGh.instance.pool.prefabs.Length)
         {
             Debug.LogError($"prefabId {prefabId} out of range");
             yield break;
@@ -55,7 +55,7 @@ public class skill4 : MonoBehaviour
 
     void SpawnAndPrepare()
     {
-        var player = GameM.instance.player;
+        var player = GameManagerGh.instance.player;
 
         
         Vector3 origin = player.transform.position;
@@ -64,7 +64,7 @@ public class skill4 : MonoBehaviour
                                           maxSpawnRadius * maxSpawnRadius));
         Vector3 spawnPos = origin + (Vector3)(randDir * r);
 
-        GameObject go = GameM.instance.pool.Get(prefabId);
+        GameObject go = GameManagerGh.instance.pool.Get(prefabId);
         if (!go) return;
 
         Transform t = go.transform;
@@ -88,7 +88,7 @@ public class skill4 : MonoBehaviour
 
 
 
-        var b = go.GetComponent<Bullet>();
+        var b = go.GetComponent<BulletGh>();
         if (b) b.Init(damage, 3, Vector3.zero);
 
 
