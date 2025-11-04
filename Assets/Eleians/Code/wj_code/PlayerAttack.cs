@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
-    public PoolManager pool;
+    public PoolManagerWj pool;
     public int bulletIndex = 0;
     public float attackRate = 2f;
     public int projectileCount = 1;
@@ -38,7 +38,7 @@ public class PlayerAttack : MonoBehaviour
             bulletObj.transform.localScale = Vector3.one * projectileSize;
 
             // 여기 핵심! GameObject → Bullet 컴포넌트 가져오기
-            Bullet bullet = bulletObj.GetComponent<Bullet>();
+            BulletWj bullet = bulletObj.GetComponent<BulletWj>();
             bullet.Fire(dir);
         }
     }
