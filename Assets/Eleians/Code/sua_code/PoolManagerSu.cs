@@ -2,7 +2,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PoolM : MonoBehaviour
+public class PoolManagerSu : MonoBehaviour
 {
     // 프리펩들을 보관할 변수
     public GameObject[] prefabs;

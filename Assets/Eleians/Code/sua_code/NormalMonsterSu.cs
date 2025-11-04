@@ -1,7 +1,7 @@
 using Mono.Cecil;
 using UnityEngine;
 
-public class NormalMonster : MonoBehaviour
+public class NormalMonsterSu : MonoBehaviour
 {
     public float speed;
     public Rigidbody2D target;
@@ -38,7 +38,7 @@ public class NormalMonster : MonoBehaviour
     private void OnEnable()
     {
         // target = GameManager.instance.Circle.GetComponent<Rigidbody2D>();
-        target = GameManager.instance.player.GetComponent<Rigidbody2D>();
+        target = GameManagerSu.instance.player.GetComponent<Rigidbody2D>();
     }
 
 }

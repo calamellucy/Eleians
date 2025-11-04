@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Spawner : MonoBehaviour
+public class SpawnerSu : MonoBehaviour
 {
     public Transform[] spawnPoint;
 
@@ -24,7 +24,7 @@ public class Spawner : MonoBehaviour
 
     void Spawn()
     {
-        GameObject enemy = GameManager.instance.pool.Get(Random.Range(0, 1));
+        GameObject enemy = GameManagerSu.instance.pool.Get(Random.Range(0, 1));
         enemy.transform.position = spawnPoint[Random.Range(1, spawnPoint.Length)].position;
     }
 }

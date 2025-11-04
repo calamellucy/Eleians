@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class TestPlayer1 : MonoBehaviour
+public class PlayerSu : MonoBehaviour
 {
     public Vector2 inputVec;
     public float speed;
