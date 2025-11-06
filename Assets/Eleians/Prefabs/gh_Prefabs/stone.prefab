@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6643553044651428683}
   - component: {fileID: 7293786703817722162}
   - component: {fileID: -2196824502345595460}
+  - component: {fileID: -8387788446602095623}
   m_Layer: 0
   m_Name: stone
   m_TagString: Untagged
@@ -130,7 +131,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.453125, y: 0.234375}
+    oldSize: {x: 0.2265625, y: 0.1171875}
     newSize: {x: 0.29, y: 0.15}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -165,3 +166,17 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &-8387788446602095623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6420440615092491133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c910336ce6443d478809865a660020d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Bullet
+  damage: 0
+  per: 0
