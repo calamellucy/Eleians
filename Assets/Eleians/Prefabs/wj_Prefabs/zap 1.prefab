@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2005980512277223122}
   - component: {fileID: 6915696700312734610}
   - component: {fileID: -1646657377153505982}
+  - component: {fileID: -5899105770171554787}
   m_Layer: 0
   m_Name: zap 1
   m_TagString: Untagged
@@ -164,10 +165,24 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2934488521162555772}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca76cc6e8da19c148b3c1e7f989ed501, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
   speed: 10
   lifetime: 2
+--- !u!114 &-5899105770171554787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2934488521162555772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c910336ce6443d478809865a660020d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Bullet
+  damage: 0
+  per: 0

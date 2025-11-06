@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 7017067633471774943}
   - component: {fileID: 3572292703986221049}
   - component: {fileID: 8850149410203235170}
-  - component: {fileID: 4024464067370048266}
+  - component: {fileID: -7832555614685385140}
   m_Layer: 0
-  m_Name: Namudoji
+  m_Name: NormalMonster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -180,7 +180,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4024464067370048266
+--- !u!114 &-7832555614685385140
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -189,8 +189,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 641570731576117388}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e6ba5a7183ee8944afd325d89ecbde9, type: 3}
+  m_Script: {fileID: 11500000, guid: f6ccc0341eaced245a2744ea217294e5, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NewMonoBehaviourScript
+  m_EditorClassIdentifier: Assembly-CSharp::NormalMonster
   speed: 1
   target: {fileID: 0}
