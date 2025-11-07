@@ -1,13 +1,13 @@
 fileFormatVersion: 2
-guid: 930fb8a10bb2b044394fbb07f1b66fa7
+guid: 75338db034f6856479bc262c89ca17e3
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5071563641634004584
-    second: standing_0
+      213: -1912012431566861492
+    second: Standing2_0
   - first:
-      213: -4856210911436824162
-    second: standing_1
+      213: -3235838385047515765
+    second: Standing2_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -99,24 +99,11 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: standing_0
+      name: Standing2_0
       rect:
         serializedVersion: 2
         x: 0
@@ -131,14 +118,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8916e9cfcbf2e99b0800000000000000
-      internalID: -5071563641634004584
+      spriteID: c4b8352e2da2775e0800000000000000
+      internalID: -1912012431566861492
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: standing_1
+      name: Standing2_1
       rect:
         serializedVersion: 2
         x: 64
@@ -153,8 +140,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e91ae65c7e54b9cb0800000000000000
-      internalID: -4856210911436824162
+      spriteID: b8d4bac022ef713d0800000000000000
+      internalID: -3235838385047515765
       vertices: []
       indices: 
       edges: []
@@ -163,7 +150,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 1c5fe045ba09cca43bde13d81b81a231
+    spriteID: c2a54cb1e55421246a4c83d26a99d441
     internalID: 0
     vertices: []
     indices: 
@@ -172,13 +159,11 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries:
-      - key: SpriteEditor.SliceOnImport
-        value: False
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      standing_0: -5071563641634004584
-      standing_1: -4856210911436824162
+      Standing2_0: -1912012431566861492
+      Standing2_1: -3235838385047515765
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
