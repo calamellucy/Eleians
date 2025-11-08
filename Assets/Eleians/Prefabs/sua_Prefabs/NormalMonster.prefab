@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -7832555614685385140}
   m_Layer: 0
   m_Name: NormalMonster
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -106,7 +106,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 2
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 0
@@ -192,5 +192,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6ccc0341eaced245a2744ea217294e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NormalMonster
-  speed: 1
+  speed: 0
+  health: 0
+  maxHealth: 0
+  animCon:
+  - {fileID: 9100000, guid: d1740ccdeee7002449607e75e907e4de, type: 2}
   target: {fileID: 0}

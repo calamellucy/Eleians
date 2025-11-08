@@ -1,13 +1,28 @@
 fileFormatVersion: 2
-guid: 930fb8a10bb2b044394fbb07f1b66fa7
+guid: ad95797271b8d584e82d53b221c1be66
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5071563641634004584
-    second: standing_0
+      213: 3604192591476135790
+    second: dead_0
   - first:
-      213: -4856210911436824162
-    second: standing_1
+      213: -2991312472683628695
+    second: dead_1
+  - first:
+      213: 4404202361452085733
+    second: dead_2
+  - first:
+      213: -2479182351684794062
+    second: dead_3
+  - first:
+      213: -2436804021803932963
+    second: dead_4
+  - first:
+      213: 5825826999855438651
+    second: dead_5
+  - first:
+      213: -5348288698317918056
+    second: dead_6
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -99,24 +114,11 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: standing_0
+      name: dead_0
       rect:
         serializedVersion: 2
         x: 0
@@ -131,14 +133,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8916e9cfcbf2e99b0800000000000000
-      internalID: -5071563641634004584
+      spriteID: e67970de01aa40230800000000000000
+      internalID: 3604192591476135790
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: standing_1
+      name: dead_1
       rect:
         serializedVersion: 2
         x: 64
@@ -153,8 +155,52 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e91ae65c7e54b9cb0800000000000000
-      internalID: -4856210911436824162
+      spriteID: 9673f7d9729bc76d0800000000000000
+      internalID: -2991312472683628695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dead_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e1c94996bede1d30800000000000000
+      internalID: 4404202361452085733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dead_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 239096259cc289dd0800000000000000
+      internalID: -2479182351684794062
       vertices: []
       indices: 
       edges: []
@@ -163,7 +209,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 1c5fe045ba09cca43bde13d81b81a231
+    spriteID: b17bb5a36afae5b43bcd21739a08fc76
     internalID: 0
     vertices: []
     indices: 
@@ -172,13 +218,13 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries:
-      - key: SpriteEditor.SliceOnImport
-        value: False
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      standing_0: -5071563641634004584
-      standing_1: -4856210911436824162
+      dead_0: 3604192591476135790
+      dead_1: -2991312472683628695
+      dead_2: 4404202361452085733
+      dead_3: -2479182351684794062
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
