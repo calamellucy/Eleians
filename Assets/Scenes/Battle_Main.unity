@@ -255,6 +255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   gameTime: 0
+  maxGameTime: 60
   health: 0
   maxHealth: 100
   level: 0
@@ -453,7 +454,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 4.21875
+  orthographic size: 2.8125
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1342,6 +1343,10 @@ MonoBehaviour:
   spawnPoint: []
   spawnData:
   - spriteType: 0
+    spawnTime: 0.7
+    health: 35
+    speed: 1
+  - spriteType: 1
     spawnTime: 0.2
     health: 35
     speed: 1
@@ -1853,7 +1858,7 @@ SpriteRenderer:
   m_Size: {x: 3.53125, y: 5.90625}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1602427840

@@ -5,6 +5,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     [Header("# Game Control")]
     public float gameTime;
+    public float maxGameTime = 6 * 10f;
     [Header("# Player Info")]
     public int health;
     public int maxHealth = 100;
@@ -28,6 +29,10 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         gameTime += Time.deltaTime;
+
+        if (gameTime > maxGameTime) {
+            gameTime = maxGameTime;
+        }
     }
 
     public void GetExp()
