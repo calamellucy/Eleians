@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -31,6 +32,17 @@ public class Skill4 : MonoBehaviour
     [Header("Aiming")]
     public bool useLastAimingWhenIdle = true; // 입력이 0일 때 마지막 조준 방향 유지 여부
     private Vector2 lastAimDir = Vector2.right; // 마지막 비영(非0) 입력 방향
+
+
+    // ── ★ 추가: 하드캡(동시 탄 수 제한) ───────────────────────────────
+    [Header("Perf")]
+    public int maxActiveProjectiles = 150; // 필요하면 수치만 조절
+    int activeProjectiles;                 // 현재 활성 탄 수
+
+    // ── ★ 추가: 스프라이트 렌더러 캐싱(오브젝트별 1회만) ─────────────
+    static Dictionary<int, SpriteRenderer[]> srCache = new Dictionary<int, SpriteRenderer[]>();
+
+
 
     private Coroutine loopCo;
 
@@ -73,6 +85,11 @@ public class Skill4 : MonoBehaviour
 
     void SpawnAndPrepare()
     {
+        // ★ 하드캡 초과 시 스폰 스킵(피크 프레임 차단)
+        if (activeProjectiles >= maxActiveProjectiles)
+            return;
+
+
         var player = GameManager.instance.player;
 
         // 플레이어 주변 0.3~1.0 반경 랜덤 스폰 (면적 균등)
@@ -120,16 +137,31 @@ public class Skill4 : MonoBehaviour
         var b = go.GetComponent<Bullet>();
         if (b) b.Init(damage, 3, Vector3.zero);
 
+        // ★ 캐싱: 스프라이트 렌더러 배열을 1회만 가져와 저장
+        int id = go.GetInstanceID();
+        if (!srCache.TryGetValue(id, out var renderers))
+        {
+            renderers = go.GetComponentsInChildren<SpriteRenderer>(true);
+            srCache[id] = renderers;
+        }
+
+        // ★ 활성 탄 수 카운트 + 코루틴에 캐시 전달
+        activeProjectiles++;
+        StartCoroutine(FadeAndFire(go, fireDir, renderers));
+
+
         // 페이드인 → 대기 → 발사
-        StartCoroutine(FadeAndFire(go, fireDir));
+        // StartCoroutine(FadeAndFire(go, fireDir));
     }
 
-    IEnumerator FadeAndFire(GameObject go, Vector2 dir)
+    // IEnumerator FadeAndFire(GameObject go, Vector2 dir)
+    IEnumerator FadeAndFire(GameObject go, Vector2 dir, SpriteRenderer[] renderers)
     {
-        if (!go) yield break;
+        // if (!go) yield break;
+        if (!go) { activeProjectiles--; yield break; }
 
         // 프리팹 및 자식의 모든 SpriteRenderer 수집
-        var renderers = go.GetComponentsInChildren<SpriteRenderer>(true);
+        // var renderers = go.GetComponentsInChildren<SpriteRenderer>(true);
 
         // 0) 완전 투명으로 시작
         SetAlpha(renderers, 0f);
@@ -154,7 +186,16 @@ public class Skill4 : MonoBehaviour
 
         // 4) lifeTime 후 비활성화
         yield return new WaitForSeconds(lifeTime);
-        if (go) go.SetActive(false);
+        // if (go) go.SetActive(false);
+        if (go)
+        {
+            var rb2 = go.GetComponent<Rigidbody2D>();
+            if (rb2) rb2.linearVelocity = Vector2.zero;
+            go.SetActive(false);
+        }
+
+        // ★ 활성 탄 수 감소
+        activeProjectiles--;
     }
 
     void SetAlpha(SpriteRenderer[] srs, float a)
