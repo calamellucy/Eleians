@@ -4,7 +4,7 @@ using UnityEngine;
 public class skill4Gh : MonoBehaviour
 {
     public int prefabId;
-    public float speed = 8f;
+    public float speed = 5f;
     public float damage = 10f;
     public float lifeTime = 2f;          // ← 발사 "후" 생존시간
 

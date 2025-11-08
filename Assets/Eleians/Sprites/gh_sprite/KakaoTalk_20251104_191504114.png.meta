@@ -1,0 +1,330 @@
+fileFormatVersion: 2
+guid: 18a040eebd635fc47addd3c29e812e4d
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8586151221010657243
+    second: KakaoTalk_20251104_191504114_0
+  - first:
+      213: -4227231888033481315
+    second: KakaoTalk_20251104_191504114_1
+  - first:
+      213: -762472752355403149
+    second: KakaoTalk_20251104_191504114_2
+  - first:
+      213: 101155506072114003
+    second: KakaoTalk_20251104_191504114_3
+  - first:
+      213: -2345551187325179569
+    second: KakaoTalk_20251104_191504114_4
+  - first:
+      213: -390460643825170863
+    second: KakaoTalk_20251104_191504114_5
+  - first:
+      213: -6247149178268292491
+    second: KakaoTalk_20251104_191504114_6
+  - first:
+      213: 5636432449836506549
+    second: KakaoTalk_20251104_191504114_7
+  - first:
+      213: -3781152156391446473
+    second: KakaoTalk_20251104_191504114_8
+  - first:
+      213: 6241598385518818966
+    second: KakaoTalk_20251104_191504114_9
+  - first:
+      213: 6790378995022655771
+    second: KakaoTalk_20251104_191504114_10
+  - first:
+      213: 74683386255068230
+    second: KakaoTalk_20251104_191504114_11
+  - first:
+      213: 2223742364757133670
+    second: KakaoTalk_20251104_191504114_12
+  - first:
+      213: 2993605588776397120
+    second: KakaoTalk_20251104_191504114_13
+  - first:
+      213: 3242973888286282102
+    second: KakaoTalk_20251104_191504114_14
+  - first:
+      213: -7508279763079808347
+    second: KakaoTalk_20251104_191504114_15
+  - first:
+      213: -5045397493091772783
+    second: KakaoTalk_20251104_191504114_16
+  - first:
+      213: -3576773831058663747
+    second: KakaoTalk_20251104_191504114_17
+  - first:
+      213: 1187711745157761358
+    second: KakaoTalk_20251104_191504114_18
+  - first:
+      213: -3635762031307649424
+    second: KakaoTalk_20251104_191504114_19
+  - first:
+      213: 7077396736331493496
+    second: KakaoTalk_20251104_191504114_20
+  - first:
+      213: 7791144864518373837
+    second: KakaoTalk_20251104_191504114_21
+  - first:
+      213: 4700391523325512205
+    second: KakaoTalk_20251104_191504114_22
+  - first:
+      213: 4760040465945372193
+    second: KakaoTalk_20251104_191504114_23
+  - first:
+      213: -2782329755791250673
+    second: KakaoTalk_20251104_191504114_24
+  - first:
+      213: 1129677705462052651
+    second: KakaoTalk_20251104_191504114_25
+  - first:
+      213: -2803098621572216546
+    second: KakaoTalk_20251104_191504114_26
+  - first:
+      213: -8772471734606652638
+    second: KakaoTalk_20251104_191504114_27
+  - first:
+      213: -1390664734479267836
+    second: KakaoTalk_20251104_191504114_28
+  - first:
+      213: -7643831431819283157
+    second: KakaoTalk_20251104_191504114_29
+  - first:
+      213: -1596079254840848533
+    second: KakaoTalk_20251104_191504114_30
+  - first:
+      213: 8567838899488802204
+    second: KakaoTalk_20251104_191504114_31
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 128
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: stone_summon 0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5209fd3b4fcd7d880800000000000000
+      internalID: -8586151221010657243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stone_summon 1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9d7f82aefad555c0800000000000000
+      internalID: -4227231888033481315
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stone_summon3
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37a11fc42172b65f0800000000000000
+      internalID: -762472752355403149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stone_summon4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 353d0869560676100800000000000000
+      internalID: 101155506072114003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stonex
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f49acf45f9de27fd0800000000000000
+      internalID: -2345551187325179569
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 2b9c846b596970b45a4128afe13e72b5
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":32.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      stone_summon 0: -8586151221010657243
+      stone_summon 1: -4227231888033481315
+      stone_summon3: -762472752355403149
+      stone_summon4: 101155506072114003
+      stonex: -2345551187325179569
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
