@@ -1216,10 +1216,6 @@ MonoBehaviour:
     spawnTime: 0.6
     health: 35
     speed: 1
-  - spriteType: 4
-    spawnTime: 0.5
-    health: 35
-    speed: 1
   innerMin: {x: -16, y: -13}
   innerMax: {x: 15, y: 12}
 --- !u!1 &1256919895
