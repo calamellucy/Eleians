@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8933842438807939929}
   - component: {fileID: 465607253973961983}
   - component: {fileID: 8953656367831212120}
+  - component: {fileID: -6876010720138951788}
   m_Layer: 0
   m_Name: Tower
   m_TagString: Tower
@@ -166,6 +167,25 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1.3411642}
   m_EdgeRadius: 0
+--- !u!114 &-6876010720138951788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 486534827732295373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fae9f8e9165893f4ea0b17b60e399eab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Tower
+  maxHealth: 100
+  currentHealth: 0
+  normalSprite: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  anim: {fileID: 0}
+  healthBarUI: {fileID: 0}
+  healthSlider: {fileID: 0}
 --- !u!1 &7707656407525374608
 GameObject:
   m_ObjectHideFlags: 0

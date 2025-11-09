@@ -11,12 +11,12 @@ public class NormalMonster : MonoBehaviour
     public Rigidbody2D target;
 
 
-    bool isLive;
+    protected bool isLive;
 
-    Rigidbody2D rigid;
-    Collider2D coll;
-    Animator anim;
-    SpriteRenderer spriter;
+    protected Rigidbody2D rigid;
+    protected Collider2D coll;
+    protected Animator anim;
+    protected SpriteRenderer spriter;
     WaitForFixedUpdate wait;
 
     void Awake()
