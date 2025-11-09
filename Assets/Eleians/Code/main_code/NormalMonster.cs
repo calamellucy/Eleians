@@ -68,30 +68,64 @@ public class NormalMonster : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.CompareTag("Bullet") || !isLive)
+        if (!isLive)
             return;
 
-        health -= collision.GetComponent<Bullet>().damage;
-
-        if(health > 0) {
-            anim.SetTrigger("hit");
-            StartCoroutine(KnockBack());
-        }
-        else
+        if (collision.CompareTag("Bullet") || collision.CompareTag("HomingBullet"))
         {
-            isLive = false;
-            coll.enabled = false;
-            rigid.simulated = false;
-            spriter.sortingOrder = 1;
-            anim.SetBool("dead", true);
-            GameManager.instance.kill++;
-            GameManager.instance.GetExp();
+            float dmg = 0f;
+            int per = 0;
+
+            Bullet b = null;
+            BulletHoming bh = null;
+
+            // Bulletì¸ì§€ í™•ì¸
+            if (collision.TryGetComponent(out b))
+            {
+                dmg = b.damage;
+                per = b.per;
+            }
+            // BulletHomingì¸ì§€ í™•ì¸
+            else if (collision.TryGetComponent(out bh))
+            {
+                dmg = bh.damage;
+                per = bh.per;
+            }
+
+            // ë°ë¯¸ì§€ ì ìš©
+            health -= dmg;
+
+            if (health > 0)
+            {
+                anim.SetTrigger("hit");
+                StartCoroutine(KnockBack());
+            }
+            else
+            {
+                isLive = false;
+                coll.enabled = false;
+                rigid.simulated = false;
+                spriter.sortingOrder = 1;
+                anim.SetBool("dead", true);
+                GameManager.instance.kill++;
+                GameManager.instance.GetExp();
+            }
+
+            // ê´€í†µ ì²˜ë¦¬
+            per--;
+            if (per < 0)
+                collision.gameObject.SetActive(false);
+            else
+            {
+                if (b != null) b.per = per;
+                if (bh != null) bh.per = per;
+            }
         }
     }
 
     IEnumerator KnockBack()
     {
-        yield return wait; // ÇÏ³ªÀÇ ¹°¸® ÇÁ·¹ÀÓ µô·¹ÀÌ
+        yield return wait; // ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
         Vector3 playerpos = GameManager.instance.player.transform.position;
         Vector3 dirVec = transform.position - playerpos;
         rigid.AddForce(dirVec.normalized * 1, ForceMode2D.Impulse);
