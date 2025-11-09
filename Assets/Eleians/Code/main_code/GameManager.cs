@@ -55,12 +55,14 @@ public class GameManager : MonoBehaviour
             isTowerPhase = true;
             phaseTimer = 0f;
             Debug.Log("거점 페이즈 시작!");
+            tower.GetComponent<Tower>().OnTowerPhaseStart(); // 호출
         }
         else if (isTowerPhase && phaseTimer >= towerPhaseDuration)
         {
             isTowerPhase = false;
             phaseTimer = 0f;
             Debug.Log("거점 페이즈 종료, 일반 페이즈 재개!");
+            tower.GetComponent<Tower>().OnTowerPhaseEnd();   // 호출
         }
     }
 
