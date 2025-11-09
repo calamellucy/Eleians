@@ -46,7 +46,7 @@ public class NormalMonster : MonoBehaviour
         spriter.flipX = target.position.x > rigid.position.x;
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         target = GameManager.instance.player.GetComponent<Rigidbody2D>();
         isLive = true;
@@ -58,9 +58,9 @@ public class NormalMonster : MonoBehaviour
 
     }
 
-    public void Init(SpawnData data)
+    public void Init(SpawnData data, int spriteIndex)
     {
-        anim.runtimeAnimatorController = animCon[data.spriteType];
+        anim.runtimeAnimatorController = animCon[spriteIndex];
         speed = data.speed;
         maxHealth = data.health;
         health = data.health;
