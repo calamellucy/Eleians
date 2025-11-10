@@ -13,6 +13,9 @@ public class Skill1 : MonoBehaviour
     public float damage = 10f;
     public int per = 1;
 
+    // ⚡ 임시 전기 원소 개수 (나중에 GameManager 등에서 가져오게 변경 예정)
+    public int electricCount = 0;
+
     float timer;
 
     void Update()
@@ -28,14 +31,26 @@ public class Skill1 : MonoBehaviour
 
     void TryFire()
     {
+        Debug.Log($"[Skill1] Fire! time={Time.time:F2}");
+
         Transform target = FindNearestEnemy();
         if (target == null)
             return;
 
+        //  전기 진화 효과 적용
+        int bulletCount = projectileCount;
+        int penetration = per;
+
+        if (electricCount >= 5)
+        {
+            bulletCount += 2;
+            penetration += 1;
+        }
+
         Vector3 dir = (target.position - transform.position).normalized;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
-        for (int i = 0; i < projectileCount; i++)
+        for (int i = 0; i < bulletCount; i++)
         {
             GameObject bulletObj = GameManager.instance.pool.Get(prefabId);
             bulletObj.transform.position = transform.position;
@@ -46,9 +61,10 @@ public class Skill1 : MonoBehaviour
             if (bullet != null)
             {
                 bullet.damage = damage;
-                bullet.per = per;
+                bullet.per = penetration;
                 bullet.speed = speed;
                 bullet.SetTarget(target);
+                bullet.GetComponent<BulletEvolution>().Setup(this); // ⚡ 진화 관리 스크립트 추가
             }
 
             StartCoroutine(DisableAfter(bulletObj, lifetime));
