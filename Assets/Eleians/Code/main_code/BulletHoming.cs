@@ -18,26 +18,26 @@ public class BulletHoming : MonoBehaviour
     public void SetTarget(Transform t)
     {
         target = t;
-
-        // 초기 발사 방향 설정
-        if (t != null)
-        {
-            Vector2 dir = ((Vector2)t.position - rigid.position).normalized;
-            rigid.linearVelocity = dir * speed;
-        }
+        UpdateVelocity();
     }
 
     void FixedUpdate()
     {
-        // 타겟이 죽었거나 비활성화되면 기존 방향으로 직진
+        UpdateVelocity();
+    }
+
+    void UpdateVelocity()
+    {
+        if (rigid == null) return;
+
+        // 타겟이 없거나 죽었으면 직진 유지
         if (target == null || !target.gameObject.activeSelf)
         {
-            target = null;
             rigid.linearVelocity = rigid.linearVelocity.normalized * speed;
             return;
         }
 
-        // 살아있는 타겟 추적
+        // 타겟 방향으로 발사 (현재는 초기 방향만 유지)
         Vector2 dir = ((Vector2)target.position - rigid.position).normalized;
         rigid.linearVelocity = dir * speed;
     }
@@ -52,7 +52,6 @@ public class BulletHoming : MonoBehaviour
             monster.health -= damage;
 
         per--;
-
         if (per < 0)
             gameObject.SetActive(false);
     }

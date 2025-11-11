@@ -5,45 +5,40 @@ public class BulletEvolution : MonoBehaviour
 {
     Skill1 skill;
     BulletHoming bullet;
-    bool hasTriggered = false; // ⚡ 한 번만 실행하도록 플래그 추가
+    bool hasTriggered = false;
 
     public void Setup(Skill1 skillRef)
     {
         skill = skillRef;
         bullet = GetComponent<BulletHoming>();
-        hasTriggered = false; // 새 총알 생성 시 초기화
+        hasTriggered = false;
     }
 
-    // Bullet이 비활성화될 때 (관통력 다 소모 시)
     void OnDisable()
     {
-        if (hasTriggered || skill == null || bullet == null)
+        if (skill == null || bullet == null)
             return;
 
-        hasTriggered = true; // 다시 호출되지 않게 잠금
+        if (hasTriggered)
+            return;
+
+        hasTriggered = true;
 
         int electric = skill.electricCount;
 
-        // ⚡ 10개 이상 → 폭발 생성
         if (electric >= 10)
-        {
             CreateExplosion();
-        }
 
-        // ⚡ 20개 이상 → 분열탄 발사
         if (electric >= 20)
-        {
             SpawnSplitBullets();
-        }
     }
 
     void CreateExplosion()
     {
-        // explosion은 PoolManager에서 Element 4에 있음!
-        GameObject explosion = GameManager.instance.pool.Get(4); // ✅ 1 → 4로 수정
+        GameObject explosion = GameManager.instance.pool.Get(4);
         explosion.transform.position = transform.position;
         explosion.transform.rotation = Quaternion.identity;
-        explosion.transform.localScale = Vector3.one; // 안전하게 초기화
+        explosion.transform.localScale = Vector3.one;
 
         Explosion exp = explosion.GetComponent<Explosion>();
         if (exp != null)
@@ -56,8 +51,6 @@ public class BulletEvolution : MonoBehaviour
         explosion.SetActive(true);
     }
 
-
-
     void SpawnSplitBullets()
     {
         for (int i = 0; i < 3; i++)
@@ -68,6 +61,7 @@ public class BulletEvolution : MonoBehaviour
             GameObject split = GameManager.instance.pool.Get(skill.prefabId);
             split.transform.position = transform.position;
             split.transform.rotation = Quaternion.AngleAxis(randAngle, Vector3.forward);
+            split.SetActive(true);
 
             BulletHoming b = split.GetComponent<BulletHoming>();
             if (b != null)
@@ -85,7 +79,7 @@ public class BulletEvolution : MonoBehaviour
     IEnumerator DisableAfter(GameObject go, float t)
     {
         yield return new WaitForSeconds(t);
-        if (go != null)
+        if (go != null && go.activeSelf)
             go.SetActive(false);
     }
 }
