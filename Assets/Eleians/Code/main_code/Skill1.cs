@@ -101,10 +101,7 @@ public class Skill1 : MonoBehaviour
     IEnumerator DisableAfter(GameObject go, float t)
     {
         yield return new WaitForSeconds(t);
-        if (go == null || !go.activeSelf)
-            yield break;  // 이미 비활성화된 경우 즉시 종료
-
-        go.SetActive(false);
+        if (go != null && go.activeSelf)
+            go.SetActive(false);
     }
-
 }

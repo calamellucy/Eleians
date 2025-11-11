@@ -14,21 +14,26 @@ public class BulletEvolution : MonoBehaviour
         hasTriggered = false;
     }
 
-    void OnDisable()
+    void OnEnable()
     {
-        if (skill == null || bullet == null)
-            return;
+        hasTriggered = false;
+    }
 
-        if (hasTriggered)
+    // ⚡ BulletHoming이 직접 호출하는 진화 트리거
+    public void TriggerEvolution()
+    {
+        if (hasTriggered || skill == null || bullet == null)
             return;
 
         hasTriggered = true;
 
         int electric = skill.electricCount;
 
+        // 10개 이상 → 폭발
         if (electric >= 10)
             CreateExplosion();
 
+        // 20개 이상 → 분열
         if (electric >= 20)
             SpawnSplitBullets();
     }
@@ -69,7 +74,7 @@ public class BulletEvolution : MonoBehaviour
                 b.damage = skill.damage * 0.5f;
                 b.per = Mathf.Max(0, skill.per / 2);
                 b.speed = skill.speed;
-                b.SetTarget(null); // 분열탄은 직진
+                b.SetTarget(null);
             }
 
             skill.StartCoroutine(DisableAfter(split, skill.lifetime * 0.5f));
