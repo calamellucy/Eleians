@@ -66,7 +66,7 @@ public class BulletEvolution : MonoBehaviour
             GameObject split = GameManager.instance.pool.Get(skill.prefabId);
             split.transform.position = transform.position;
             split.transform.rotation = Quaternion.AngleAxis(randAngle, Vector3.forward);
-            split.transform.localScale = Vector3.one * (skill.projectileSize * 0.5f);
+            split.transform.localScale = Vector3.one * (skill.projectileSize * 0.7f);
             split.SetActive(true);
 
             Bullet_Re b = split.GetComponent<Bullet_Re>();
@@ -75,7 +75,7 @@ public class BulletEvolution : MonoBehaviour
                 b.damage = skill.damage * 0.5f;
                 b.per = Mathf.Max(0, skill.count / 2);
                 b.GetComponent<BulletEvolution>().hasTriggered = true; // 재분열 방지
-                b.Init(b.damage, b.per, dir);
+                b.Init(b.damage, b.per, dir, b.elecCount);
             }
 
             skill.StartCoroutine(DisableAfter(split, 1.5f));

@@ -18307,7 +18307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e71513089578c2d4c9b98d1e303ae1fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Scanner
-  scanRange: 7
+  scanRange: 10
   targetTag: Enemy
   nearestTarget: {fileID: 0}
 --- !u!114 &1602427842
@@ -19283,7 +19283,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 0
+  orthographic size: 3.75
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

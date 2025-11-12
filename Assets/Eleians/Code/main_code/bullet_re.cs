@@ -4,6 +4,7 @@ public class Bullet_Re : MonoBehaviour
 {
     public float damage;
     public int per;
+    public int elecCount;
 
     Rigidbody2D rigid;
     Skill1_Re skill1;
@@ -14,16 +15,17 @@ public class Bullet_Re : MonoBehaviour
         skill1 = GetComponentInParent<Skill1_Re>();
     }
 
-    public void Init(float damage, int per, Vector3 dir)
+    public void Init(float damage, int per, Vector3 dir, int elecCount)
     {
         this.damage = damage;
         this.per = per;
+        this.elecCount = elecCount;
 
         if (per >= 0)
         {
-            rigid.linearVelocity = dir * 10f * skill1.electricCount * 0.6f;
-            // (dir*10f): 기본속도
-            // (electricCount*0.6f): 전기 개수에 비례한 투사체 속도 증가
+            rigid.linearVelocity = dir * (10f + elecCount * 0.05f);
+            // (10f): 기본속도
+            // (electricCount*0.05f): 전기 개수에 비례한 투사체 속도 증가
         }
     }
 
@@ -31,6 +33,12 @@ public class Bullet_Re : MonoBehaviour
     {
         if (!collision.CompareTag("Enemy"))
             return;
+
+        NormalMonster monster = collision.GetComponent<NormalMonster>();
+        if (monster != null)
+        {
+            monster.ApplyDamage(damage);
+        }
 
         // 관통 횟수 감소
         per--;

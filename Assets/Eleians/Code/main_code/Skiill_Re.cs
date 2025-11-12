@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Skill1_Re : MonoBehaviour
 {
-    public int prefabId;               // 프리펩 아이디: 2
+    public int prefabId = 2;           // 프리펩 아이디: 2
     public float damage;               // 기본 대미지
     public int count;                  // 관통 횟수
     public float attackRate;           // 공격 속도 (초당 발사 횟수)
@@ -25,7 +25,7 @@ public class Skill1_Re : MonoBehaviour
 
     void Start()
     {
-        Init();
+       // Init();
     }
 
     void Update()
@@ -37,13 +37,15 @@ public class Skill1_Re : MonoBehaviour
             TryFire();
             Debug.Log("Update"); // 오류 검사
         }
+        Init();
     }
 
     public void Init()
     {
-        attackRate = 1f * 0.08f * electricCount;        
+        prefabId = 2;
+        attackRate = 1f + 0.08f * electricCount;        
         damage = 10f + 0.6f * electricCount/* ( * 불 원소 개수) */;             
-        count = 1 /* ( + (불원소 개수 * 0.25)/1)*/;      
+        count = 0 /* ( + (불원소 개수 * 0.25)/1)*/;      
         projectileSize = 0.2f /* ( * 흙 원소 개수 * 0.08f) */;   
         projectileCount = 1 /* ( + (얼음 원소 개수 * 0.33f)/1) */;
 
@@ -56,7 +58,15 @@ public class Skill1_Re : MonoBehaviour
         // 각 속성 옆의 주석은 진화 상태에 따른 변화 예시입니다.
 
         /* !! 투사체 속도는 Bullet_Re 스크립트에서 처리 !! */
+
+        if (electricCount >= 5)
+        {
+            projectileCount += 2;
+            count += 1;
+        }
     }
+
+    //public void RefreshStats() => Init();
 
     void TryFire()
     {
@@ -73,11 +83,7 @@ public class Skill1_Re : MonoBehaviour
 
         int projectile_Count = projectileCount;
         int per = count;
-        if (electricCount >= 5)
-        {
-            projectile_Count += 2; 
-            per += 1;
-        }
+        
 
         for (int i = 0; i < projectile_Count; i++)
         {
@@ -99,7 +105,7 @@ public class Skill1_Re : MonoBehaviour
         if (evo != null)
             evo.Setup(this);
 
-        bullet.GetComponent<Bullet_Re>().Init(damage, per, dir);
+        bullet.GetComponent<Bullet_Re>().Init(damage, per, dir, electricCount);
         Debug.Log("Fire");
     }
 
