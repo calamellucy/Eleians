@@ -135,7 +135,7 @@ public class Skill4 : MonoBehaviour
         SetAlpha(renderers, 0f);
 
         // 1) 0.8초 페이드인
-        float fadeTime = 0.8f;
+        float fadeTime = 0.1f;
         float t = 0f;
         while (t < fadeTime && go.activeInHierarchy)
         {

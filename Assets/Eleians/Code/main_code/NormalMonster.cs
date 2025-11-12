@@ -30,6 +30,8 @@ public class NormalMonster : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!GameManager.instance.Living)
+            return;
         if (!isLive || anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
             return;
 
@@ -40,6 +42,8 @@ public class NormalMonster : MonoBehaviour
     }
     private void LateUpdate()
     {
+        if (!GameManager.instance.Living)
+            return;
         if (!isLive)
             return;
 

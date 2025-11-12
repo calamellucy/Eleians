@@ -24,18 +24,25 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (!GameManager.instance.Living)
+            return;
+
         inputVec.x = Input.GetAxisRaw("Horizontal");
         inputVec.y = Input.GetAxisRaw("Vertical");
     }
 
     void FixedUpdate()
     {
+        if (!GameManager.instance.Living)
+            return;
         Vector2 nextVec = inputVec.normalized * speed * Time.fixedDeltaTime;
         rigid.MovePosition(rigid.position + nextVec);
     }
 
     void LateUpdate()
     {
+        if (!GameManager.instance.Living)
+            return;
         anim.SetFloat("Speed", inputVec.magnitude);
 
         if (inputVec.x != 0) {

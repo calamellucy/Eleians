@@ -55,6 +55,8 @@ public class skill4Gh : MonoBehaviour
 
     void SpawnAndPrepare()
     {
+        if (!GameManager.instance.Living)
+            return;
         var player = GameManagerGh.instance.player;
 
         
