@@ -564,57 +564,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1246111560}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &456765273
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 456765274}
-  - component: {fileID: 456765275}
-  m_Layer: 0
-  m_Name: Skill1_Re
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &456765274
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 456765273}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.13617, y: -0.10406, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1602427840}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &456765275
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 456765273}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49d5b4958869f6548bb0e4eb9dd65863, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Skill1_Re
-  id: 1
-  prefabId: 2
-  damage: 10
-  count: 1
-  attackRate: 2
-  projectileSize: 0.2
-  electricCount: 20
 --- !u!1 &502278469
 GameObject:
   m_ObjectHideFlags: 0
@@ -18391,7 +18340,6 @@ Transform:
   m_Children:
   - {fileID: 307704583}
   - {fileID: 1246111560}
-  - {fileID: 456765274}
   - {fileID: 1949113737}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -19383,7 +19331,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 3.90625
+  orthographic size: 3.9453125
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

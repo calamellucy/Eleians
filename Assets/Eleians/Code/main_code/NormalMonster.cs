@@ -48,6 +48,9 @@ public class NormalMonster : MonoBehaviour
 
     protected virtual void OnEnable()
     {
+        if (GameManager.instance == null || GameManager.instance.player == null)
+            return;
+
         target = GameManager.instance.player.GetComponent<Rigidbody2D>();
         isLive = true;
         coll.enabled = true;

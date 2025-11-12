@@ -20,6 +20,8 @@ public class Skill1_Re : MonoBehaviour
     void Awake()
     {
         player = GetComponentInParent<Player>();
+        if (player == null)
+            Debug.LogError("Skill1_Re Player regerence is NULL");
     }
 
     void Start()
@@ -34,6 +36,7 @@ public class Skill1_Re : MonoBehaviour
         {
             timer = 0f;
             TryFire();
+            //Debug.Log("Update");
         }
     }
 
@@ -79,6 +82,8 @@ public class Skill1_Re : MonoBehaviour
                 evo.Setup(this);
 
             bullet.GetComponent<Bullet_Re>().Init(damage, per, newDir);
+            Debug.Log($"[TryFire] bullet={bullet?.name}, active={bullet?.gameObject.activeSelf}, prefabId={prefabId}");
         }
     }
+
 }
