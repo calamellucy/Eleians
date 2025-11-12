@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class bullet_re : MonoBehaviour
+public class Bullet_Re : MonoBehaviour
 {
     public float damage;
     public int per;
@@ -30,10 +30,13 @@ public class bullet_re : MonoBehaviour
 
         per--;
 
+        GetComponent<BulletEvolution>()?.TriggerEvolution();
+
         if (per == -1)
         {
             rigid.linearVelocity = Vector2.zero;
             gameObject.SetActive(false);
         }
     }
+
 }

@@ -9,6 +9,7 @@ TagManager:
   - Ground
   - Tower
   - HomingBullet
+  - Explosion
   layers:
   - Default
   - TransparentFX

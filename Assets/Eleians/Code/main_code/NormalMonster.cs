@@ -71,6 +71,34 @@ public class NormalMonster : MonoBehaviour
         if (!isLive)
             return;
 
+        // 폭발 피격 추가
+        if (collision.CompareTag("Explosion"))
+        {
+            Explosion exp = collision.GetComponent<Explosion>();
+            if (exp != null)
+            {
+                health -= exp.damage;
+
+                if (health > 0)
+                {
+                    anim.SetTrigger("hit");
+                    StartCoroutine(KnockBack());
+                }
+                else
+                {
+                    isLive = false;
+                    coll.enabled = false;
+                    rigid.simulated = false;
+                    spriter.sortingOrder = 1;
+                    anim.SetBool("dead", true);
+                    GameManager.instance.kill++;
+                    GameManager.instance.GetExp();
+                }
+            }
+            return; // 여기서 바로 종료
+        }
+
+        // 기존 총알 피격 로직 그대로 유지
         if (collision.CompareTag("Bullet") || collision.CompareTag("HomingBullet"))
         {
             float dmg = 0f;
@@ -79,20 +107,17 @@ public class NormalMonster : MonoBehaviour
             Bullet b = null;
             BulletHoming bh = null;
 
-            // Bullet인지 확인
             if (collision.TryGetComponent(out b))
             {
                 dmg = b.damage;
                 per = b.per;
             }
-            // BulletHoming인지 확인
             else if (collision.TryGetComponent(out bh))
             {
                 dmg = bh.damage;
                 per = bh.per;
             }
 
-            // 데미지 적용
             health -= dmg;
 
             if (health > 0)
@@ -111,7 +136,6 @@ public class NormalMonster : MonoBehaviour
                 GameManager.instance.GetExp();
             }
 
-            // 관통 처리
             per--;
             if (per < 0)
                 collision.gameObject.SetActive(false);
@@ -123,9 +147,10 @@ public class NormalMonster : MonoBehaviour
         }
     }
 
+
     IEnumerator KnockBack()
     {
-        yield return wait; // �ϳ��� ���� ������ �����
+        yield return wait; 
         Vector3 playerpos = GameManager.instance.player.transform.position;
         Vector3 dirVec = transform.position - playerpos;
         rigid.AddForce(dirVec.normalized * 1, ForceMode2D.Impulse);

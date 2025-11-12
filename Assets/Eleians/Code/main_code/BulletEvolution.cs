@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class BulletEvolution : MonoBehaviour
 {
-    Skill1 skill;
-    BulletHoming bullet;
+    Skill1_Re skill;
+    Bullet_Re bullet;
     bool hasTriggered = false;
 
-    public void Setup(Skill1 skillRef)
+    public void Setup(Skill1_Re skillRef)
     {
         skill = skillRef;
-        bullet = GetComponent<BulletHoming>();
+        bullet = GetComponent<Bullet_Re>();
         hasTriggered = false;
     }
 
@@ -19,21 +19,20 @@ public class BulletEvolution : MonoBehaviour
         hasTriggered = false;
     }
 
-    // ⚡ BulletHoming이 직접 호출하는 진화 트리거
+    // Bullet_Re에서 적에게 맞았을 때 호출
     public void TriggerEvolution()
     {
-        if (hasTriggered || skill == null || bullet == null)
+        if (hasTriggered || skill == null)
             return;
 
         hasTriggered = true;
-
         int electric = skill.electricCount;
 
         // 10개 이상 → 폭발
         if (electric >= 10)
             CreateExplosion();
 
-        // 20개 이상 → 분열
+        // 20개 이상 → 분열 (관통을 모두 소비한 경우)
         if (electric >= 20)
             SpawnSplitBullets();
     }
@@ -58,6 +57,7 @@ public class BulletEvolution : MonoBehaviour
 
     void SpawnSplitBullets()
     {
+        // 20전기: 3발 분열, 대미지/크기/관통 절반, 재분열 불가
         for (int i = 0; i < 3; i++)
         {
             float randAngle = Random.Range(0f, 360f);
@@ -66,18 +66,19 @@ public class BulletEvolution : MonoBehaviour
             GameObject split = GameManager.instance.pool.Get(skill.prefabId);
             split.transform.position = transform.position;
             split.transform.rotation = Quaternion.AngleAxis(randAngle, Vector3.forward);
+            split.transform.localScale = Vector3.one * (skill.projectileSize * 0.5f);
             split.SetActive(true);
 
-            BulletHoming b = split.GetComponent<BulletHoming>();
+            Bullet_Re b = split.GetComponent<Bullet_Re>();
             if (b != null)
             {
                 b.damage = skill.damage * 0.5f;
-                b.per = Mathf.Max(0, skill.per / 2);
-                b.speed = skill.speed;
-                b.SetTarget(null);
+                b.per = Mathf.Max(0, skill.count / 2);
+                b.GetComponent<BulletEvolution>().hasTriggered = true; // 재분열 방지
+                b.Init(b.damage, b.per, dir);
             }
 
-            skill.StartCoroutine(DisableAfter(split, skill.lifetime * 0.5f));
+            skill.StartCoroutine(DisableAfter(split, 1.5f));
         }
     }
 

@@ -7,27 +7,15 @@ public class Explosion : MonoBehaviour
     public float radius = 1.5f;
     public float duration = 0.3f;
 
-    static int enemyLayerMask = -1;
-
     void OnEnable()
     {
-        if (enemyLayerMask == -1)
-            enemyLayerMask = LayerMask.GetMask("Enemy");
-
-        StartCoroutine(Explode());
+        transform.localScale = Vector3.one * (radius * 2f);
+        StartCoroutine(DisableAfter(duration));
     }
 
-    IEnumerator Explode()
+    IEnumerator DisableAfter(float t)
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, radius, enemyLayerMask);
-        foreach (Collider2D hit in hits)
-        {
-            NormalMonster monster = hit.GetComponent<NormalMonster>();
-            if (monster != null && monster.gameObject.activeSelf)
-                monster.health -= damage;
-        }
-
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(t);
         gameObject.SetActive(false);
     }
 
