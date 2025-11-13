@@ -4,6 +4,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     [Header("# Game Control")]
+    public bool Living = true;
     public bool isLive;
     public float gameTime;
     public float maxGameTime = 30 * 10f; // 5min
@@ -18,6 +19,7 @@ public class GameManager : MonoBehaviour
     public Player player;
     public GameObject tower;
     public PoolManager pool;
+    public LvUp uiLevelUp;
     [Header("# Game Phase")]
     public bool isTowerPhase = false;
     public float phaseTimer = 0f;
@@ -73,6 +75,18 @@ public class GameManager : MonoBehaviour
         {
             level++;
             exp = 0;
+            uiLevelUp.Show();
         }
+    }
+
+    public void Stop()
+    {
+        Living = false;
+        Time.timeScale = 0f;
+    }
+    public void Resume()
+    {
+        Living = true;
+        Time.timeScale = 1f;
     }
 }
