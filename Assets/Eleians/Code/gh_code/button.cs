@@ -15,6 +15,7 @@ public class button : MonoBehaviour
                 break;
             case 2:
                 StatsManager.instance.IceCnt++;
+                GameManager.instance.health += 8;
                 break;
             case 3:
                 StatsManager.instance.EarthCnt++;
