@@ -18110,8 +18110,6 @@ GameObject:
   - component: {fileID: 1602427837}
   - component: {fileID: 1602427836}
   - component: {fileID: 1602427835}
-  - component: {fileID: 1602427841}
-  - component: {fileID: 1602427842}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -18133,7 +18131,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player
   inputVec: {x: 0, y: 0}
   speed: 3
-  scanner: {fileID: 0}
 --- !u!95 &1602427836
 Animator:
   serializedVersion: 7
@@ -18266,7 +18263,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 5
   m_Sprite: {fileID: -5071563641634004584, guid: 930fb8a10bb2b044394fbb07f1b66fa7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -18292,43 +18289,10 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1246111560}
+  - {fileID: 1675766379}
   - {fileID: 1949113737}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1602427841
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1602427834}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e71513089578c2d4c9b98d1e303ae1fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Scanner
-  scanRange: 7
-  targetTag: Enemy
-  nearestTarget: {fileID: 0}
---- !u!114 &1602427842
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1602427834}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49d5b4958869f6548bb0e4eb9dd65863, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::skill1_re
-  prefabId: 0
-  damage: 0
-  count: 0
-  attackRate: 0
-  projectileSize: 0
-  projectileCount: 0
-  electricCount: 1
 --- !u!1 &1606321021
 GameObject:
   m_ObjectHideFlags: 0
@@ -18579,6 +18543,59 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1647613902}
   m_CullTransparentMesh: 1
+--- !u!1 &1675766378
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1675766379}
+  - component: {fileID: 1675766380}
+  m_Layer: 0
+  m_Name: Skill1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1675766379
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1675766378}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1602427840}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1675766380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1675766378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c985a7608339b6a4fa496db8e6ced37b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Skill1
+  prefabId: 2
+  attackRate: 1
+  projectileCount: 1
+  projectileSize: 0.2
+  speed: 10
+  lifetime: 5
+  damage: 10
+  per: 1
+  electricCount: 20
 --- !u!1 &1676629861
 GameObject:
   m_ObjectHideFlags: 0
@@ -19073,7 +19090,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1949113736}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef87c2b84ce3bd8439eeec6e054f181b, type: 3}
   m_Name: 
@@ -19283,7 +19300,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 0
+  orthographic size: 3.9453125
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
