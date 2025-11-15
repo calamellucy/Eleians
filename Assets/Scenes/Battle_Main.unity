@@ -396,13 +396,14 @@ GameObject:
   - component: {fileID: 62771374}
   - component: {fileID: 62771373}
   - component: {fileID: 62771372}
+  - component: {fileID: 62771375}
   m_Layer: 5
   m_Name: Artifact 7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &62771371
 RectTransform:
   m_ObjectHideFlags: 0
@@ -420,10 +421,10 @@ RectTransform:
   - {fileID: 581473943}
   m_Father: {fileID: 1610793794}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 108, y: -200}
-  m_SizeDelta: {x: 130, y: 160}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &62771372
 MonoBehaviour:
@@ -468,7 +469,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 62771373}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 62771375}
+        m_TargetAssemblyTypeName: ArtifactButton, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &62771373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -507,6 +520,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 62771370}
   m_CullTransparentMesh: 1
+--- !u!114 &62771375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 62771370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8e115c1252928f429d879483b7f6707, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactButton
+  iconImage: {fileID: 581473944}
+  nameText: {fileID: 1114856869}
+  descText: {fileID: 292920038}
+  data: {fileID: 0}
 --- !u!1 &64219681
 GameObject:
   m_ObjectHideFlags: 0
@@ -2166,13 +2195,14 @@ GameObject:
   - component: {fileID: 468399022}
   - component: {fileID: 468399021}
   - component: {fileID: 468399020}
+  - component: {fileID: 468399023}
   m_Layer: 5
   m_Name: Artifact 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &468399019
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2190,10 +2220,10 @@ RectTransform:
   - {fileID: 1934917146}
   m_Father: {fileID: 1610793794}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 108, y: -120}
-  m_SizeDelta: {x: 130, y: 160}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &468399020
 MonoBehaviour:
@@ -2238,7 +2268,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 468399021}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 468399023}
+        m_TargetAssemblyTypeName: ArtifactButton, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &468399021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2277,6 +2319,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 468399018}
   m_CullTransparentMesh: 1
+--- !u!114 &468399023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 468399018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8e115c1252928f429d879483b7f6707, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactButton
+  iconImage: {fileID: 1934917147}
+  nameText: {fileID: 1617209734}
+  descText: {fileID: 1807669817}
+  data: {fileID: 0}
 --- !u!1 &469543177
 GameObject:
   m_ObjectHideFlags: 0
@@ -4015,6 +4073,7 @@ GameObject:
   - component: {fileID: 1044483880}
   - component: {fileID: 1044483879}
   - component: {fileID: 1044483878}
+  - component: {fileID: 1044483881}
   m_Layer: 5
   m_Name: Artifact 2
   m_TagString: Untagged
@@ -4066,7 +4125,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_HighlightedColor: {r: 1, g: 0.7372549, b: 0.6, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -4087,7 +4146,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1044483879}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1044483881}
+        m_TargetAssemblyTypeName: ArtifactButton, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1044483879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4126,6 +4197,75 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1044483876}
   m_CullTransparentMesh: 1
+--- !u!114 &1044483881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044483876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8e115c1252928f429d879483b7f6707, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactButton
+  iconImage: {fileID: 1670041263}
+  nameText: {fileID: 1255264336}
+  descText: {fileID: 1546279696}
+  data: {fileID: 0}
+--- !u!1 &1094237268
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1094237270}
+  - component: {fileID: 1094237269}
+  m_Layer: 0
+  m_Name: ArtifactManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1094237269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1094237268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 562fc3b0b5c98d642a3d0c21f682305a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactManager
+  allArtifacts:
+  - {fileID: 11400000, guid: 0cf05c0ce9a5c1e46a8d31d1f4ff47d6, type: 2}
+  - {fileID: 11400000, guid: 0a76720f808dfd54ba257b50d12c7e76, type: 2}
+  - {fileID: 11400000, guid: 604ff673adffbf54c90e138529e5faf8, type: 2}
+  - {fileID: 11400000, guid: 94730a00e5e147d42932dd59624471f4, type: 2}
+  - {fileID: 11400000, guid: c4ab8ea5ec31ebb43a23987f1dac4945, type: 2}
+  - {fileID: 11400000, guid: f18f0dc159190aa49a8a17f8622d79d0, type: 2}
+  - {fileID: 11400000, guid: 53e8d35aaf4b3ab4ebbfb86efeca262c, type: 2}
+  - {fileID: 11400000, guid: 2898e209293a83848ac5d6d3bf3bbba6, type: 2}
+--- !u!4 &1094237270
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1094237268}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.36445, y: -0.96607, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1105259235
 GameObject:
   m_ObjectHideFlags: 0
@@ -4704,6 +4844,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef16d6d22d3d1a046a814c67d25854a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelectArtifact
+  buttons:
+  - {fileID: 2112745804}
+  - {fileID: 1944741209}
+  - {fileID: 1044483881}
+  - {fileID: 1362405910}
+  - {fileID: 468399023}
+  - {fileID: 1763855068}
+  - {fileID: 1842062958}
+  - {fileID: 62771375}
 --- !u!1 &1246111559
 GameObject:
   m_ObjectHideFlags: 0
@@ -13060,13 +13209,14 @@ GameObject:
   - component: {fileID: 1362405909}
   - component: {fileID: 1362405908}
   - component: {fileID: 1362405907}
+  - component: {fileID: 1362405910}
   m_Layer: 5
   m_Name: Artifact 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1362405906
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13084,10 +13234,10 @@ RectTransform:
   - {fileID: 1268720249}
   m_Father: {fileID: 1610793794}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 108, y: -120}
-  m_SizeDelta: {x: 130, y: 160}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1362405907
 MonoBehaviour:
@@ -13132,7 +13282,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1362405908}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1362405910}
+        m_TargetAssemblyTypeName: ArtifactButton, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1362405908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13171,6 +13333,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1362405905}
   m_CullTransparentMesh: 1
+--- !u!114 &1362405910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1362405905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8e115c1252928f429d879483b7f6707, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactButton
+  iconImage: {fileID: 1268720250}
+  nameText: {fileID: 318815675}
+  descText: {fileID: 1458388570}
+  data: {fileID: 0}
 --- !u!1 &1412912093
 GameObject:
   m_ObjectHideFlags: 0
@@ -22290,7 +22468,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -23862,13 +24040,14 @@ GameObject:
   - component: {fileID: 1763855067}
   - component: {fileID: 1763855066}
   - component: {fileID: 1763855065}
+  - component: {fileID: 1763855068}
   m_Layer: 5
   m_Name: Artifact 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1763855064
 RectTransform:
   m_ObjectHideFlags: 0
@@ -23886,10 +24065,10 @@ RectTransform:
   - {fileID: 923122992}
   m_Father: {fileID: 1610793794}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 108, y: -200}
-  m_SizeDelta: {x: 130, y: 160}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1763855065
 MonoBehaviour:
@@ -23934,7 +24113,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1763855066}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1763855068}
+        m_TargetAssemblyTypeName: ArtifactButton, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1763855066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23973,6 +24164,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1763855063}
   m_CullTransparentMesh: 1
+--- !u!114 &1763855068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1763855063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8e115c1252928f429d879483b7f6707, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactButton
+  iconImage: {fileID: 923122993}
+  nameText: {fileID: 1500141440}
+  descText: {fileID: 704000160}
+  data: {fileID: 0}
 --- !u!1 &1780083680
 GameObject:
   m_ObjectHideFlags: 0
@@ -24295,13 +24502,14 @@ GameObject:
   - component: {fileID: 1842062957}
   - component: {fileID: 1842062956}
   - component: {fileID: 1842062955}
+  - component: {fileID: 1842062958}
   m_Layer: 5
   m_Name: Artifact 6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1842062954
 RectTransform:
   m_ObjectHideFlags: 0
@@ -24319,10 +24527,10 @@ RectTransform:
   - {fileID: 1699215982}
   m_Father: {fileID: 1610793794}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 108, y: -200}
-  m_SizeDelta: {x: 130, y: 160}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1842062955
 MonoBehaviour:
@@ -24367,7 +24575,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1842062956}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1842062958}
+        m_TargetAssemblyTypeName: ArtifactButton, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1842062956
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24406,6 +24626,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1842062953}
   m_CullTransparentMesh: 1
+--- !u!114 &1842062958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1842062953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8e115c1252928f429d879483b7f6707, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactButton
+  iconImage: {fileID: 1699215983}
+  nameText: {fileID: 10358355}
+  descText: {fileID: 1490605735}
+  data: {fileID: 0}
 --- !u!1 &1888313881
 GameObject:
   m_ObjectHideFlags: 0
@@ -25008,6 +25244,7 @@ GameObject:
   - component: {fileID: 1944741208}
   - component: {fileID: 1944741207}
   - component: {fileID: 1944741206}
+  - component: {fileID: 1944741209}
   m_Layer: 5
   m_Name: Artifact 1
   m_TagString: Untagged
@@ -25059,7 +25296,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_HighlightedColor: {r: 1, g: 0.7372549, b: 0.6, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -25080,7 +25317,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1944741207}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1944741209}
+        m_TargetAssemblyTypeName: ArtifactButton, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1944741207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25119,6 +25368,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1944741204}
   m_CullTransparentMesh: 1
+--- !u!114 &1944741209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1944741204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8e115c1252928f429d879483b7f6707, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactButton
+  iconImage: {fileID: 193712617}
+  nameText: {fileID: 1105259238}
+  descText: {fileID: 100077995}
+  data: {fileID: 0}
 --- !u!1 &1949113736
 GameObject:
   m_ObjectHideFlags: 0
@@ -25517,6 +25782,7 @@ GameObject:
   - component: {fileID: 2112745803}
   - component: {fileID: 2112745802}
   - component: {fileID: 2112745801}
+  - component: {fileID: 2112745804}
   m_Layer: 5
   m_Name: Artifact 0
   m_TagString: Untagged
@@ -25568,7 +25834,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 1, g: 0.5176471, b: 0, a: 1}
+    m_HighlightedColor: {r: 1, g: 0.7372549, b: 0.6, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -25589,7 +25855,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2112745802}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2112745804}
+        m_TargetAssemblyTypeName: ArtifactButton, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2112745802
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25628,6 +25906,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2112745799}
   m_CullTransparentMesh: 1
+--- !u!114 &2112745804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2112745799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8e115c1252928f429d879483b7f6707, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactButton
+  iconImage: {fileID: 649827881}
+  nameText: {fileID: 1569587050}
+  descText: {fileID: 469543180}
+  data: {fileID: 0}
 --- !u!1 &2133821953
 GameObject:
   m_ObjectHideFlags: 0
@@ -25841,3 +26135,4 @@ SceneRoots:
   - {fileID: 629947161}
   - {fileID: 375237493}
   - {fileID: 1750179145}
+  - {fileID: 1094237270}

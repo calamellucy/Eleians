@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72cf24f9046563949a8aea03ca25aab8, type: 3}
+  m_Name: Artifact_FinalSpecPDF
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactData
+  id: 7
+  artifactName: "\uAC1C\uBC1C\uBA85\uC138\uC11C.pdf"
+  description: "\uACFC\uC81C \uC81C\uCD9C\uC5D0\uB294 \uBE60\uB978 \uC18D\uB3C4\uC640\n\uB192\uC740
+    \uC9D1\uC911\uB825\uC774 \uD544\uC694\uD558\uB2E4.\n\uACF5\uACA9\uC18D\uB3C4
+    \uC99D\uAC00\uB7C9\uC758 50%\uB9CC\uD07C \uACF5\uACA9\uB825 \uC99D\uAC00\n\uACF5\uACA9\uC18D\uB3C4
+    8% \uAC10\uC18C"
+  icon: {fileID: -7840206581599368491, guid: b646555423c020943a870f0b5d3bd06c, type: 3}

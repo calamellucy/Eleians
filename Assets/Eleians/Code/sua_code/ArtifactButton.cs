@@ -1,12 +1,25 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ArtifactButton : MonoBehaviour
 {
-    public int artifactID;
+    public Image iconImage;
+    public Text nameText;
+    public Text descText;
 
-    public void OnClickArtifact()
+    public ArtifactData data;
+
+    public void SetData(ArtifactData artifact)
     {
-        ArtifactManager.instance.Apply(artifactID);
+        data = artifact;
+        iconImage.sprite = artifact.icon;
+        nameText.text = artifact.artifactName;
+        descText.text = artifact.description;
+    }
+
+    public void OnClick()
+    {
+        ArtifactManager.instance.AcquireArtifact(data);
         GameManager.instance.uiSelectArt.Hide();
     }
 }

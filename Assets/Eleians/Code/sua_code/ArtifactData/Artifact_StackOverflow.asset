@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72cf24f9046563949a8aea03ca25aab8, type: 3}
+  m_Name: Artifact_StackOverflow
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactData
+  id: 4
+  artifactName: "\uC2A4\uD0DD \uC624\uBC84\uD50C\uB85C\uC6B0"
+  description: "\uC801 \uCC98\uCE58 \uC2DC \uC2A4\uD0DD\uC744 \uC5BB\uB294\uB2E4.\n5\uCD08\uB9C8\uB2E4
+    \uBAA8\uB4E0 \uC2A4\uD0DD\uC744\n\uC18C\uC9C4\uD558\uC5EC \uC2A4\uD0DD\uC5D0
+    \uBE44\uB840\uD55C\n\uD3ED\uBC1C\uC744 \uC77C\uC73C\uD0A8\uB2E4. "
+  icon: {fileID: -3475180027495069561, guid: c53bf8bf75b01e943a480d03b324d15c, type: 3}
