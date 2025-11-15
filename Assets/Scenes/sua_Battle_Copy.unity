@@ -18114,7 +18114,7 @@ GameObject:
   - component: {fileID: 1602427835}
   - component: {fileID: 1602427841}
   - component: {fileID: 1602427842}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -18220,7 +18220,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!212 &1602427839
 SpriteRenderer:
@@ -19382,6 +19382,10 @@ PrefabInstance:
     - target: {fileID: 465607253973961983, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
       propertyPath: m_Constraints
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 465607253973961983, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 486534827732295373, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
       propertyPath: m_Name

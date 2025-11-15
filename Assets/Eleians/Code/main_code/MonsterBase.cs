@@ -34,10 +34,21 @@ public class MonsterBase : MonoBehaviour
         isLive = true;
         isKnockback = false;
         isDeadProcessed = false;
+        attackTimer = 0f; // 추가
+
+        // ★ 물리 상태 완전 초기화
+        rigid.bodyType = RigidbodyType2D.Dynamic;
+        rigid.simulated = true;
+        rigid.linearVelocity = Vector2.zero;
+        rigid.angularVelocity = 0f;
 
         coll.enabled = true;
-        rigid.simulated = true;
+        //rigid.simulated = true;
         health = maxHealth;
+
+        // ★ 애니메이션 상태 초기화
+        anim.ResetTrigger("hit");
+        anim.SetBool("dead", false);
     }
 
     // ---------------------
@@ -113,9 +124,12 @@ public class MonsterBase : MonoBehaviour
         if (health <= 0)
         {
             isLive = false;
+
+            rigid.simulated = false;
             rigid.linearVelocity = Vector2.zero;
             rigid.angularVelocity = 0f;
-            rigid.bodyType = RigidbodyType2D.Kinematic;
+            coll.enabled = false;
+            //rigid.bodyType = RigidbodyType2D.Kinematic;
             anim.SetBool("dead", true);
             return;
         }
@@ -145,6 +159,7 @@ public class MonsterBase : MonoBehaviour
         // 넉백 유지
         yield return new WaitForSeconds(0.1f);
 
+        if (!isLive) yield break;
         isKnockback = false;
     }
 
@@ -154,12 +169,13 @@ public class MonsterBase : MonoBehaviour
         isDeadProcessed = true;
 
         health = 0;
-        coll.enabled = false;
+        //coll.enabled = false;
         rigid.simulated = false;
-        
+        rigid.linearVelocity = Vector2.zero;
+        rigid.angularVelocity = 0f;
+        coll.enabled = false;
 
-        // 사망 처리 애니메이션은 이미 재생 중이므로
-        // 여기서는 단순히 비활성화만 처리
+        // 비활성화 처리
         gameObject.SetActive(false);
 
         // 게임 매니저에게 보고
