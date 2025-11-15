@@ -146,9 +146,9 @@ public enum MonsterType
 public class SpawnData
 {
     public MonsterType monsterType;
-    // public int spriteType;
     public int spriteCount;
     public float spawnTime;
     public int health;
     public float speed;
+    public float damage;
 }
