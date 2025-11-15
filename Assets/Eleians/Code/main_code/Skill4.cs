@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -16,13 +17,15 @@ public class Skill4 : MonoBehaviour
 
     [Header("Move / Damage")]
     public float speed = 8f;
-    public float damage = 0.1f;
+    public float damage = 30f;
     public float lifeTime = 2f;          // 발사 "후" 생존시간
 
     [Header("Burst")]
-    public float burstInterval = 4f;     // 버스트 간격
-    public int shotsPerBurst = 45;       // 버스트당 발사 수
-    public float burstDuration = 1.5f;   // 버스트 진행 시간
+    public float burstInterval = 3.33f;     // 버스트 간격
+    public int shotsPerBurst = 30;       // 버스트당 발사 수
+    public float burstDuration = 1.3f;   // 버스트 진행 시간
+    public int per = 0;                  // 관통력
+    public Vector3 baseBulletScale = Vector3.one;
 
     [Header("Spawn Range (ring)")]
     public float minSpawnRadius = 0.3f;
@@ -31,6 +34,11 @@ public class Skill4 : MonoBehaviour
     [Header("Aiming")]
     public bool useLastAimingWhenIdle = true; // 입력이 0일 때 마지막 조준 방향 유지 여부
     private Vector2 lastAimDir = Vector2.left; // 마지막 비영(非0) 입력 방향
+
+    [Header("Triggers")]
+    public bool StoneDust = false;
+    public bool StoneActive = false;
+    public bool VibrationalWave = false;
 
     private Coroutine loopCo;
 
@@ -56,6 +64,39 @@ public class Skill4 : MonoBehaviour
             lastAimDir = player.IsFacingRight ? Vector2.right : Vector2.left;
         }
     }
+
+    public void GiveLevelSystemToSkill4()
+    {
+        // 불 - 암석난사의 크기 +8%
+        baseBulletScale =  Vector3.one *  (1f + StatsManager.instance.FireCnt * 0.06f);
+
+        // 얼음 - 암석난사의 공격 계수 +8%
+        damage = StatsManager.instance.Attack * (0.3f + 0.08f * StatsManager.instance.IceCnt);
+
+        // 전기 - 암석난사의 생성 간격 -8%
+        burstInterval = 1f / (StatsManager.instance.AttackSpeed * 0.3f);
+        burstDuration = 1.5f / StatsManager.instance.AttackSpeed;
+
+        // 흙 - 암석난사의 개수 +1
+        shotsPerBurst = 30 + StatsManager.instance.EarthCnt;
+        if (StatsManager.instance.EarthCnt >= 5) {
+            shotsPerBurst += 10;
+            per = 1;
+         }
+        if (StatsManager.instance.EarthCnt >= 10)
+        {
+            StoneDust = true;
+        }
+        if (StatsManager.instance.EarthCnt >= 10)
+        {
+            StoneActive = true;
+        }
+        if (StatsManager.instance.EarthCnt >= 10)
+        {
+            VibrationalWave = true;
+        }
+    }
+
 
     // 🔹 스킬의 ‘버스트 패턴’을 무한 반복하는 메인 루프
     //    - GameManager/Pool/Player 참조 체크
@@ -121,6 +162,8 @@ public class Skill4 : MonoBehaviour
         t.SetParent(transform, false);
         t.position = spawnPos;
 
+        t.localScale = baseBulletScale;
+
         // 🔹 조준 방향은 Update에서 계속 갱신된 lastAimDir 사용
         Vector2 fireDir = lastAimDir;
 
@@ -142,7 +185,7 @@ public class Skill4 : MonoBehaviour
 
         // (선택) 탄환 데미지, 관통 등 초기화
         var b = go.GetComponent<Bullet>();
-        if (b) b.Init(damage, 0, Vector3.zero);
+        if (b) b.Init(StatsManager.instance.ApplyCrit(damage), per, Vector3.zero);
 
         // 페이드인 → 짧은 대기 → 발사를 처리하는 코루틴 시작
         StartCoroutine(FadeAndFire(go, fireDir));
@@ -165,7 +208,7 @@ public class Skill4 : MonoBehaviour
         SetAlpha(renderers, 0f);
 
         // 1) 0.8초 페이드인
-        float fadeTime = 0.5f;
+        float fadeTime = 0.4f;
         float t = 0f;
         float stoppedTime = 0.8f - fadeTime;
         while (t < fadeTime && go.activeInHierarchy)
@@ -176,7 +219,7 @@ public class Skill4 : MonoBehaviour
             yield return null;
         }
 
-        // 2) 0.2초 대기(정지)
+        // 2) 대기(정지)
         yield return new WaitForSeconds(stoppedTime);
 
         // 3) 발사(속도 부여)

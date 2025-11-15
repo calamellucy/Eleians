@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
@@ -6,6 +6,7 @@ public class Bullet : MonoBehaviour
     public int per;
 
     Rigidbody2D rigid;
+    public StoneDust stoneDust;   // â† ì¶”ê°€
 
     void Awake()
     {
@@ -14,14 +15,15 @@ public class Bullet : MonoBehaviour
 
     public void Init(float damage, int per, Vector3 dir)
     {
-        this.damage = damage; 
+        this.damage = damage;
         this.per = per;
 
-        if(per > -1)
+        if (per > -1)
         {
             rigid.linearVelocity = dir;
         }
     }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (!collision.CompareTag("Enemy"))
@@ -33,17 +35,29 @@ public class Bullet : MonoBehaviour
             monster.ApplyDamage(damage);
         }
 
-        // °üÅë È½¼ö °¨¼Ò
+        // ğŸ”¹ í™ ì¹´ìš´íŠ¸ê°€ 10 ì´ˆê³¼ë©´ í­ë°œ ì†Œí™˜
+        if (StatsManager.instance != null && StatsManager.instance.EarthCnt >= 10)
+        {
+            if (stoneDust != null)
+            {
+                // ì´ì•Œì´ ë‚ ì•„ê°€ë˜ ë°©í–¥ ê¸°ì¤€
+                Vector2 dir = rigid.linearVelocity.normalized; ;
+
+                stoneDust.SpawnExplosion(transform.position, dir);
+            }
+        }
+
+        // ê´€í†µ íšŸìˆ˜ ê°ì†Œ
         per--;
 
-        // °üÅë È½¼ö°¡ ³²¾Æ ÀÖÀ¸¸é ±×´ë·Î Åë°ú
+        // ê´€í†µì´ ë‚¨ì•„ ìˆìœ¼ë©´ íƒ„ì€ ê³„ì† ë‚ ì•„ê°
         if (per >= 0)
         {
             GetComponent<BulletEvolution>()?.TriggerEvolution();
             return;
         }
 
-        // °üÅëÀÌ ³¡³µÀ» ¶§¸¸ Á¾·á
+        // ê´€í†µì´ ëë‚¬ì„ ë•Œë§Œ ì¢…ë£Œ
         rigid.linearVelocity = Vector2.zero;
         gameObject.SetActive(false);
     }
