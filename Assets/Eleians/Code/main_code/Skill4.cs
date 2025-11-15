@@ -87,11 +87,11 @@ public class Skill4 : MonoBehaviour
         {
             StoneDust = true;
         }
-        if (StatsManager.instance.EarthCnt >= 10)
+        if (StatsManager.instance.EarthCnt >= 15)
         {
             StoneActive = true;
         }
-        if (StatsManager.instance.EarthCnt >= 10)
+        if (StatsManager.instance.EarthCnt >= 20)
         {
             VibrationalWave = true;
         }
