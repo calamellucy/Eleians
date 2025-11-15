@@ -16,7 +16,7 @@ public class Skill4 : MonoBehaviour
 
     [Header("Move / Damage")]
     public float speed = 8f;
-    public float damage = 10f;
+    public float damage = 0.1f;
     public float lifeTime = 2f;          // 발사 "후" 생존시간
 
     [Header("Burst")]
@@ -30,7 +30,7 @@ public class Skill4 : MonoBehaviour
 
     [Header("Aiming")]
     public bool useLastAimingWhenIdle = true; // 입력이 0일 때 마지막 조준 방향 유지 여부
-    private Vector2 lastAimDir = Vector2.right; // 마지막 비영(非0) 입력 방향
+    private Vector2 lastAimDir = Vector2.left; // 마지막 비영(非0) 입력 방향
 
     private Coroutine loopCo;
 
@@ -142,7 +142,7 @@ public class Skill4 : MonoBehaviour
 
         // (선택) 탄환 데미지, 관통 등 초기화
         var b = go.GetComponent<Bullet>();
-        if (b) b.Init(damage, 3, Vector3.zero);
+        if (b) b.Init(damage, 0, Vector3.zero);
 
         // 페이드인 → 짧은 대기 → 발사를 처리하는 코루틴 시작
         StartCoroutine(FadeAndFire(go, fireDir));
@@ -180,12 +180,17 @@ public class Skill4 : MonoBehaviour
         yield return new WaitForSeconds(stoppedTime);
 
         // 3) 발사(속도 부여)
+        go.tag = "Bullet";
         var rb = go.GetComponent<Rigidbody2D>();
         if (rb) rb.linearVelocity = dir * speed;
 
         // 4) lifeTime 후 비활성화
         yield return new WaitForSeconds(lifeTime);
-        if (go) go.SetActive(false);
+        if (go)
+        {
+            go.tag = "Untagged";   // 다시 초기화
+            go.SetActive(false);
+        }
     }
 
     // 🔹 전달받은 SpriteRenderer 배열의 알파값(투명도)을 일괄 변경하는 유틸리티 함수

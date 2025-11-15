@@ -22,4 +22,29 @@ public class Bullet : MonoBehaviour
             rigid.linearVelocity = dir;
         }
     }
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!collision.CompareTag("Enemy"))
+            return;
+
+        NormalMonster monster = collision.GetComponent<NormalMonster>();
+        if (monster != null)
+        {
+            monster.ApplyDamage(damage);
+        }
+
+        // 관통 횟수 감소
+        per--;
+
+        // 관통 횟수가 남아 있으면 그대로 통과
+        if (per >= 0)
+        {
+            GetComponent<BulletEvolution>()?.TriggerEvolution();
+            return;
+        }
+
+        // 관통이 끝났을 때만 종료
+        rigid.linearVelocity = Vector2.zero;
+        gameObject.SetActive(false);
+    }
 }
