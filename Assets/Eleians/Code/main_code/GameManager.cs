@@ -18,8 +18,10 @@ public class GameManager : MonoBehaviour
     [Header("# Game Object")]
     public Player player;
     public GameObject tower;
+    public GameObject chestPrefab;
     public PoolManager pool;
     public LvUp uiLevelUp;
+    public SelectArtifact uiSelectArt;
     [Header("# Game Phase")]
     public bool isTowerPhase = false;
     public float phaseTimer = 0f;
@@ -89,4 +91,10 @@ public class GameManager : MonoBehaviour
         Living = true;
         Time.timeScale = 1f;
     }
+
+    public void OnTowerDefenseSuccess()
+    {
+        Instantiate(chestPrefab, tower.transform.position + Vector3.right * 2f, Quaternion.identity);
+    }
+
 }

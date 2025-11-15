@@ -44,6 +44,8 @@ public class Tower : MonoBehaviour
             // 수호 성공 → 스프라이트 변경
             spriteRenderer.sprite = normalSprite;
             Debug.Log("거점 수호 성공");
+
+            GameManager.instance.OnTowerDefenseSuccess();
         }
         else
         {
