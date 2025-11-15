@@ -52,6 +52,10 @@ public class ArtifactManager : MonoBehaviour
         }
 
         ownedArtifacts.Add(data);
+
+        // 슬롯 아이콘 추가
+        ArtifactSlotUI.instance.AddArtifactIcon(data.icon);
+
         ApplyArtifact(data);
     }
 

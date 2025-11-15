@@ -11,11 +11,11 @@ public class Chest : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if (opened) return;
 
-        if (collision.CompareTag("Player"))
+        if (collision.collider.CompareTag("Player"))
         {
             opened = true;
             anim.SetTrigger("open");
@@ -29,7 +29,7 @@ public class Chest : MonoBehaviour
         AnimatorClipInfo[] info = anim.GetCurrentAnimatorClipInfo(0);
         float clipLength = info[0].clip.length;
 
-        yield return new WaitForSeconds(clipLength);
+        yield return new WaitForSeconds(clipLength + 0.8f);
 
         GameManager.instance.uiSelectArt.Show();
         Destroy(gameObject);
