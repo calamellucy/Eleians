@@ -40,7 +40,7 @@ public class StatsManager : MonoBehaviour
         Level = 0;
 
         FireCnt = IceCnt = ElectricCnt = 0;
-        EarthCnt = 15;
+        EarthCnt = 0;
     }
 
     // 레벨업 → 원소 선택 시 호출

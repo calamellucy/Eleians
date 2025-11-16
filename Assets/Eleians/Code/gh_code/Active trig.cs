@@ -5,6 +5,8 @@ public class Activetrig : MonoBehaviour
 {
     RectTransform rect;
     public Skill4 sk4;
+    public EarthBumpSkill earthbump;
+
     [Header("Cooldown")]
     public float Cool = 10f;
 
@@ -53,7 +55,7 @@ public class Activetrig : MonoBehaviour
         // 쿨타임이 끝났을 때만 Q 키 입력 가능
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            StatsManager.instance.FireCnt += 1;
+            earthbump.ActiveEarthBump();
             StartCooldown();
         }
     }
@@ -66,4 +68,5 @@ public class Activetrig : MonoBehaviour
         // 초기화: Height를 다시 33으로
         coolImage.sizeDelta = new Vector2(coolImage.sizeDelta.x, maxHeight);
     }
+
 }
