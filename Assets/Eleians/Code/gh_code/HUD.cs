@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public enum InfoType {Exp, Level, Kill, Time, Health}
+    public enum InfoType { Exp, Level, Time, Health, Electric, Fire, Ice, Earth }
     public InfoType type;
     Text myText;
     Slider mySlider;
@@ -23,13 +23,24 @@ public class HUD : MonoBehaviour
             case InfoType.Exp:
                 float curExp = GameManager.instance.exp;
                 float maxExp = GameManager.instance.nextExp[GameManager.instance.level];
-                mySlider.value = curExp/maxExp; 
+                mySlider.value = curExp / maxExp;
                 break;
             case InfoType.Level:
-                myText.text = string.Format("Lv.{0:F0}", GameManager.instance.level); 
+                myText.text = string.Format("Lv.{0:F0}", GameManager.instance.level);
                 break;
-            case InfoType.Kill:
+            case InfoType.Electric:
+                myText.text = string.Format("{0:F0}", StatsManager.instance.ElectricCnt);
+                break;
+            case InfoType.Fire:
+                myText.text = string.Format("{0:F0}", StatsManager.instance.FireCnt);
 
+                break;
+            case InfoType.Ice:
+                myText.text = string.Format("{0:F0}", StatsManager.instance.IceCnt);
+
+                break;
+            case InfoType.Earth:
+                myText.text = string.Format("{0:F0}", StatsManager.instance.EarthCnt);
                 break;
             case InfoType.Time:
                 float spendedTime = GameManager.instance.gameTime;
@@ -39,7 +50,7 @@ public class HUD : MonoBehaviour
                 break;
             case InfoType.Health:
                 float curHP = GameManager.instance.health;
-                float maxHP = GameManager.instance.maxHealth;
+                float maxHP = StatsManager.instance.HP;
                 mySlider.value = curHP / maxHP;
                 break;
 

@@ -1,61 +1,33 @@
-using System.Collections;
 using UnityEngine;
-using UnityEngine.Rendering.VirtualTexturing;
 
-public class NormalMonster : MonoBehaviour
+public class NormalMonster : MonsterBase
 {
-    public float speed;
-    public float health;
-    public float maxHealth;
     public RuntimeAnimatorController[] animCon;
-    public Rigidbody2D target;
+    // public Rigidbody2D target;
 
-
-    protected bool isLive;
-
-    protected Rigidbody2D rigid;
-    protected Collider2D coll;
-    protected Animator anim;
-    protected SpriteRenderer spriter;
-    WaitForFixedUpdate wait;
-
-    void Awake()
+    protected override void OnEnable()
     {
-        rigid = GetComponent<Rigidbody2D>();
-        coll = GetComponent<Collider2D>();
-        anim = GetComponent<Animator>();
-        spriter = GetComponent<SpriteRenderer>();
-        wait = new WaitForFixedUpdate();
+        base.OnEnable();
+
+        // Player를 타겟으로
+        target = GameManager.instance.player.GetComponent<Rigidbody2D>();
     }
 
-    private void FixedUpdate()
+    protected void FixedUpdate()
     {
-        if (!isLive || anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
-            return;
+        if (!isLive) return;
+        if (isKnockback) return;
 
-        Vector2 dirVec = target.position - rigid.position;
-        Vector2 nextVec = dirVec.normalized * speed * Time.fixedDeltaTime;
-        rigid.MovePosition(rigid.position + nextVec);
+        Vector2 dir = target.position - rigid.position;
+        rigid.MovePosition(rigid.position + dir.normalized * speed * Time.fixedDeltaTime);
         rigid.linearVelocity = Vector2.zero;
     }
-    private void LateUpdate()
+
+    protected void LateUpdate()
     {
-        if (!isLive)
-            return;
+        if (!isLive) return;
 
         spriter.flipX = target.position.x > rigid.position.x;
-    }
-
-    protected virtual void OnEnable()
-    {
-        target = GameManager.instance.player.GetComponent<Rigidbody2D>();
-        isLive = true;
-        coll.enabled = true;
-        rigid.simulated = true;
-        spriter.sortingOrder = 2;
-        anim.SetBool("dead", false);
-        health = maxHealth;
-
     }
 
     public void Init(SpawnData data, int spriteIndex)
@@ -63,76 +35,21 @@ public class NormalMonster : MonoBehaviour
         anim.runtimeAnimatorController = animCon[spriteIndex];
         speed = data.speed;
         maxHealth = data.health;
-        health = data.health;
+        damage = data.damage;
+        health = maxHealth;
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    // ---------------------
+    // NormalMonster는 Player만 공격
+    // ---------------------
+    protected override void OnHitPlayer(Player player)
     {
-        if (!isLive)
-            return;
+        attackTimer -= Time.deltaTime;
 
-        if (collision.CompareTag("Bullet") || collision.CompareTag("HomingBullet"))
+        if (attackTimer <= 0f)
         {
-            float dmg = 0f;
-            int per = 0;
-
-            Bullet b = null;
-            BulletHoming bh = null;
-
-            // Bullet인지 확인
-            if (collision.TryGetComponent(out b))
-            {
-                dmg = b.damage;
-                per = b.per;
-            }
-            // BulletHoming인지 확인
-            else if (collision.TryGetComponent(out bh))
-            {
-                dmg = bh.damage;
-                per = bh.per;
-            }
-
-            // 데미지 적용
-            health -= dmg;
-
-            if (health > 0)
-            {
-                anim.SetTrigger("hit");
-                StartCoroutine(KnockBack());
-            }
-            else
-            {
-                isLive = false;
-                coll.enabled = false;
-                rigid.simulated = false;
-                spriter.sortingOrder = 1;
-                anim.SetBool("dead", true);
-                GameManager.instance.kill++;
-                GameManager.instance.GetExp();
-            }
-
-            // 관통 처리
-            per--;
-            if (per < 0)
-                collision.gameObject.SetActive(false);
-            else
-            {
-                if (b != null) b.per = per;
-                if (bh != null) bh.per = per;
-            }
+            player.ApplyDamage(damage);
+            attackTimer = attackDelay;
         }
-    }
-
-    IEnumerator KnockBack()
-    {
-        yield return wait; // �ϳ��� ���� ������ �����
-        Vector3 playerpos = GameManager.instance.player.transform.position;
-        Vector3 dirVec = transform.position - playerpos;
-        rigid.AddForce(dirVec.normalized * 1, ForceMode2D.Impulse);
-    }
-
-    void Dead()
-    {
-        gameObject.SetActive(false);
     }
 }

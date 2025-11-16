@@ -4,8 +4,8 @@ using UnityEngine.UI;
 public class Tower : MonoBehaviour
 {
     [Header("Tower Settings")]
-    public int maxHealth = 100;
-    public int currentHealth;
+    public float maxHealth = 100;
+    public float currentHealth;
     public Sprite normalSprite;      // 수호 성공 시 변경될 스프라이트
     public SpriteRenderer spriteRenderer;
     public Animator anim;
@@ -44,6 +44,8 @@ public class Tower : MonoBehaviour
             // 수호 성공 → 스프라이트 변경
             spriteRenderer.sprite = normalSprite;
             Debug.Log("거점 수호 성공");
+
+            GameManager.instance.OnTowerDefenseSuccess();
         }
         else
         {
@@ -51,7 +53,7 @@ public class Tower : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         if (isDestroyed) return;
 

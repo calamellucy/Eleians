@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72cf24f9046563949a8aea03ca25aab8, type: 3}
+  m_Name: Artifact_EscapeNumberOne
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactData
+  id: 8
+  artifactName: "\uC704\uAE30 \uD0C8\uCD9C \uB118\uBC84\uC6D0"
+  description: "\uD53C\uD574\uB97C \uC785\uC744 \uC2DC\n3\uCD08\uAC04 \uBB34\uC801\uC0C1\uD0DC
+    \uB3CC\uC785\n\uC774\uB3D9\uC18D\uB3C4 \uBC0F \uACF5\uACA9\uB825\n50% \uC99D\uAC00"
+  icon: {fileID: 5973373908962925164, guid: 22f1030323b238645ab870b8efa060f8, type: 3}

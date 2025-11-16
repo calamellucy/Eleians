@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
 {
     public Vector2 inputVec;
     public float speed;
+    public Scanner scanner;
 
     public bool IsFacingRight { get; private set; } = true;
     public Vector2 MoveDir => inputVec;
@@ -20,6 +21,7 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
         spriter = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        scanner = GetComponent<Scanner>();
     }
 
     void Update()
@@ -43,6 +45,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    /*
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (!GameManager.instance.isLive)
@@ -54,5 +57,27 @@ public class Player : MonoBehaviour
         {
             // anim.SetTrigger("Dead");
         }
+    }
+    */
+
+    public void ApplyDamage(float dmg)
+    {
+        if (!GameManager.instance.isLive) return;
+
+        GameManager.instance.health -= dmg;
+
+        if (GameManager.instance.health <= 0)
+        {
+            Die();
+        }
+
+        // hit 애니, 무적시간, 사운드 추가 가능
+    }
+
+    void Die()
+    {
+        GameManager.instance.isLive = false;
+        // anim.SetTrigger("Dead");
+        // rigid.simulated = false;
     }
 }

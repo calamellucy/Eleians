@@ -27,6 +27,8 @@ public class Spawner : MonoBehaviour
 
     void Update()
     {
+        if (!GameManager.instance.isLive) return;
+
         timer += Time.deltaTime;
         level = Mathf.Min(Mathf.FloorToInt(GameManager.instance.gameTime / 10f), spawnData.Length - 1);
         
@@ -146,9 +148,9 @@ public enum MonsterType
 public class SpawnData
 {
     public MonsterType monsterType;
-    // public int spriteType;
     public int spriteCount;
     public float spawnTime;
     public int health;
     public float speed;
+    public float damage;
 }

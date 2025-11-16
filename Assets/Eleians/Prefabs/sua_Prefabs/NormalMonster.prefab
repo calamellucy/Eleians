@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3572292703986221049}
   - component: {fileID: 8850149410203235170}
   - component: {fileID: -7832555614685385140}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: NormalMonster
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -119,7 +119,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!70 &3572292703986221049
 CapsuleCollider2D:
@@ -195,9 +195,10 @@ MonoBehaviour:
   speed: 0
   health: 0
   maxHealth: 0
+  damage: 0
+  target: {fileID: 0}
   animCon:
   - {fileID: 9100000, guid: 2c6f20883ecef9241b7a91146d859961, type: 2}
   - {fileID: 9100000, guid: 2f155edfe4e0aff4781835b478a191bd, type: 2}
   - {fileID: 9100000, guid: 3b9283527009617439b303a3783a61c8, type: 2}
   - {fileID: 9100000, guid: e04967d81e219c740aa5a316bb23dff6, type: 2}
-  target: {fileID: 0}
