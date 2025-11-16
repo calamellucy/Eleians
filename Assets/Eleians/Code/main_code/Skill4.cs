@@ -1,48 +1,109 @@
-using System.Collections;
+ï»¿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
 /// Skill4
-/// - ÇÃ·¹ÀÌ¾î ÁÖº¯(0.3~1.0)¿¡¼­ ½ºÆù
-/// - 0.8s ÆäÀÌµåÀÎ ¡æ 0.2s ´ë±â ÈÄ ¹ß»ç
-/// - ¹ß»ç ¹æÇâ: ÀÔ·ÂÀÌ ÀÖÀ¸¸é ÀÔ·Â ¹æÇâ, ¾øÀ¸¸é '¸¶Áö¸· ºñ¿µ ÀÔ·Â ¹æÇâ' À¯Áö
-/// - ¹ö½ºÆ®: 45¹ß/1.5s, 4ÃÊ °£°İ
-/// - ¹ß»ç ÈÄ 2ÃÊ µÚ ºñÈ°¼ºÈ­
+/// - í”Œë ˆì´ì–´ ì£¼ë³€(0.3~1.0)ì—ì„œ ìŠ¤í°
+/// - 0.8s í˜ì´ë“œì¸ â†’ 0.2s ëŒ€ê¸° í›„ ë°œì‚¬
+/// - ë°œì‚¬ ë°©í–¥: ì…ë ¥ì´ ìˆìœ¼ë©´ ì…ë ¥ ë°©í–¥, ì—†ìœ¼ë©´ 'ë§ˆì§€ë§‰ ë¹„ì˜ ì…ë ¥ ë°©í–¥' ìœ ì§€
+/// - ë²„ìŠ¤íŠ¸: 45ë°œ/1.5s, 4ì´ˆ ê°„ê²©
+/// - ë°œì‚¬ í›„ 2ì´ˆ ë’¤ ë¹„í™œì„±í™”
 /// </summary>
 public class Skill4 : MonoBehaviour
 {
     [Header("Pool / Prefab")]
-    public int prefabId;
+    public int prefabId = 1;
 
     [Header("Move / Damage")]
     public float speed = 8f;
-    public float damage = 10f;
-    public float lifeTime = 2f;          // ¹ß»ç "ÈÄ" »ıÁ¸½Ã°£
+    public float damage = 30f;
+    public float lifeTime = 2f;          // ë°œì‚¬ "í›„" ìƒì¡´ì‹œê°„
 
     [Header("Burst")]
-    public float burstInterval = 4f;     // ¹ö½ºÆ® °£°İ
-    public int shotsPerBurst = 45;       // ¹ö½ºÆ®´ç ¹ß»ç ¼ö
-    public float burstDuration = 1.5f;   // ¹ö½ºÆ® ÁøÇà ½Ã°£
+    public float burstInterval = 3.33f;     // ë²„ìŠ¤íŠ¸ ê°„ê²©
+    public int shotsPerBurst = 30;       // ë²„ìŠ¤íŠ¸ë‹¹ ë°œì‚¬ ìˆ˜
+    public float burstDuration = 1.3f;   // ë²„ìŠ¤íŠ¸ ì§„í–‰ ì‹œê°„
+    public int per = 0;                  // ê´€í†µë ¥
+    public Vector3 baseBulletScale = Vector3.one;
 
     [Header("Spawn Range (ring)")]
     public float minSpawnRadius = 0.3f;
     public float maxSpawnRadius = 1.0f;
 
     [Header("Aiming")]
-    public bool useLastAimingWhenIdle = true; // ÀÔ·ÂÀÌ 0ÀÏ ¶§ ¸¶Áö¸· Á¶ÁØ ¹æÇâ À¯Áö ¿©ºÎ
-    private Vector2 lastAimDir = Vector2.right; // ¸¶Áö¸· ºñ¿µ(Şª0) ÀÔ·Â ¹æÇâ
+    public bool useLastAimingWhenIdle = true; // ì…ë ¥ì´ 0ì¼ ë•Œ ë§ˆì§€ë§‰ ì¡°ì¤€ ë°©í–¥ ìœ ì§€ ì—¬ë¶€
+    private Vector2 lastAimDir = Vector2.left; // ë§ˆì§€ë§‰ ë¹„ì˜(é0) ì…ë ¥ ë°©í–¥
+
+    [Header("Triggers")]
+    public bool StoneDust = false;
+    public bool StoneActive = false;
+    public bool VibrationalWave = false;
 
     private Coroutine loopCo;
 
+    // ğŸ”¹ ìŠ¤í‚¬ì´ ì²˜ìŒ ìƒì„±ë  ë•Œ, ì „ì²´ ìŠ¤í‚¬ ë£¨í”„(ì§€ì†ì ìœ¼ë¡œ ë²„ìŠ¤íŠ¸ë¥¼ ë°˜ë³µí•˜ëŠ” ì½”ë£¨í‹´)ë¥¼ ì‹œì‘í•˜ëŠ” í•¨ìˆ˜
     void Start()
     {
         if (loopCo != null) StopCoroutine(loopCo);
         loopCo = StartCoroutine(Loop());
     }
+    void Update()
+    {
+        var player = GameManager.instance.player;
+        if (player == null) return;
 
+        // ì…ë ¥ì´ ìˆìœ¼ë©´ ê·¸ ë°©í–¥ìœ¼ë¡œ ê°±ì‹ 
+        if (player.inputVec.sqrMagnitude > 0.0001f)
+        {
+            lastAimDir = player.inputVec.normalized;
+        }
+        // ì…ë ¥ì´ ì—†ì„ ë•Œ, ìœ ì§€ ëª¨ë“œê°€ ì•„ë‹ˆë©´ ë°”ë¼ë³´ëŠ” ì¢Œ/ìš°ë¡œ ë®ì–´ì”€
+        else if (!useLastAimingWhenIdle)
+        {
+            lastAimDir = player.IsFacingRight ? Vector2.right : Vector2.left;
+        }
+    }
+
+    public void GiveLevelSystemToSkill4()
+    {
+        // ë¶ˆ - ì•”ì„ë‚œì‚¬ì˜ í¬ê¸° +8%
+        baseBulletScale =  Vector3.one *  (1f + StatsManager.instance.FireCnt * 0.06f);
+
+        // ì–¼ìŒ - ì•”ì„ë‚œì‚¬ì˜ ê³µê²© ê³„ìˆ˜ +8%
+        damage = StatsManager.instance.Attack * (0.3f + 0.08f * StatsManager.instance.IceCnt);
+
+        // ì „ê¸° - ì•”ì„ë‚œì‚¬ì˜ ìƒì„± ê°„ê²© -8%
+        burstInterval = 1f / (StatsManager.instance.AttackSpeed * 0.3f);
+        burstDuration = 1.5f / StatsManager.instance.AttackSpeed;
+
+        // í™ - ì•”ì„ë‚œì‚¬ì˜ ê°œìˆ˜ +1
+        shotsPerBurst = 30 + StatsManager.instance.EarthCnt;
+        if (StatsManager.instance.EarthCnt >= 5) {
+            shotsPerBurst += 10;
+            per = 1;
+         }
+        if (StatsManager.instance.EarthCnt >= 10)
+        {
+            StoneDust = true;
+        }
+        if (StatsManager.instance.EarthCnt >= 15)
+        {
+            StoneActive = true;
+        }
+        if (StatsManager.instance.EarthCnt >= 20)
+        {
+            VibrationalWave = true;
+        }
+    }
+
+
+    // ğŸ”¹ ìŠ¤í‚¬ì˜ â€˜ë²„ìŠ¤íŠ¸ íŒ¨í„´â€™ì„ ë¬´í•œ ë°˜ë³µí•˜ëŠ” ë©”ì¸ ë£¨í”„
+    //    - GameManager/Pool/Player ì°¸ì¡° ì²´í¬
+    //    - Burst() í•œ ë²ˆ ì‹¤í–‰ â†’ burstInterval ë§Œí¼ ëŒ€ê¸° â†’ ë‹¤ì‹œ Burst()
     IEnumerator Loop()
     {
-        // ÇÊ¼ö ÂüÁ¶ °Ë»ç
+        // í•„ìˆ˜ ì°¸ì¡° ê²€ì‚¬
         if (GameManager.instance == null || GameManager.instance.pool == null || GameManager.instance.player == null)
         {
             Debug.LogError("GameManager / PoolManager / Player reference missing");
@@ -56,33 +117,44 @@ public class Skill4 : MonoBehaviour
 
         while (true)
         {
+            // í•œ ë²ˆì˜ â€˜íƒ„ë§‰ ë²„ìŠ¤íŠ¸â€™ë¥¼ ì‹¤í–‰
             yield return StartCoroutine(Burst());
+            // ë²„ìŠ¤íŠ¸ ê°„ ëŒ€ê¸° ì‹œê°„
             yield return new WaitForSeconds(burstInterval);
         }
     }
 
+    // ğŸ”¹ í•œ ë²ˆì˜ ë²„ìŠ¤íŠ¸(íƒ„ë§‰ ìŸì•„ë¶“ê¸°)ë¥¼ ë‹´ë‹¹í•˜ëŠ” í•¨ìˆ˜
+    //    - shotsPerBurstë§Œí¼ ë°˜ë³µí•´ì„œ SpawnAndPrepare() í˜¸ì¶œ
+    //    - burstDuration ë™ì•ˆ ê· ë“±í•˜ê²Œ ë‚˜ëˆ ì„œ ë°œì‚¬(ê°„ê²© gap)
     IEnumerator Burst()
     {
         float gap = burstDuration / Mathf.Max(1, shotsPerBurst);
         for (int i = 0; i < shotsPerBurst; i++)
         {
-            SpawnAndPrepare();                // °¢ ÅºÀº ³»ºÎ ÄÚ·çÆ¾¿¡¼­ ÆäÀÌµå¡æ¹ß»ç
+            // ê° íƒ„í™˜ì„ ìƒì„±í•˜ê³ , í˜ì´ë“œì¸/ë°œì‚¬ë¥¼ ë‹´ë‹¹í•˜ëŠ” ì½”ë£¨í‹´ì„ ë‚´ë¶€ì ìœ¼ë¡œ ì‹œì‘
+            SpawnAndPrepare();
             yield return new WaitForSeconds(gap);
         }
     }
 
+    // ğŸ”¹ ê°œë³„ íƒ„í™˜ 1ë°œì„ ì‹¤ì œë¡œ ìŠ¤í°í•˜ê³ ,
+    //    - í”Œë ˆì´ì–´ ì£¼ë³€ ëœë¤ ìœ„ì¹˜ì— ë°°ì¹˜
+    //    - ì¡°ì¤€ ë°©í–¥ ê³„ì‚°(ì…ë ¥ or ë§ˆì§€ë§‰ ì…ë ¥ or ë°”ë¼ë³´ëŠ” ë°©í–¥)
+    //    - Rigidbody ë° Bullet ì„¸íŒ…
+    //    - í˜ì´ë“œì¸ í›„ ë°œì‚¬í•˜ëŠ” ì½”ë£¨í‹´(FadeAndFire)ì„ ì‹œì‘
     void SpawnAndPrepare()
     {
         var player = GameManager.instance.player;
 
-        // ÇÃ·¹ÀÌ¾î ÁÖº¯ 0.3~1.0 ¹İ°æ ·£´ı ½ºÆù (¸éÀû ±Õµî)
+        // í”Œë ˆì´ì–´ ì£¼ë³€ 0.3~1.0 ë°˜ê²½ ëœë¤ ìŠ¤í° (ë©´ì  ê· ë“±)
         Vector3 origin = player.transform.position;
         Vector2 randDir = Random.insideUnitCircle.normalized;
         float r = Mathf.Sqrt(Random.Range(minSpawnRadius * minSpawnRadius,
                                           maxSpawnRadius * maxSpawnRadius));
         Vector3 spawnPos = origin + (Vector3)(randDir * r);
 
-        // Ç®¿¡¼­ ÇÁ¸®ÆÕ °¡Á®¿À±â
+        // í’€ì—ì„œ í”„ë¦¬íŒ¹ ê°€ì ¸ì˜¤ê¸°
         GameObject go = GameManager.instance.pool.Get(prefabId);
         if (!go) return;
 
@@ -90,25 +162,20 @@ public class Skill4 : MonoBehaviour
         t.SetParent(transform, false);
         t.position = spawnPos;
 
-        // ¹ß»ç ¹æÇâ °áÁ¤: ÀÔ·Â ÀÖÀ¸¸é ±× ¹æÇâ(Ä³½Ì), ¾øÀ¸¸é Ä³½Ì ¶Ç´Â ÁÂ/¿ì
-        Vector2 fireDir;
-        if (player.inputVec.sqrMagnitude > 0.0001f)
-        {
-            fireDir = player.inputVec.normalized;
-            if (useLastAimingWhenIdle) lastAimDir = fireDir; // ¸¶Áö¸· À¯È¿ ¹æÇâ Ä³½Ì
-        }
-        else
-        {
-            fireDir = useLastAimingWhenIdle
-                ? lastAimDir
-                : (player.IsFacingRight ? Vector2.right : Vector2.left);
-        }
+        t.localScale = baseBulletScale;
 
-        // º¸ÀÌ´Â ¹æÇâ È¸Àü(ÇÊ¿ä ½Ã ½ºÇÁ¶óÀÌÆ® ¿ÀÇÁ¼ÂÀº angle += offset;)
+        // ğŸ”¹ ì¡°ì¤€ ë°©í–¥ì€ Updateì—ì„œ ê³„ì† ê°±ì‹ ëœ lastAimDir ì‚¬ìš©
+        Vector2 fireDir = lastAimDir;
+
+        // í˜¹ì‹œë¼ë„ 0ë²¡í„°ë©´(ì´ˆê¸° ìƒí™© ë“±) ë°”ë¼ë³´ëŠ” ë°©í–¥ìœ¼ë¡œ í•œ ë²ˆ ë” ë³´ì •
+        if (fireDir.sqrMagnitude < 0.0001f)
+            fireDir = player.IsFacingRight ? Vector2.right : Vector2.left;
+
+        // íƒ„í™˜ ìŠ¤í”„ë¼ì´íŠ¸ íšŒì „
         float angle = Mathf.Atan2(fireDir.y, fireDir.x) * Mathf.Rad2Deg;
         t.rotation = Quaternion.Euler(0, 0, angle);
 
-        // Rigidbody2D ¼¼ÆÃ: ¹ß»ç Àü±îÁö´Â Á¤Áö
+        // Rigidbody2D ì„¸íŒ…: ë°œì‚¬ ì „ê¹Œì§€ëŠ” ì •ì§€ ìƒíƒœë¡œ ë‘ê¸°
         var rb = go.GetComponent<Rigidbody2D>();
         if (!rb) rb = go.AddComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Dynamic;
@@ -116,27 +183,34 @@ public class Skill4 : MonoBehaviour
         rb.simulated = true;
         rb.linearVelocity = Vector2.zero;
 
-        // (¼±ÅÃ) µ¥¹ÌÁö ÃÊ±âÈ­
+        // (ì„ íƒ) íƒ„í™˜ ë°ë¯¸ì§€, ê´€í†µ ë“± ì´ˆê¸°í™”
         var b = go.GetComponent<Bullet>();
-        if (b) b.Init(damage, 3, Vector3.zero);
+        if (b) b.Init(StatsManager.instance.ApplyCrit(damage), per, Vector3.zero);
 
-        // ÆäÀÌµåÀÎ ¡æ ´ë±â ¡æ ¹ß»ç
+        // í˜ì´ë“œì¸ â†’ ì§§ì€ ëŒ€ê¸° â†’ ë°œì‚¬ë¥¼ ì²˜ë¦¬í•˜ëŠ” ì½”ë£¨í‹´ ì‹œì‘
         StartCoroutine(FadeAndFire(go, fireDir));
     }
 
+    // ğŸ”¹ í•œ íƒ„í™˜ì— ëŒ€í•´:
+    //    1) ì™„ì „ íˆ¬ëª… ìƒíƒœë¡œ ì‹œì‘
+    //    2) 0.8ì´ˆ ë™ì•ˆ ì„œì„œíˆ ë‚˜íƒ€ë‚˜ëŠ” í˜ì´ë“œì¸
+    //    3) 0.2ì´ˆ ì •ì§€ ìƒíƒœ ìœ ì§€
+    //    4) ì§€ì •ëœ ë°©í–¥/ì†ë„ë¡œ ë°œì‚¬
+    //    5) lifeTime ì´í›„ ë¹„í™œì„±í™”
     IEnumerator FadeAndFire(GameObject go, Vector2 dir)
     {
         if (!go) yield break;
 
-        // ÇÁ¸®ÆÕ ¹× ÀÚ½ÄÀÇ ¸ğµç SpriteRenderer ¼öÁı
+        // í”„ë¦¬íŒ¹ ë° ìì‹ì˜ ëª¨ë“  SpriteRenderer ìˆ˜ì§‘
         var renderers = go.GetComponentsInChildren<SpriteRenderer>(true);
 
-        // 0) ¿ÏÀü Åõ¸íÀ¸·Î ½ÃÀÛ
+        // 0) ì™„ì „ íˆ¬ëª…ìœ¼ë¡œ ì‹œì‘
         SetAlpha(renderers, 0f);
 
-        // 1) 0.8ÃÊ ÆäÀÌµåÀÎ
-        float fadeTime = 0.8f;
+        // 1) 0.8ì´ˆ í˜ì´ë“œì¸
+        float fadeTime = 0.4f;
         float t = 0f;
+        float stoppedTime = 0.8f - fadeTime;
         while (t < fadeTime && go.activeInHierarchy)
         {
             t += Time.deltaTime;
@@ -145,18 +219,25 @@ public class Skill4 : MonoBehaviour
             yield return null;
         }
 
-        // 2) 0.2ÃÊ ´ë±â(Á¤Áö)
-        yield return new WaitForSeconds(0.2f);
+        // 2) ëŒ€ê¸°(ì •ì§€)
+        yield return new WaitForSeconds(stoppedTime);
 
-        // 3) ¹ß»ç
+        // 3) ë°œì‚¬(ì†ë„ ë¶€ì—¬)
+        go.tag = "Bullet";
         var rb = go.GetComponent<Rigidbody2D>();
         if (rb) rb.linearVelocity = dir * speed;
 
-        // 4) lifeTime ÈÄ ºñÈ°¼ºÈ­
+        // 4) lifeTime í›„ ë¹„í™œì„±í™”
         yield return new WaitForSeconds(lifeTime);
-        if (go) go.SetActive(false);
+        if (go)
+        {
+            go.tag = "Untagged";   // ë‹¤ì‹œ ì´ˆê¸°í™”
+            go.SetActive(false);
+        }
     }
 
+    // ğŸ”¹ ì „ë‹¬ë°›ì€ SpriteRenderer ë°°ì—´ì˜ ì•ŒíŒŒê°’(íˆ¬ëª…ë„)ì„ ì¼ê´„ ë³€ê²½í•˜ëŠ” ìœ í‹¸ë¦¬í‹° í•¨ìˆ˜
+    //    - í˜ì´ë“œì¸/í˜ì´ë“œì•„ì›ƒ ê°™ì€ ì´í™íŠ¸ìš©ìœ¼ë¡œ ì‚¬ìš©
     void SetAlpha(SpriteRenderer[] srs, float a)
     {
         for (int i = 0; i < srs.Length; i++)
