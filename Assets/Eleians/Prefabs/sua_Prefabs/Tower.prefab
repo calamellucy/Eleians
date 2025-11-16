@@ -135,7 +135,7 @@ MonoBehaviour:
   destroyedSprite: {fileID: -1801479109, guid: c6009d14e49928241ba805b83dad6690, type: 3}
   activeSprite: {fileID: -4984380791814788580, guid: a9c94814ea7c6494b8a8391118fe4d22, type: 3}
   towerSprite: {fileID: 8461753297895271954}
-  anim: {fileID: 0}
+  anim: {fileID: 6883379573963872133}
   shakeGroup: {fileID: 4214427508320680533}
   dustLeft: {fileID: 3342405771585011355}
   dustRight: {fileID: 3880388052606886294}
