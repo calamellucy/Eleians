@@ -17,6 +17,8 @@ public class Activetrig : MonoBehaviour
     float timer = 0f;
     bool isCooldown = false;
 
+
+
     void Awake()
     {
         rect = GetComponent<RectTransform>();
