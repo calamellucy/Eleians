@@ -12,6 +12,12 @@ public class TowerMonster : NormalMonster
     // Tower¸¸ °ø°Ý
     protected override void OnHitTower(Tower tower)
     {
+        if (!GameManager.instance.isTowerPhase)
+        {
+            Die(false);
+            return;
+        }
+
         attackTimer -= Time.deltaTime;
 
         if (attackTimer <= 0f)

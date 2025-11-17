@@ -5392,7 +5392,7 @@ MonoBehaviour:
     spawnTime: 0.7
     health: 35
     speed: 1
-    damage: 0
+    damage: 10
   innerMin: {x: -16, y: -13}
   innerMax: {x: 15, y: 12}
 --- !u!1 &1255264333
@@ -77927,6 +77927,10 @@ PrefabInstance:
       value: Tower
       objectReference: {fileID: 0}
     - target: {fileID: 3987084870330700451, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3987084870330700451, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
@@ -77934,9 +77938,29 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3987084870330700451, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -5.000002
+      objectReference: {fileID: 0}
     - target: {fileID: 4391975738542980976, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6131882295574250314, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6131882295574250314, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6131882295574250314, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6131882295574250314, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6547262138910496747, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -77982,9 +78006,17 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 2011217657}
+    - target: {fileID: 7256576223777079263, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
+      propertyPath: m_Type
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 7707656407525374608, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
       propertyPath: m_Name
       value: TowerJam
+      objectReference: {fileID: 0}
+    - target: {fileID: 8461753297895271954, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
