@@ -108,6 +108,16 @@ public class MonsterBase : MonoBehaviour
             }
         }
 
+        if (collision.CompareTag("dust"))
+        {
+             ApplyDamage(StatsManager.instance.ApplyCrit((StatsManager.instance.Attack + (StatsManager.instance.EarthCnt * 2))) * 0.3f);
+        }
+
+        if (collision.CompareTag("Bump"))
+        {
+            ApplyDamage(StatsManager.instance.ApplyCrit((StatsManager.instance.Attack + (StatsManager.instance.EarthCnt * 8))) * 2f);
+        }
+
         if (collision.CompareTag("Jeonjapa"))
         {
             var br = collision.GetComponent<Bullet_Re>();

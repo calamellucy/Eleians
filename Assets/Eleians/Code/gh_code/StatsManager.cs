@@ -5,6 +5,7 @@ public class StatsManager : MonoBehaviour
 {
     public static StatsManager instance;
 
+    [Header("Player's Stats")]
     public float Attack;
     public float HP;
     public float MovementSpeed;
@@ -14,6 +15,7 @@ public class StatsManager : MonoBehaviour
     public int Level;
 
     // 원소 선택 누적 카운트(원하면 UI에 노출)
+    [Header("Elements Count")]
     public int ElectricCnt;
     public int FireCnt;
     public int IceCnt;
@@ -37,7 +39,8 @@ public class StatsManager : MonoBehaviour
         CritDamage = 2;
         Level = 0;
 
-        FireCnt = IceCnt = ElectricCnt = EarthCnt = 0;
+        FireCnt = IceCnt = ElectricCnt = 0;
+        EarthCnt = 0;
     }
 
     // 레벨업 → 원소 선택 시 호출
@@ -47,7 +50,7 @@ public class StatsManager : MonoBehaviour
         Attack = 100 + FireCnt * 4f; 
         HP = 100 + IceCnt * 8f; 
         AttackSpeed = 1 + ElectricCnt * 0.08f; 
-        CritChance = Mathf.Clamp01(0.05f + EarthCnt*0.015f); 
+        CritChance = Mathf.Clamp01(0.05f + EarthCnt*0.015f);
     }
 
     // 편의 함수들
