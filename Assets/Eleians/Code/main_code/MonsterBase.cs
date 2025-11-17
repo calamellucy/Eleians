@@ -131,19 +131,11 @@ public class MonsterBase : MonoBehaviour
 
         health -= dmg;
 
+        PoolManager.instance.ShowDamage(7, dmg, transform.position + Vector3.up * 0.5f);
+
+
         if (health <= 0)
         {
-            /*
-            isLive = false;
-
-            rigid.simulated = false;
-            rigid.linearVelocity = Vector2.zero;
-            rigid.angularVelocity = 0f;
-            coll.enabled = false;
-            //rigid.bodyType = RigidbodyType2D.Kinematic;
-            anim.SetBool("dead", true);
-            return;
-            */
             Die(true);
             return;
         }
@@ -199,35 +191,6 @@ public class MonsterBase : MonoBehaviour
 
     public void Die(bool giveReward)
     {
-        /*
-            isLive = false;
-
-            rigid.simulated = false;
-            rigid.linearVelocity = Vector2.zero;
-            rigid.angularVelocity = 0f;
-            coll.enabled = false;
-            //rigid.bodyType = RigidbodyType2D.Kinematic;
-            anim.SetBool("dead", true);
-            return;
-
-
-        if (isDeadProcessed) return;
-        isDeadProcessed = true;
-
-        health = 0;
-        //coll.enabled = false;
-        rigid.simulated = false;
-        rigid.linearVelocity = Vector2.zero;
-        rigid.angularVelocity = 0f;
-        coll.enabled = false;
-
-        // 비활성화 처리
-        gameObject.SetActive(false);
-
-        // 게임 매니저에게 보고
-        GameManager.instance.kill++;
-        GameManager.instance.GetExp();
-        */
         if (isDeadProcessed) return;
         isDeadProcessed = true;
         isLive = false;
