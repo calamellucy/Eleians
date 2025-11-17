@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     [Header("# Game Phase")]
     public bool isTowerPhase = false;
     public float phaseTimer = 0f;
-    public float normalPhaseDuration = 60f;
+    public float normalPhaseDuration = 150f;
     public float towerPhaseDuration = 30f;
 
     void Awake()

@@ -866,7 +866,7 @@ MonoBehaviour:
   Living: 1
   isLive: 0
   gameTime: 0
-  maxGameTime: 120
+  maxGameTime: 240
   health: 0
   maxHealth: 100
   level: 0
@@ -4518,7 +4518,7 @@ MonoBehaviour:
   subAngle: 55
   hitStart: 0.1
   hitEnd: 0.3
-  damage: 250
+  damage: 25
 --- !u!1 &923122991
 GameObject:
   m_ObjectHideFlags: 0
