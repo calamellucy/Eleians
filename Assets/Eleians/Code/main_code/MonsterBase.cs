@@ -8,6 +8,8 @@ public class MonsterBase : MonoBehaviour
     public float health;
     public float maxHealth;
     public float damage;
+    public float originalSpeed;
+    public float slowMultiplier = 1f;
 
     protected bool isLive;
     protected bool isDeadProcessed = false;
@@ -34,9 +36,9 @@ public class MonsterBase : MonoBehaviour
         isLive = true;
         isKnockback = false;
         isDeadProcessed = false;
-        attackTimer = 0f; // Ãß°¡
+        attackTimer = 0f; // ï¿½ß°ï¿½
 
-        // ¡Ú ¹°¸® »óÅÂ ¿ÏÀü ÃÊ±âÈ­
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         rigid.bodyType = RigidbodyType2D.Dynamic;
         rigid.simulated = true;
         rigid.linearVelocity = Vector2.zero;
@@ -46,13 +48,16 @@ public class MonsterBase : MonoBehaviour
         //rigid.simulated = true;
         health = maxHealth;
 
-        // ¡Ú ¾Ö´Ï¸ŞÀÌ¼Ç »óÅÂ ÃÊ±âÈ­
+        // ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         anim.ResetTrigger("hit");
         anim.SetBool("dead", false);
+
+        originalSpeed = speed;
+        slowMultiplier = 1f;
     }
 
     // ---------------------
-    // Ãæµ¹ ¸Ş½ÃÁö ´ÜÀÏ Ã³¸®
+    // ï¿½æµ¹ ï¿½Ş½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
     // ---------------------
     protected void OnCollisionStay2D(Collision2D collision)
     {
@@ -78,13 +83,13 @@ public class MonsterBase : MonoBehaviour
     }
 
     // ---------------------
-    // ÀÚ½ÄÀÌ overrideÇÏ´Â °ø°İ Ã³¸® ÇÔ¼ö
+    // ï¿½Ú½ï¿½ï¿½ï¿½ overrideï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½Ô¼ï¿½
     // ---------------------
     protected virtual void OnHitPlayer(Player player) { }
     protected virtual void OnHitTower(Tower tower) { }
 
     // ---------------------
-    // ÃÑ¾Ë ÇÇ°İ Ã³¸®
+    // ï¿½Ñ¾ï¿½ ï¿½Ç°ï¿½ Ã³ï¿½ï¿½
     // ---------------------
     protected void OnTriggerEnter2D(Collider2D collision)
     {
@@ -123,6 +128,27 @@ public class MonsterBase : MonoBehaviour
             var br = collision.GetComponent<Bullet_Re>();
             if (br != null) ApplyDamage(br.damage);
         }
+
+        if (collision.CompareTag("Seori"))
+        {
+            Seori_Shuri seo = collision.GetComponent<Seori_Shuri>();
+            if (seo == null) return;
+
+            ApplyDamage(seo.damage);
+
+            // â”€â”€â”€â”€â”€â”€â”€ ë‘”í™” ì ìš©í•˜ëŠ” ë¶€ë¶„ â”€â”€â”€â”€â”€â”€â”€â”€â”€
+            ApplySlow(seo.slowRate);
+        }
+
+        if (collision.CompareTag("dhwyy"))
+        {
+            BlizzardArea dhw = collision.GetComponent<BlizzardArea>();
+            if (dhw == null) return;
+
+            ApplyDamage(dhw.baseDamage);
+
+            ApplySlow(dhw.slowRate);
+        }
     }
 
     public void ApplyDamage(float dmg)
@@ -131,22 +157,31 @@ public class MonsterBase : MonoBehaviour
 
         health -= dmg;
 
+        PoolManager.instance.ShowDamage(7, dmg, transform.position + Vector3.up * 0.5f);
+
+
         if (health <= 0)
         {
-            isLive = false;
-
-            rigid.simulated = false;
-            rigid.linearVelocity = Vector2.zero;
-            rigid.angularVelocity = 0f;
-            coll.enabled = false;
-            //rigid.bodyType = RigidbodyType2D.Kinematic;
-            anim.SetBool("dead", true);
+            Die(true);
             return;
         }
 
         anim.SetTrigger("hit");
         KnockBack(target.position);
     }
+    // ë‘”í™”ì²˜ë¦¬í•¨ìˆ˜
+    public void ApplySlow(float slowRate)
+    {
+        // slowRate = ë‘”í™” í¼ì„¼íŠ¸ (ì˜ˆ: 0.3 = 30% ê°ì†Œ)
+        float newMultiplier = 1f - slowRate;
+
+        // ê¸°ì¡´ slowMultiplierë³´ë‹¤ ë” ë‚®ìœ¼ë©´ ì ìš©
+        slowMultiplier = Mathf.Min(slowMultiplier, newMultiplier);
+
+        slowMultiplier = Mathf.Clamp(slowMultiplier, 0.2f, 1f);
+        speed = originalSpeed * slowMultiplier;
+    }
+
 
     protected virtual void KnockBack(Vector3 from)
     {
@@ -166,7 +201,7 @@ public class MonsterBase : MonoBehaviour
         float force = 8f;
         rigid.AddForce(dir * force, ForceMode2D.Impulse);
 
-        // ³Ë¹é À¯Áö
+        // ï¿½Ë¹ï¿½ ï¿½ï¿½ï¿½ï¿½
         yield return new WaitForSeconds(0.1f);
 
         if (!isLive) yield break;
@@ -185,11 +220,39 @@ public class MonsterBase : MonoBehaviour
         rigid.angularVelocity = 0f;
         coll.enabled = false;
 
-        // ºñÈ°¼ºÈ­ Ã³¸®
+        // ï¿½ï¿½È°ï¿½ï¿½È­ Ã³ï¿½ï¿½
         gameObject.SetActive(false);
 
-        // °ÔÀÓ ¸Å´ÏÀú¿¡°Ô º¸°í
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         GameManager.instance.kill++;
         GameManager.instance.GetExp();
+    }
+
+    public void Die(bool giveReward)
+    {
+        if (isDeadProcessed) return;
+        isDeadProcessed = true;
+        isLive = false;
+
+        // ¹°¸®/Ãæµ¹ Á¤¸®
+        rigid.simulated = false;
+        rigid.linearVelocity = Vector2.zero;
+        rigid.angularVelocity = 0f;
+        coll.enabled = false;
+
+        // º¸»ó Ã³¸®
+        if (giveReward)
+        {
+            GameManager.instance.kill++;
+            GameManager.instance.GetExp();
+        }
+
+        // »ç¸Á ¾Ö´Ï Àç»ı
+        anim.SetBool("dead", true);
+    }
+
+    public void OnDeathAnimationEnd()
+    {
+        gameObject.SetActive(false);
     }
 }

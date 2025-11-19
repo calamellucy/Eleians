@@ -12,6 +12,9 @@ public class Skill1_Re : MonoBehaviour
 
     [Header("Evolution State")]
     public int electricCount = 0;       // 전기 원소 개수 (0~20)
+    public int fireCount = 0;
+    public int iceCount = 0;
+    public int earthCount = 0;
 
     float timer;
     Player player;
@@ -37,17 +40,17 @@ public class Skill1_Re : MonoBehaviour
             TryFire();
             Debug.Log("Update"); // 오류 검사
         }
-        Init();
+        SyncWithStats();
     }
 
     public void Init()
     {
         prefabId = 2;
         attackRate = 1f + 0.08f * electricCount;        
-        damage = 10f + 0.6f * electricCount/* ( * 불 원소 개수) */;             
-        count = 0 /* ( + (불원소 개수 * 0.25)/1)*/;      
-        projectileSize = 0.2f /* ( * 흙 원소 개수 * 0.08f) */;   
-        projectileCount = 1 /* ( + (얼음 원소 개수 * 0.33f)/1) */;
+        damage = 10f + 0.6f * electricCount + fireCount;             
+        count = 0 + (int)((fireCount * 0.25) / 1);      
+        projectileSize = 0.2f + earthCount * 0.08f;   
+        projectileCount = 1 + (int)((iceCount * 0.34f)/1);
 
         // attakRate: 초당 발사 횟수 + 전기 개수에 비례한 공격 속도 증가
         // damage: 기본 대미지 + 전기 개수에 비례한 대미지 증가 + 불 개수에 비례한 대미지 증가
@@ -109,5 +112,12 @@ public class Skill1_Re : MonoBehaviour
         Debug.Log("Fire");
     }
 
-
+    void SyncWithStats()
+    {
+        electricCount = StatsManager.instance.ElectricCnt;
+        fireCount = StatsManager.instance.FireCnt;
+        iceCount = StatsManager.instance.IceCnt;
+        earthCount = StatsManager.instance.EarthCnt;
+        Init();
+    }
 }
