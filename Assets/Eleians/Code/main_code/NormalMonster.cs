@@ -9,6 +9,9 @@ public class NormalMonster : MonsterBase
     {
         base.OnEnable();
 
+        if (GameManager.instance == null || GameManager.instance.player == null)
+            return;
+
         // Player를 타겟으로
         target = GameManager.instance.player.GetComponent<Rigidbody2D>();
     }
