@@ -102,12 +102,14 @@ public class MonsterBase : MonoBehaviour
 
         if (collision.CompareTag("dust"))
         {
-            ApplyDamage(StatsManager.instance.ApplyCrit((StatsManager.instance.Attack + (StatsManager.instance.EarthCnt * 2))) * 0.3f);
+            float baseDamage = (StatsManager.instance.Attack + (StatsManager.instance.EarthCnt * 2)) * 0.3f;
+            ApplyDamage(baseDamage);
         }
 
         if (collision.CompareTag("Bump"))
         {
-            ApplyDamage(StatsManager.instance.ApplyCrit((StatsManager.instance.Attack + (StatsManager.instance.EarthCnt * 8))) * 2f);
+            float baseDamage = (StatsManager.instance.Attack + (StatsManager.instance.EarthCnt * 8)) * 2f;
+            ApplyDamage(baseDamage);
         }
 
         if (collision.CompareTag("Jeonjapa"))
@@ -139,8 +141,20 @@ public class MonsterBase : MonoBehaviour
     {
         if (!isLive) return;
 
-        health -= dmg;
-        PoolManager.instance.ShowDamage(7, dmg, transform.position + Vector3.up * 0.5f);
+        float finalDamage = dmg;
+        bool isCrit = false; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 크리 여부 추가
+
+        if (StatsManager.instance.RollCrit()) {
+            isCrit = true;
+            finalDamage *= StatsManager.instance.CritDamage;
+        }
+
+        health -= finalDamage;
+
+        // !!!!!!!! isCrit도 넘겨서 풀매니저랑 데미지텍스트까지 아주 살짝 손 봄.
+        // 풀매니저에선 그냥 SetDamage에서 isCirt만 추가했고
+        // 데미지텍스트에선 if (isCrit) text.color = Color.red; 로 써놓고 SetDamage인자 추가함.
+        PoolManager.instance.ShowDamage(7, finalDamage, transform.position + Vector3.up * 0.5f, isCrit); 
 
         if (health <= 0)
         {
