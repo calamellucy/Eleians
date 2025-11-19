@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class MonsterBase : MonoBehaviour
 {
-    [Header("Monster Stats")]
     public float speed;
     public float health;
     public float maxHealth;
@@ -36,19 +35,16 @@ public class MonsterBase : MonoBehaviour
         isLive = true;
         isKnockback = false;
         isDeadProcessed = false;
-        attackTimer = 0f; // �߰�
+        attackTimer = 0f;
 
-        // �� ���� ���� ���� �ʱ�ȭ
         rigid.bodyType = RigidbodyType2D.Dynamic;
         rigid.simulated = true;
         rigid.linearVelocity = Vector2.zero;
         rigid.angularVelocity = 0f;
 
         coll.enabled = true;
-        //rigid.simulated = true;
         health = maxHealth;
 
-        // �� �ִϸ��̼� ���� �ʱ�ȭ
         anim.ResetTrigger("hit");
         anim.SetBool("dead", false);
 
@@ -56,9 +52,6 @@ public class MonsterBase : MonoBehaviour
         slowMultiplier = 1f;
     }
 
-    // ---------------------
-    // �浹 �޽��� ���� ó��
-    // ---------------------
     protected void OnCollisionStay2D(Collision2D collision)
     {
         if (!isLive) return;
@@ -82,15 +75,9 @@ public class MonsterBase : MonoBehaviour
         }
     }
 
-    // ---------------------
-    // �ڽ��� override�ϴ� ���� ó�� �Լ�
-    // ---------------------
     protected virtual void OnHitPlayer(Player player) { }
     protected virtual void OnHitTower(Tower tower) { }
 
-    // ---------------------
-    // �Ѿ� �ǰ� ó��
-    // ---------------------
     protected void OnTriggerEnter2D(Collider2D collision)
     {
         if (!isLive) return;
@@ -115,7 +102,7 @@ public class MonsterBase : MonoBehaviour
 
         if (collision.CompareTag("dust"))
         {
-             ApplyDamage(StatsManager.instance.ApplyCrit((StatsManager.instance.Attack + (StatsManager.instance.EarthCnt * 2))) * 0.3f);
+            ApplyDamage(StatsManager.instance.ApplyCrit((StatsManager.instance.Attack + (StatsManager.instance.EarthCnt * 2))) * 0.3f);
         }
 
         if (collision.CompareTag("Bump"))
@@ -135,8 +122,6 @@ public class MonsterBase : MonoBehaviour
             if (seo == null) return;
 
             ApplyDamage(seo.damage);
-
-            // ─────── 둔화 적용하는 부분 ─────────
             ApplySlow(seo.slowRate);
         }
 
@@ -146,7 +131,6 @@ public class MonsterBase : MonoBehaviour
             if (dhw == null) return;
 
             ApplyDamage(dhw.baseDamage);
-
             ApplySlow(dhw.slowRate);
         }
     }
@@ -156,9 +140,7 @@ public class MonsterBase : MonoBehaviour
         if (!isLive) return;
 
         health -= dmg;
-
         PoolManager.instance.ShowDamage(7, dmg, transform.position + Vector3.up * 0.5f);
-
 
         if (health <= 0)
         {
@@ -169,19 +151,14 @@ public class MonsterBase : MonoBehaviour
         anim.SetTrigger("hit");
         KnockBack(target.position);
     }
-    // 둔화처리함수
+
     public void ApplySlow(float slowRate)
     {
-        // slowRate = 둔화 퍼센트 (예: 0.3 = 30% 감소)
         float newMultiplier = 1f - slowRate;
-
-        // 기존 slowMultiplier보다 더 낮으면 적용
         slowMultiplier = Mathf.Min(slowMultiplier, newMultiplier);
-
         slowMultiplier = Mathf.Clamp(slowMultiplier, 0.2f, 1f);
         speed = originalSpeed * slowMultiplier;
     }
-
 
     protected virtual void KnockBack(Vector3 from)
     {
@@ -201,7 +178,6 @@ public class MonsterBase : MonoBehaviour
         float force = 8f;
         rigid.AddForce(dir * force, ForceMode2D.Impulse);
 
-        // �˹� ����
         yield return new WaitForSeconds(0.1f);
 
         if (!isLive) yield break;
@@ -214,16 +190,13 @@ public class MonsterBase : MonoBehaviour
         isDeadProcessed = true;
 
         health = 0;
-        //coll.enabled = false;
         rigid.simulated = false;
         rigid.linearVelocity = Vector2.zero;
         rigid.angularVelocity = 0f;
         coll.enabled = false;
 
-        // ��Ȱ��ȭ ó��
         gameObject.SetActive(false);
 
-        // ���� �Ŵ������� ����
         GameManager.instance.kill++;
         GameManager.instance.GetExp();
     }
@@ -234,20 +207,17 @@ public class MonsterBase : MonoBehaviour
         isDeadProcessed = true;
         isLive = false;
 
-        // ����/�浹 ����
         rigid.simulated = false;
         rigid.linearVelocity = Vector2.zero;
         rigid.angularVelocity = 0f;
         coll.enabled = false;
 
-        // ���� ó��
         if (giveReward)
         {
             GameManager.instance.kill++;
             GameManager.instance.GetExp();
         }
 
-        // ��� �ִ� ���
         anim.SetBool("dead", true);
     }
 
