@@ -52,23 +52,21 @@ public class PoolManager : MonoBehaviour
     }
 
     // 데미지 텍스트 출력 함수
-    public GameObject ShowDamage(int index, float dmg, Vector3 worldPos)
+    public GameObject ShowDamage(int index, float dmg, Vector3 worldPos, bool isCrit)
     {
         GameObject obj = Get(index);
 
-        // 1) 캔버스 밑으로 붙이기 (한 번만 해도 됨)
         if (damageCanvas != null && obj.transform.parent != damageCanvas)
             obj.transform.SetParent(damageCanvas, false);
 
-        // 2) 월드 좌표 맞춰주기
         obj.transform.position = worldPos;
 
-        // 3) 숫자/애니 시작
         var dt = obj.GetComponent<DamageText>();
         if (dt != null)
-            dt.SetDamage(dmg);
+            dt.SetDamage(dmg, isCrit);
 
         return obj;
     }
+
 
 }
