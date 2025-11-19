@@ -31,10 +31,17 @@ public class Spawner : MonoBehaviour
 
         timer += Time.deltaTime;
         level = Mathf.Min(Mathf.FloorToInt(GameManager.instance.gameTime / 10f), spawnData.Length - 1);
-        
-        if (timer > spawnData[level].spawnTime)
+
+        float difficulty = 1f + (GameManager.instance.gameTime / 60f);
+        float currentSpawnTime = spawnData[0].spawnTime / difficulty;
+
+        if (timer > currentSpawnTime)
         {
             timer = 0;
+
+            // int spawnCount = 1 + Mathf.FloorToInt(GameManager.instance.gameTime / 30f);
+            // for (int i = 0; i < spawnCount; i++) Spawn();
+
             Spawn();
         }
     }
