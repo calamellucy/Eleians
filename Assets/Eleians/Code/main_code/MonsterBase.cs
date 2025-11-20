@@ -10,7 +10,7 @@ public class MonsterBase : MonoBehaviour
     public float originalSpeed;
     public float slowMultiplier = 1f;
 
-    protected bool isLive;
+    public bool isLive;
     protected bool isDeadProcessed = false;
     protected bool isKnockback = false;
     public Rigidbody2D target;
@@ -78,64 +78,6 @@ public class MonsterBase : MonoBehaviour
     protected virtual void OnHitPlayer(Player player) { }
     protected virtual void OnHitTower(Tower tower) { }
 
-    protected void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (!isLive) return;
-
-        if (collision.CompareTag("Explosion"))
-        {
-            var exp = collision.GetComponent<Explosion>();
-            if (exp != null) ApplyDamage(exp.damage);
-            return;
-        }
-
-        if (collision.CompareTag("Bullet"))
-        {
-            var b = collision.GetComponent<Bullet>();
-            if (b != null)
-            {
-                ApplyDamage(b.damage);
-                b.per--;
-                if (b.per < 0) b.gameObject.SetActive(false);
-            }
-        }
-
-        if (collision.CompareTag("dust"))
-        {
-            float baseDamage = (StatsManager.instance.Attack + (StatsManager.instance.EarthCnt * 2)) * 0.3f;
-            ApplyDamage(baseDamage);
-        }
-
-        if (collision.CompareTag("Bump"))
-        {
-            float baseDamage = (StatsManager.instance.Attack + (StatsManager.instance.EarthCnt * 8)) * 2f;
-            ApplyDamage(baseDamage);
-        }
-
-        if (collision.CompareTag("Jeonjapa"))
-        {
-            var br = collision.GetComponent<Bullet_Re>();
-            if (br != null) ApplyDamage(br.damage);
-        }
-
-        if (collision.CompareTag("Seori"))
-        {
-            Seori_Shuri seo = collision.GetComponent<Seori_Shuri>();
-            if (seo == null) return;
-
-            ApplyDamage(seo.damage);
-            ApplySlow(seo.slowRate);
-        }
-
-        if (collision.CompareTag("dhwyy"))
-        {
-            BlizzardArea dhw = collision.GetComponent<BlizzardArea>();
-            if (dhw == null) return;
-
-            ApplyDamage(dhw.baseDamage);
-            ApplySlow(dhw.slowRate);
-        }
-    }
 
     public void ApplyDamage(float dmg)
     {
@@ -197,7 +139,8 @@ public class MonsterBase : MonoBehaviour
         if (!isLive) yield break;
         isKnockback = false;
     }
-
+    /*
+     * 안 쓰는 애임
     public void Dead()
     {
         if (isDeadProcessed) return;
@@ -214,6 +157,7 @@ public class MonsterBase : MonoBehaviour
         GameManager.instance.kill++;
         GameManager.instance.GetExp();
     }
+    */
 
     public void Die(bool giveReward)
     {
