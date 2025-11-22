@@ -159,7 +159,7 @@ public class MonsterBase : MonoBehaviour
     }
     */
 
-    public void Die(bool giveReward)
+    public virtual void Die(bool giveReward)
     {
         if (isDeadProcessed) return;
         isDeadProcessed = true;
