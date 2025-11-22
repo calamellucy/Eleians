@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3572292703986221049}
   - component: {fileID: 8850149410203235170}
   - component: {fileID: -7832555614685385140}
+  - component: {fileID: 2982861548057514276}
   m_Layer: 7
   m_Name: NormalMonster
   m_TagString: Enemy
@@ -196,9 +197,23 @@ MonoBehaviour:
   health: 0
   maxHealth: 0
   damage: 0
+  originalSpeed: 0
+  slowMultiplier: 1
   target: {fileID: 0}
   animCon:
   - {fileID: 9100000, guid: 2c6f20883ecef9241b7a91146d859961, type: 2}
   - {fileID: 9100000, guid: 2f155edfe4e0aff4781835b478a191bd, type: 2}
   - {fileID: 9100000, guid: 3b9283527009617439b303a3783a61c8, type: 2}
   - {fileID: 9100000, guid: e04967d81e219c740aa5a316bb23dff6, type: 2}
+--- !u!114 &2982861548057514276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 641570731576117388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 428839e766b754346bd4a7bccd7ef283, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageReceiver
