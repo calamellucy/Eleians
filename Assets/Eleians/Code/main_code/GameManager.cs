@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
     public PoolManager pool;
     public LvUp uiLevelUp;
     public SelectArtifact uiSelectArt;
+    public ArrowController arrow;
+    private bool arrowActivatedThisPhase = false;
     [Header("# Game Phase")]
     public List<TowerType> towerPhaseOrder;
     private int towerIndex = 0;
@@ -111,11 +113,23 @@ public class GameManager : MonoBehaviour
         }
         */
 
+        // 10초 전 화살표 표시
+        if (!isTowerPhase && !arrowActivatedThisPhase && phaseTimer >= normalPhaseDuration - 10f)
+        {
+            TowerType nextTower = towerPhaseOrder[towerIndex];
+            Transform nextTowerTransform = GetTowerTransform(nextTower);
+            arrow.Activate(nextTowerTransform);
+
+            arrowActivatedThisPhase = true; // 다시 실행되지 않도록
+        }
+
         if (!isTowerPhase && phaseTimer >= normalPhaseDuration)
         {
             // 타워 페이즈 진입
             isTowerPhase = true;
             phaseTimer = 0f;
+
+            arrowActivatedThisPhase = false;
 
             if (towerIndex < towerPhaseOrder.Count)
             {
@@ -190,6 +204,19 @@ public class GameManager : MonoBehaviour
                 iceTower.GetComponent<Tower>().OnTowerPhaseEnd();
                 break;
         }
+        arrow.Deactivate();
+    }
+
+    Transform GetTowerTransform(TowerType type)
+    {
+        switch (type)
+        {
+            case TowerType.Electric: return elecTower.transform;
+            case TowerType.Fire: return fireTower.transform;
+            case TowerType.Ground: return groundTower.transform;
+            case TowerType.Ice: return iceTower.transform;
+        }
+        return null;
     }
 
     public void GetExp()

@@ -127,7 +127,7 @@ public class FlameSword : MonoBehaviour
         NormalMonster monster = other.GetComponent<NormalMonster>();
         if (monster != null)
         {
-            monster.ApplyDamage(damage);
+            monster.ApplyDamage(damage, 2);
         }
     }
 }

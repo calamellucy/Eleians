@@ -32,7 +32,7 @@ public class Bullet : MonoBehaviour
         NormalMonster monster = collision.GetComponent<NormalMonster>();
         if (monster != null)
         {
-            monster.ApplyDamage(damage);
+            monster.ApplyDamage(damage, 1);
         }
 
         // 🔹 흙 카운트가 10 초과면 폭발 소환

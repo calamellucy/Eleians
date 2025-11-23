@@ -9,6 +9,7 @@ public class MonsterBase : MonoBehaviour
     public float damage;
     public float originalSpeed;
     public float slowMultiplier = 1f;
+    public int monsterType;
 
     public bool isLive;
     protected bool isDeadProcessed = false;
@@ -79,8 +80,9 @@ public class MonsterBase : MonoBehaviour
     protected virtual void OnHitTower(Tower tower) { }
 
 
-    public void ApplyDamage(float dmg)
+    public virtual void ApplyDamage(float dmg, int skillType)
     {
+        // skillType 1, 2, 3, 4: 전기, 불, 얼음, 흙
         if (!isLive) return;
 
         float finalDamage = dmg;
