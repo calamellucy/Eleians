@@ -4,36 +4,54 @@ using UnityEngine.UI;
 public class Tower : MonoBehaviour
 {
     [Header("Tower Settings")]
-    public float maxHealth = 100;
+    public float maxHealth = 100f;
     public float currentHealth;
-    public Sprite normalSprite;      // 수호 성공 시 변경될 스프라이트
-    public SpriteRenderer spriteRenderer;
-    public Animator anim;
+    public bool isDestroyed = false;
+
+    [Header("Sprite Phases (20%씩)")]
+    public Sprite[] phaseSprites;     // 0~4단계 스프라이트 넣기
+    public Sprite destroyedSprite;
+    public Sprite activeSprite;
+
+    [Header("Components")]
+    public SpriteRenderer towerSprite;
+    public Animator anim;             // 흔들림 애니메이션 재생
+    public Transform shakeGroup;      // 흔들리는 그룹
+
+    [Header("Effects")]
+    public GameObject dustLeft;
+    public GameObject dustRight;
+    public GameObject towerJam;
 
     [Header("UI")]
-    public GameObject healthBarUI;   // 체력바 오브젝트 (Canvas 아래)
     public Slider healthSlider;
-
-    bool isDestroyed = false;
+    public GameObject healthBarUI;
 
     void Awake()
     {
         currentHealth = maxHealth;
-        UpdateHealthUI();
         healthBarUI.SetActive(false);
+        towerJam.SetActive(false);
+        dustLeft.SetActive(false);
+        dustRight.SetActive(false);
+        UpdateHealthUI();
+        UpdateTowerSprite();
     }
 
-    // TowerPhase 시작 시 호출
+    // TowerPhase 시작
     public void OnTowerPhaseStart()
     {
         currentHealth = maxHealth;
         isDestroyed = false;
+
         healthBarUI.SetActive(true);
         UpdateHealthUI();
+        UpdateTowerSprite();
+
         anim.SetBool("isActive", true);
     }
 
-    // TowerPhase 종료 시 호출
+    // TowerPhase 종료
     public void OnTowerPhaseEnd()
     {
         healthBarUI.SetActive(false);
@@ -41,10 +59,9 @@ public class Tower : MonoBehaviour
 
         if (!isDestroyed)
         {
-            // 수호 성공 → 스프라이트 변경
-            spriteRenderer.sprite = normalSprite;
             Debug.Log("거점 수호 성공");
-
+            towerSprite.sprite = activeSprite;
+            towerJam.SetActive(true);
             GameManager.instance.OnTowerDefenseSuccess();
         }
         else
@@ -53,27 +70,64 @@ public class Tower : MonoBehaviour
         }
     }
 
+    // ───────────────────────────────────────────
+    //               ★ 피격 처리 ★
+    // ───────────────────────────────────────────
     public void TakeDamage(float damage)
     {
         if (isDestroyed) return;
 
         currentHealth -= damage;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
         UpdateHealthUI();
-        anim.SetTrigger("hit"); // 피격 애니메이션 재생
+        UpdateTowerSprite();
+
+        // 흔들림 애니메이션 재생
+        anim.SetTrigger("hit");
 
         if (currentHealth <= 0)
         {
-            currentHealth = 0;
             isDestroyed = true;
             anim.SetBool("destroyed", true);
+
+            towerSprite.sprite = destroyedSprite;
             Debug.Log("거점 파괴됨");
         }
     }
 
+    // ───────────────────────────────────────────
+    //            ★ HP 바 & 스프라이트 변경 ★
+    // ───────────────────────────────────────────
     void UpdateHealthUI()
     {
         if (healthSlider != null)
-            healthSlider.value = (float)currentHealth / maxHealth;
+            healthSlider.value = currentHealth / maxHealth;
+    }
+
+    void UpdateTowerSprite()
+    {
+        if (isDestroyed) return;
+
+        float ratio = currentHealth / maxHealth;
+        int phase = Mathf.Clamp(4 - Mathf.FloorToInt(ratio * 5), 0, 4);
+
+        towerSprite.sprite = phaseSprites[phase];
+    }
+
+    // ───────────────────────────────────────────
+    //      ★ 애니메이션 이벤트로 Dust 켜고 끄기 ★
+    // ───────────────────────────────────────────
+    public void ShowDust()
+    {
+        dustLeft.SetActive(true);
+        dustRight.SetActive(true);
+    }
+
+    public void HideDust()
+    {
+        dustLeft.SetActive(false);
+        dustRight.SetActive(false);
     }
 
 }

@@ -33,12 +33,13 @@ public class Bullet_Re : MonoBehaviour
     {
         if (!collision.CompareTag("Enemy"))
             return;
-
+        /*
         NormalMonster monster = collision.GetComponent<NormalMonster>();
         if (monster != null)
         {
             monster.ApplyDamage(damage);
         }
+        */
 
         // 관통 횟수 감소
         per--;

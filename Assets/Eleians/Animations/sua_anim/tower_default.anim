@@ -21,11 +21,11 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 2628045555077674133, guid: 383aee2d00bf85a488590f4215c7bd3c, type: 3}
+      value: {fileID: 5266925709320105287, guid: b0aeb5d0c5322464d816ed80f6f2b1ec, type: 3}
     - time: 1
-      value: {fileID: 2628045555077674133, guid: 383aee2d00bf85a488590f4215c7bd3c, type: 3}
+      value: {fileID: 5266925709320105287, guid: b0aeb5d0c5322464d816ed80f6f2b1ec, type: 3}
     attribute: m_Sprite
-    path: 
+    path: ShakeGroup/TowerSprite
     classID: 212
     script: {fileID: 0}
     flags: 2
@@ -37,7 +37,7 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 0
+      path: 2917499018
       attribute: 0
       script: {fileID: 0}
       typeID: 212
@@ -46,8 +46,8 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 2628045555077674133, guid: 383aee2d00bf85a488590f4215c7bd3c, type: 3}
-    - {fileID: 2628045555077674133, guid: 383aee2d00bf85a488590f4215c7bd3c, type: 3}
+    - {fileID: 5266925709320105287, guid: b0aeb5d0c5322464d816ed80f6f2b1ec, type: 3}
+    - {fileID: 5266925709320105287, guid: b0aeb5d0c5322464d816ed80f6f2b1ec, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
