@@ -49,7 +49,7 @@ public class Skill1_Re : MonoBehaviour
         attackRate = 1f + 0.08f * electricCount;        
         damage = 10f + 0.6f * electricCount + fireCount;             
         count = 0 + (int)((fireCount * 0.25) / 1);      
-        projectileSize = 0.2f + earthCount * 0.08f;   
+        projectileSize = 0.2f * (1 + earthCount * 0.08f);   
         projectileCount = 1 + (int)((iceCount * 0.34f)/1);
 
         // attakRate: 초당 발사 횟수 + 전기 개수에 비례한 공격 속도 증가
