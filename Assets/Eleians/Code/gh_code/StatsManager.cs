@@ -44,7 +44,7 @@ public class StatsManager : MonoBehaviour
     }
 
     // 레벨업 → 원소 선택 시 호출
-    public void LevelUpdate()
+    void Update()
     {
         Level = GameManager.instance.level;
         Attack = 100 + FireCnt * 4f; 
