@@ -1,19 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Resources;
 using UnityEngine;
 
 public class FlameSword : MonoBehaviour
 {
     [Header("세팅")]
-    public float interval = 1.5f;      // 1초마다 발동
-    public float scale = 3f;         // 초기 스케일 배수
+    public float interval = 1.5f;
+    public float scale = 3f;
     public float subAngle = 55f;
 
     [Header("히트 타이밍")]
-    public float hitStart = 0.1f;    // 애니 시작 후 몇 초 뒤부터 판정 있을지
-    public float hitEnd = 0.3f;      // 언제까지 판정 줄지
-    public float damage = 250f;
+    public float hitStart = 0.1f;
+    public float hitEnd = 0.3f;
+    public float damage = 150f;
 
     Animator anim;
     Collider2D col;
@@ -22,7 +21,6 @@ public class FlameSword : MonoBehaviour
     float timer;
     private HashSet<Collider2D> hitTargets = new HashSet<Collider2D>();
 
-
     void Awake()
     {
         anim = GetComponent<Animator>();
@@ -30,16 +28,17 @@ public class FlameSword : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
 
         col.isTrigger = true;
-        col.enabled = false;                 // 시작엔 꺼두기
-        sr.enabled = false;                       // 처음엔 안 보이게
-        transform.localScale = Vector3.one * scale;  // 3배로 키우기
+        col.enabled = false;
+        sr.enabled = false;
+        transform.localScale = Vector3.one * scale;
     }
 
     void Update()
     {
         timer += Time.deltaTime;
 
-        if (timer >= interval) {
+        if (timer >= interval)
+        {
             timer = 0f;
             Slash();
         }
@@ -50,49 +49,59 @@ public class FlameSword : MonoBehaviour
         interval = 1.5f / (StatsManager.instance.AttackSpeed);
 
         // 불 - 공격계수 +7%
-        damage = StatsManager.instance.Attack * 2.5f * (1 + 0.07f * StatsManager.instance.FireCnt);
+        damage = StatsManager.instance.Attack * 1.5f * (1 + 0.07f * StatsManager.instance.FireCnt);
 
-        // 얼음 - 검을 휘두를 때 이동속도 +2
-        
-
-        // 전기 - 검을 휘두를 때 크리티컬 배율 + 10%
-
-
-        // 흙 - 검의 크기 +7% 
+        // 흙 - 검의 크기 +7%
         scale = 3f + (StatsManager.instance.EarthCnt * 0.07f);
 
-        if (StatsManager.instance.FireCnt >= 5) {
+        if (StatsManager.instance.FireCnt >= 5)
+        {
             scale += 0.35f;
         }
-        if (StatsManager.instance.FireCnt >= 10)
-        {
-        }
-        if (StatsManager.instance.FireCnt >= 15)
-        {
-        }
-        if (StatsManager.instance.FireCnt >= 20)
-        {
-        }
+
+        // FireCnt >= 10일 때의 로직은 Slash()에서 실행되므로 
+        // 여기서는 스탯 수치만 관리하면 됨 (현재 추가 스탯 변경사항 없으면 비워둬도 무방)
     }
 
     void Slash()
     {
         transform.localScale = Vector3.one * scale;
 
+        // 가장 가까운 적 탐색
         Transform target = GameManager.instance.player.scans.GetNearest(1)[0];
+
+        // 기본 방향 (적이 없을 경우 오른쪽)
+        Vector2 dir = Vector2.right;
 
         if (target != null)
         {
-            // 플레이어 위치 기준 방향 계산
-            Vector2 dir = (target.position - transform.parent.position).normalized;
-
+            dir = (target.position - transform.parent.position).normalized;
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
-            // 🔥 스프라이트 기본 방향이 "오른쪽(→)"이라고 가정
-            // 만약 위(↑)가 기본이면 angle - 90f 로 바꿔줘
+            // 검 회전 (기본 방향 보정)
             transform.rotation = Quaternion.AngleAxis(angle - subAngle, Vector3.forward);
-
         }
+
+        // ===============================================
+        // [추가된 로직] 불 특성 10레벨 이상일 때 검기 발사
+        // ===============================================
+        if (StatsManager.instance.FireCnt >= 10)
+        {
+            // 1. PoolManager에서 8번(FireSlashShots) 가져오기
+            GameObject shotObj = PoolManager.instance.Get(8);
+
+            // 2. 위치를 플레이어(검의 부모) 위치로 설정
+            shotObj.transform.position = transform.parent.position;
+
+            // 3. 방향 설정 및 발사
+            FireSlashShots shotScript = shotObj.GetComponent<FireSlashShots>();
+            if (shotScript != null)
+            {
+                // 타겟이 있으면 타겟 방향, 없으면 기본(오른쪽) 방향으로 발사
+                shotScript.Launch(dir);
+            }
+        }
+        // ===============================================
 
         sr.enabled = true;
         hitTargets.Clear();
@@ -115,13 +124,13 @@ public class FlameSword : MonoBehaviour
         sr.enabled = false;
         col.enabled = false;
     }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!col.enabled) return;
         if (!other.CompareTag("Enemy")) return;
         if (hitTargets.Contains(other)) return;
 
-        if (hitTargets.Contains(other)) return;
         hitTargets.Add(other);
 
         NormalMonster monster = other.GetComponent<NormalMonster>();
