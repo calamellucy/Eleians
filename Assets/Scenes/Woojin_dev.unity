@@ -1814,6 +1814,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LvUp
   sk4: {fileID: 0}
+  sk2: {fileID: 0}
 --- !u!114 &304632789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5220,6 +5221,7 @@ MonoBehaviour:
   - {fileID: 6793793243088334630, guid: 2fde159fbb004ba40ad88752b12499fd, type: 3}
   - {fileID: 1688397079997569225, guid: 70ed8e32c15edda408a06e5e067778c9, type: 3}
   - {fileID: 1829672016724653697, guid: 11325668a96cf314a95a30fa79153859, type: 3}
+  damageCanvas: {fileID: 0}
 --- !u!4 &1224013707
 Transform:
   m_ObjectHideFlags: 0
@@ -75930,11 +75932,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6547262138910496747, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
   m_PrefabInstance: {fileID: 1912666817330014249}
   m_PrefabAsset: {fileID: 0}
---- !u!212 &1751342361 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 8933842438807939929, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
-  m_PrefabInstance: {fileID: 1912666817330014249}
-  m_PrefabAsset: {fileID: 0}
 --- !u!95 &1751342365
 Animator:
   serializedVersion: 7
@@ -77735,7 +77732,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 2.8125
+  orthographic size: 2.9609375
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -78225,7 +78222,7 @@ PrefabInstance:
     - target: {fileID: -6876010720138951788, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
       propertyPath: spriteRenderer
       value: 
-      objectReference: {fileID: 1751342361}
+      objectReference: {fileID: 0}
     - target: {fileID: 465607253973961983, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
       propertyPath: m_Mass
       value: 1000000

@@ -75361,6 +75361,9 @@ MonoBehaviour:
   projectileSize: 0
   projectileCount: 0
   electricCount: 1
+  fireCount: 0
+  iceCount: 0
+  earthCount: 0
 --- !u!114 &1602427843
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75414,7 +75417,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: 1.0000153}
   m_SizeDelta: {x: 0, y: 14}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1606321023
@@ -77960,7 +77963,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 4.21875
+  orthographic size: 2.5078125
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
