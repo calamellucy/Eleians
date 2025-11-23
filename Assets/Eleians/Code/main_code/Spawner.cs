@@ -27,6 +27,8 @@ public class Spawner : MonoBehaviour
 
     void Update()
     {
+        Debug.Log("Spawner Running... " + Time.time);
+
         if (!GameManager.instance.isLive) return;
 
         timer += Time.deltaTime;

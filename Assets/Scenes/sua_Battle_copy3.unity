@@ -892,6 +892,7 @@ MonoBehaviour:
   exp: 0
   nextExp: 0500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000080969800
   player: {fileID: 1602427835}
+  boss: {fileID: 613104277}
   tower: {fileID: 1751342358}
   elecTower: {fileID: 813046372}
   fireTower: {fileID: 1730947203}
@@ -908,6 +909,8 @@ MonoBehaviour:
   isFireTowerPhase: 0
   isGroundTowerPhase: 0
   isIceTowerPhase: 0
+  isBossPhase: 0
+  bossPhaseStartTime: 720
   phaseTimer: 0
   normalPhaseDuration: 150
   towerPhaseDuration: 30
@@ -3393,9 +3396,13 @@ GameObject:
   - component: {fileID: 613104280}
   - component: {fileID: 613104279}
   - component: {fileID: 613104278}
-  m_Layer: 0
+  - component: {fileID: 613104284}
+  - component: {fileID: 613104282}
+  - component: {fileID: 613104281}
+  - component: {fileID: 613104283}
+  m_Layer: 7
   m_Name: Boss
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3489,12 +3496,120 @@ Transform:
   m_GameObject: {fileID: 613104277}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 20.106, y: -11.83, z: 0}
+  m_LocalPosition: {x: 17, y: -12, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &613104281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 613104277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 428839e766b754346bd4a7bccd7ef283, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageReceiver
+--- !u!114 &613104282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 613104277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b683f01ae06baab4baac29190c05e251, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossMonster
+  speed: 0
+  health: 0
+  maxHealth: 0
+  damage: 0
+  originalSpeed: 0
+  slowMultiplier: 1
+  monsterType: 0
+  isLive: 0
+  target: {fileID: 0}
+  animCon: []
+  player: {fileID: 0}
+  patternInterval: 1
+  shadowSpearPrefab: {fileID: 0}
+  shadowRainDuration: 7
+  shadowRainSpawnRate: 3
+  bindingFieldPrefab: {fileID: 0}
+  bindingFieldDuration: 8
+  sigilController: {fileID: 0}
+  darkVision: {fileID: 0}
+  darkVisionDuration: 6
+--- !u!70 &613104283
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 613104277}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: -0.019081116, y: -0.02601878}
+  m_Size: {x: 0.8998871, y: 1.0386531}
+  m_Direction: 0
+--- !u!50 &613104284
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 613104277}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 10
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 4
 --- !u!1 &622177870 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3342405771585011355, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}

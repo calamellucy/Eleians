@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public int[] nextExp = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 , 5, 5, 5};
     [Header("# Game Object")]
     public Player player;
+    public GameObject boss;
     public GameObject tower;
     public GameObject elecTower;
     public GameObject fireTower;
@@ -37,6 +38,8 @@ public class GameManager : MonoBehaviour
     public bool isFireTowerPhase = false;
     public bool isGroundTowerPhase = false;
     public bool isIceTowerPhase = false;
+    public bool isBossPhase = false;
+    public float bossPhaseStartTime = 720f;
     public float phaseTimer = 0f;
     public float normalPhaseDuration = 150f;
     public float towerPhaseDuration = 30f;
@@ -51,6 +54,7 @@ public class GameManager : MonoBehaviour
     {
         health = maxHealth;
         isLive = true;
+        boss.SetActive(false);
 
         InitTowerPhaseOrder();
     }
@@ -113,49 +117,71 @@ public class GameManager : MonoBehaviour
         }
         */
 
-        // 10초 전 화살표 표시
-        if (!isTowerPhase && !arrowActivatedThisPhase && phaseTimer >= normalPhaseDuration - 10f)
+        if (gameTime > bossPhaseStartTime)
         {
-            TowerType nextTower = towerPhaseOrder[towerIndex];
-            Transform nextTowerTransform = GetTowerTransform(nextTower);
-            arrow.Activate(nextTowerTransform);
-
-            arrowActivatedThisPhase = true; // 다시 실행되지 않도록
-        }
-
-        if (!isTowerPhase && phaseTimer >= normalPhaseDuration)
-        {
-            // 타워 페이즈 진입
-            isTowerPhase = true;
-            phaseTimer = 0f;
-
-            arrowActivatedThisPhase = false;
-
-            if (towerIndex < towerPhaseOrder.Count)
+            if (!isBossPhase)
             {
-                TowerType nextTower = towerPhaseOrder[towerIndex];
-                Debug.Log("타워 페이즈 시작: " + nextTower);
-                StartTowerPhase(nextTower);
+                isBossPhase = true;
+                SpawnBoss();
             }
             else
             {
-                Debug.Log("모든 타워 페이즈 완료! (여기서 보스 등장 가능)");
+                BossMonster bm = boss.GetComponent<BossMonster>();
+                if (!bm.isLive)
+                {
+                    // 게임 승리로 끝
+                }
             }
+
         }
-        else if (isTowerPhase && phaseTimer >= towerPhaseDuration)
+        else
         {
-            // 타워 페이즈 종료
-            isTowerPhase = false;
-            phaseTimer = 0f;
-
-            if (towerIndex < towerPhaseOrder.Count)
+            // 10초 전 화살표 표시
+            if (!isTowerPhase && !arrowActivatedThisPhase && phaseTimer >= normalPhaseDuration - 10f)
             {
-                TowerType finished = towerPhaseOrder[towerIndex];
-                EndTowerPhase(finished);
-                towerIndex++;
+                TowerType nextTower = towerPhaseOrder[towerIndex];
+                Transform nextTowerTransform = GetTowerTransform(nextTower);
+                arrow.Activate(nextTowerTransform);
+
+                arrowActivatedThisPhase = true; // 다시 실행되지 않도록
             }
 
-            Debug.Log("타워 페이즈 종료 → 일반 페이즈 재개");
+            if (!isTowerPhase && phaseTimer >= normalPhaseDuration)
+            {
+                // 타워 페이즈 진입
+                isTowerPhase = true;
+                phaseTimer = 0f;
+
+                arrowActivatedThisPhase = false;
+
+                if (towerIndex < towerPhaseOrder.Count)
+                {
+                    TowerType nextTower = towerPhaseOrder[towerIndex];
+                    Debug.Log("타워 페이즈 시작: " + nextTower);
+                    StartTowerPhase(nextTower);
+                }
+                else
+                {
+                    Debug.Log("모든 타워 페이즈 완료! (여기서 보스 등장 가능)");
+                    isTowerPhase = false;
+                    // SpawnBoss();
+                }
+            }
+            else if (isTowerPhase && phaseTimer >= towerPhaseDuration)
+            {
+                // 타워 페이즈 종료
+                isTowerPhase = false;
+                phaseTimer = 0f;
+
+                if (towerIndex < towerPhaseOrder.Count)
+                {
+                    TowerType finished = towerPhaseOrder[towerIndex];
+                    EndTowerPhase(finished);
+                    towerIndex++;
+                }
+
+                Debug.Log("타워 페이즈 종료 → 일반 페이즈 재개");
+            }
         }
     }
 
@@ -244,6 +270,20 @@ public class GameManager : MonoBehaviour
     public void OnTowerDefenseSuccess()
     {
         Instantiate(chestPrefab, tower.transform.position + Vector3.right * 2f, Quaternion.identity);
+    }
+
+    void SpawnBoss()
+    {
+        arrow.Deactivate();
+        arrowActivatedThisPhase = false;
+
+        if (boss == null) return;
+
+        boss.SetActive(true);  // 보스 밍부기 활성화
+
+        BossMonster bm = boss.GetComponent<BossMonster>();
+        if (bm != null)
+            bm.BossInit();     // HP, 데미지, 속도 등 초기화
     }
 
 }

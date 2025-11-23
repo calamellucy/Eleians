@@ -51,6 +51,26 @@ public class BossMonster : NormalMonster
             darkVision.DisableImmediately();
     }
 
+    public void BossInit()
+    {
+        speed = 1;
+        maxHealth = 10000;
+        damage = 50;
+        health = maxHealth;
+    }
+
+    public void BossSpawn()
+    {
+        BossInit();
+        gameObject.SetActive(true);
+    }
+
+    public override void ApplyDamage(float dmg, int skillType)
+    {
+        base.ApplyDamage(dmg, skillType);
+    }
+
+    // 보스 패턴
     IEnumerator PatternLoop()
     {
         // 필요하면 등장 모션/인트로 대기
