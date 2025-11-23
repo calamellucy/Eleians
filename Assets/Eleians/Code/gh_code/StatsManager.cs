@@ -39,9 +39,8 @@ public class StatsManager : MonoBehaviour
         CritDamage = 2;
         Level = 0;
 
-        IceCnt = ElectricCnt = 0;
+        FireCnt = IceCnt = ElectricCnt = 0;
         EarthCnt = 0;
-        FireCnt = 10;
     }
 
     // 레벨업 → 원소 선택 시 호출
