@@ -10,9 +10,9 @@ public class Spawner : MonoBehaviour
     public SpawnData[] spawnData;
     [Header("Battle Area (Manual)")]
     [Tooltip("전투 가능한 내부 구역의 좌측하단 (x, y)")]
-    public Vector2 innerMin = new Vector2(-7.5f, -4.5f);
+    public Vector2 innerMin = new Vector2(-16.0f, -37.0f);
     [Tooltip("전투 가능한 내부 구역의 우측상단 (x, y)")]
-    public Vector2 innerMax = new Vector2(7.5f, 4.5f);
+    public Vector2 innerMax = new Vector2(50.0f, 13.0f);
 
     float timer;
 
@@ -27,12 +27,14 @@ public class Spawner : MonoBehaviour
 
     void Update()
     {
+        Debug.Log("Spawner Running... " + Time.time);
+
         if (!GameManager.instance.isLive) return;
 
         timer += Time.deltaTime;
         level = Mathf.Min(Mathf.FloorToInt(GameManager.instance.gameTime / 10f), spawnData.Length - 1);
 
-        float difficulty = 1f + (GameManager.instance.gameTime / 60f);
+        float difficulty = 1; //1f + (GameManager.instance.gameTime / 60f);
         float currentSpawnTime = spawnData[0].spawnTime / difficulty;
 
         if (timer > currentSpawnTime)
