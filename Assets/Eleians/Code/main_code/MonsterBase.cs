@@ -80,9 +80,8 @@ public class MonsterBase : MonoBehaviour
     protected virtual void OnHitTower(Tower tower) { }
 
 
-    public virtual void ApplyDamage(float dmg, int skillType)
+    public virtual void ApplyDamage(float dmg)
     {
-        // skillType 1, 2, 3, 4: 전기, 불, 얼음, 흙
         if (!isLive) return;
 
         float finalDamage = dmg;

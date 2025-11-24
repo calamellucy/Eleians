@@ -65,9 +65,9 @@ public class BossMonster : NormalMonster
         gameObject.SetActive(true);
     }
 
-    public override void ApplyDamage(float dmg, int skillType)
+    public override void ApplyDamage(float dmg)
     {
-        base.ApplyDamage(dmg, skillType);
+        base.ApplyDamage(dmg);
     }
 
     // 보스 패턴

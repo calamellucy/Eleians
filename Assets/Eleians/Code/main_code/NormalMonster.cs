@@ -57,47 +57,23 @@ public class NormalMonster : MonsterBase
         }
     }
 
-    public override void ApplyDamage(float dmg, int skillType)
+    public override void ApplyDamage(float dmg)
     {
         switch(monsterType)
         {
-            case 0: // 나무더지 약점: 불
-                if (skillType == 2)
-                {
-                    base.ApplyDamage(WeaknessDamage(dmg), 2);
-                    return;
-                }
-                else break;
-            case 1: // 송충충 약점: 전기
-                if (skillType == 1)
-                {
-                    base.ApplyDamage(WeaknessDamage(dmg), 1);
-                    return;
-                }
-                else break;
-            case 2: // 돌순이 약점: 얼음
-                if (skillType == 3)
-                {
-                    base.ApplyDamage(WeaknessDamage(dmg), 3);
-                    return;
-                }
-                else break;
-            case 3: // 버섯탱이 약점: 흙
-                if (skillType == 4)
-                {
-                    base.ApplyDamage(WeaknessDamage(dmg), 4);
-                    return;
-                }
-                else break;
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
             default:
                 break;
 
         }
-        base.ApplyDamage(dmg, skillType);
+        base.ApplyDamage(dmg);
     }
 
-    float WeaknessDamage(float damage)
-    {
-        return damage * 1.2f;
-    }
 }

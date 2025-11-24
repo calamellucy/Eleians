@@ -16,7 +16,7 @@ public class DamageReceiver : MonoBehaviour
         if (collision.CompareTag("Explosion"))
         {
             var exp = collision.GetComponent<Explosion>();
-            if (exp != null) monster.ApplyDamage(exp.damage, 1);
+            if (exp != null) monster.ApplyDamage(exp.damage);
             return;
         }
 
@@ -25,7 +25,7 @@ public class DamageReceiver : MonoBehaviour
             var b = collision.GetComponent<Bullet>();
             if (b != null)
             {
-                monster.ApplyDamage(b.damage, 1);
+                monster.ApplyDamage(b.damage);
                 b.per--;
                 if (b.per < 0) b.gameObject.SetActive(false);
             }
@@ -34,19 +34,19 @@ public class DamageReceiver : MonoBehaviour
         if (collision.CompareTag("dust"))
         {
             float baseDamage = (StatsManager.instance.Attack + (StatsManager.instance.EarthCnt * 2)) * 0.3f;
-            monster.ApplyDamage(baseDamage, 4);
+            monster.ApplyDamage(baseDamage);
         }
 
         if (collision.CompareTag("Bump"))
         {
             float baseDamage = (StatsManager.instance.Attack + (StatsManager.instance.EarthCnt * 8)) * 2f;
-            monster.ApplyDamage(baseDamage, 4);
+            monster.ApplyDamage(baseDamage);
         }
 
         if (collision.CompareTag("Jeonjapa"))
         {
             var br = collision.GetComponent<Bullet_Re>();
-            if (br != null) monster.ApplyDamage(br.damage, 1);
+            if (br != null) monster.ApplyDamage(br.damage);
         }
 
         if (collision.CompareTag("Seori"))
@@ -54,7 +54,7 @@ public class DamageReceiver : MonoBehaviour
             Seori_Shuri seo = collision.GetComponent<Seori_Shuri>();
             if (seo == null) return;
 
-            monster.ApplyDamage(seo.damage, 3);
+            monster.ApplyDamage(seo.damage);
             monster.ApplySlow(seo.slowRate);
         }
 
@@ -63,14 +63,14 @@ public class DamageReceiver : MonoBehaviour
             BlizzardArea dhw = collision.GetComponent<BlizzardArea>();
             if (dhw == null) return;
 
-            monster.ApplyDamage(dhw.baseDamage, 3);
+            monster.ApplyDamage(dhw.baseDamage);
             monster.ApplySlow(dhw.slowRate);
         }
 
         if (collision.CompareTag("FireSlashShots"))
         {
             FireSlashShots bu = collision.GetComponent<FireSlashShots>();
-            monster.ApplyDamage(bu.damage, 2);
+            monster.ApplyDamage(bu.damage);
             return;
         }
     }

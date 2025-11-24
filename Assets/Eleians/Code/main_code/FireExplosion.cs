@@ -58,7 +58,7 @@ public class FireExplosion : MonoBehaviour
         NormalMonster monster = other.GetComponent<NormalMonster>();
         if (monster != null)
         {
-            monster.ApplyDamage(finalDamage, 2);
+            monster.ApplyDamage(finalDamage);
         }
     }
 }

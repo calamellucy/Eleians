@@ -33,8 +33,8 @@ public class TowerMonster : NormalMonster
         // 아무것도 안 함
     }
 
-    public override void ApplyDamage(float dmg, int skillType)
+    public override void ApplyDamage(float dmg)
     {
-        base.ApplyDamage(dmg, skillType);
+        base.ApplyDamage(dmg);
     }
 }
