@@ -29,13 +29,29 @@ public class BossMonster : NormalMonster
     {
         base.OnEnable();
 
-        // Player를 타겟으로
-        target = GameManager.instance.player.GetComponent<Rigidbody2D>();
+        if (GameManager.instance != null && GameManager.instance.player != null)
+        {
+            player = GameManager.instance.player.transform;
+            target = GameManager.instance.player.GetComponent<Rigidbody2D>();
+        }
 
         if (patternRoutine != null)
             StopCoroutine(patternRoutine);
 
         patternRoutine = StartCoroutine(PatternLoop());
+    }
+
+    // NormalMonster의 LateUpdate를 덮어씌웁니다.
+    // (만약 부모 함수에 virtual이 없다면 'new' 키워드를 써도 되고, 그냥 써도 작동은 합니다)
+    protected new void LateUpdate()
+    {
+        if (!isLive) return;
+
+        // 부모 코드: target.position.x > rigid.position.x (플레이어가 오른쪽이면 true)
+        // 보스 수정: target.position.x < rigid.position.x (부등호 방향 반대!)
+
+        // 원본 그림이 반대라서, 로직도 반대로 뒤집어 줌
+        spriter.flipX = target.position.x < rigid.position.x;
     }
 
     public override void Die(bool giveReward)
@@ -158,6 +174,8 @@ public class BossMonster : NormalMonster
 
         // 스폰
         GameObject spear = Instantiate(shadowSpearPrefab, pos, Quaternion.identity);
+
+        Debug.Log($"창 생성됨! 위치: {pos}, 활성상태: {spear.activeSelf}");
 
         // spear 안에서:
         // 0.6초 동안 보라색 경고 원 → 이후 창 떨어지고,
