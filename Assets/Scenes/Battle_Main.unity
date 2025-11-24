@@ -76062,6 +76062,7 @@ GameObject:
   - component: {fileID: 1602427842}
   - component: {fileID: 1602427843}
   - component: {fileID: 1602427844}
+  - component: {fileID: 1602427845}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -76323,6 +76324,22 @@ MonoBehaviour:
   runnerSpeed: 0.05
   defaultScale: {x: 3, y: 3, z: 3}
   sizeGrowthRate: 0.1
+--- !u!114 &1602427845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1602427834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f17dd7c9304c5be4f8770717f63354d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StoneDust
+  explosionPrefabId: 5
+  forwardOffset: 0.3
+  clockwiseRotationOffset: 170
+  Scale: {x: 1.5, y: 1.5, z: 1.5}
 --- !u!1 &1606321021
 GameObject:
   m_ObjectHideFlags: 0
@@ -79095,6 +79112,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef87c2b84ce3bd8439eeec6e054f181b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Skill4
+  scans: {fileID: 0}
+  stoneDustComp: {fileID: 0}
   prefabId: 1
   speed: 11
   damage: 10
