@@ -3544,7 +3544,7 @@ MonoBehaviour:
   bindingFieldPrefab: {fileID: 0}
   bindingFieldDuration: 8
   sigilController: {fileID: 0}
-  darkVision: {fileID: 0}
+  darkVision: {fileID: 1603130439}
   darkVisionDuration: 6
 --- !u!70 &613104283
 CapsuleCollider2D:
@@ -5364,6 +5364,7 @@ MonoBehaviour:
   hitStart: 0.1
   hitEnd: 0.3
   damage: 10
+  fireStack: 0
 --- !u!1 &923122991
 GameObject:
   m_ObjectHideFlags: 0
@@ -75821,10 +75822,11 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1096329519}
+  - {fileID: 1603130443}
+  - {fileID: 733831371}
   - {fileID: 1606321022}
   - {fileID: 677406582}
-  - {fileID: 733831371}
-  - {fileID: 1096329519}
   - {fileID: 1234527577}
   - {fileID: 701014313}
   - {fileID: 304632787}
@@ -76488,6 +76490,106 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   nearestTargets: []
+--- !u!1 &1603130438
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1603130443}
+  - component: {fileID: 1603130442}
+  - component: {fileID: 1603130441}
+  - component: {fileID: 1603130440}
+  - component: {fileID: 1603130439}
+  m_Layer: 5
+  m_Name: DarkVisionMask
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1603130439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1603130438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a889bd1e51271e14398cbb893a4ffc24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DarkVisionController
+  overlay: {fileID: 1603130440}
+  autoDisableOnDuration: 1
+--- !u!225 &1603130440
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1603130438}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &1603130441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1603130438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RawImage
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 2800000, guid: 9d629e5257d96744591c80ac3e8a242d, type: 3}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!222 &1603130442
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1603130438}
+  m_CullTransparentMesh: 1
+--- !u!224 &1603130443
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1603130438}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1521471353}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 720, y: 405}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1606321021
 GameObject:
   m_ObjectHideFlags: 0

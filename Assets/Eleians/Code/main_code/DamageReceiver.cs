@@ -70,7 +70,7 @@ public class DamageReceiver : MonoBehaviour
         if (collision.CompareTag("FireSlashShots"))
         {
             FireSlashShots bu = collision.GetComponent<FireSlashShots>();
-            monster.ApplyDamage(bu.damage);
+            monster.ApplyDamage(bu.damage, 2);
             return;
         }
     }
