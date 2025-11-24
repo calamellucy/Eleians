@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4521280711136858263}
   - component: {fileID: 161719883621589611}
   - component: {fileID: 4691923175683234864}
-  - component: {fileID: 2387586053923382312}
+  - component: {fileID: 7973564367835131337}
   m_Layer: 0
   m_Name: dust effect
   m_TagString: dust
@@ -203,7 +203,7 @@ PolygonCollider2D:
       - {x: 0.34978294, y: -0.17637801}
       - {x: 0.30952668, y: -0.10906041}
   m_UseDelaunayMesh: 0
---- !u!114 &2387586053923382312
+--- !u!114 &7973564367835131337
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -212,10 +212,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 510825252906416928}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f17dd7c9304c5be4f8770717f63354d8, type: 3}
+  m_Script: {fileID: 11500000, guid: 3c6b2c892df10974686e244d431799a6, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StoneDust
-  explosionPrefabId: 5
-  forwardOffset: 0.3
-  clockwiseRotationOffset: 164
-  Scale: {x: 2, y: 2, z: 2}
+  m_EditorClassIdentifier: Assembly-CSharp::DustEffect
