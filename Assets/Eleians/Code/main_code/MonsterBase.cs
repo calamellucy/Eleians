@@ -9,6 +9,7 @@ public class MonsterBase : MonoBehaviour
     public float damage;
     public float originalSpeed;
     public float slowMultiplier = 1f;
+    public int monsterType;
 
     public bool isLive;
     protected bool isDeadProcessed = false;
@@ -79,7 +80,7 @@ public class MonsterBase : MonoBehaviour
     protected virtual void OnHitTower(Tower tower) { }
 
 
-    public void ApplyDamage(float dmg)
+    public virtual void ApplyDamage(float dmg)
     {
         if (!isLive) return;
 
@@ -159,7 +160,7 @@ public class MonsterBase : MonoBehaviour
     }
     */
 
-    public void Die(bool giveReward)
+    public virtual void Die(bool giveReward)
     {
         if (isDeadProcessed) return;
         isDeadProcessed = true;

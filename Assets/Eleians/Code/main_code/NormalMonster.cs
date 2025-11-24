@@ -36,6 +36,7 @@ public class NormalMonster : MonsterBase
     public void Init(SpawnData data, int spriteIndex)
     {
         anim.runtimeAnimatorController = animCon[spriteIndex];
+        monsterType = spriteIndex;
         speed = data.speed;
         maxHealth = data.health;
         damage = data.damage;
@@ -55,4 +56,24 @@ public class NormalMonster : MonsterBase
             attackTimer = attackDelay;
         }
     }
+
+    public override void ApplyDamage(float dmg)
+    {
+        switch(monsterType)
+        {
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            default:
+                break;
+
+        }
+        base.ApplyDamage(dmg);
+    }
+
 }
