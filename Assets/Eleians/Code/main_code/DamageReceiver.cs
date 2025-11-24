@@ -26,8 +26,7 @@ public class DamageReceiver : MonoBehaviour
             if (b != null)
             {
                 monster.ApplyDamage(b.damage);
-                b.per--;
-                if (b.per < 0) b.gameObject.SetActive(false);
+                b.OnHit();
             }
         }
 
