@@ -109,7 +109,7 @@ public class Skill1_Re : MonoBehaviour
             evo.Setup(this);
 
         bullet.GetComponent<Bullet_Re>().Init(damage, per, dir, electricCount);
-        Debug.Log("Fire");
+        //Debug.Log("Fire");
     }
 
     void SyncWithStats()

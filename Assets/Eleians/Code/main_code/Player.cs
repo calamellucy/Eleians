@@ -73,8 +73,25 @@ public class Player : MonoBehaviour
             Die();
         }
 
-        // hit �ִ�, �����ð�, ���� �߰� ����
+        // hit �ִ�, �����ð�, ���� �߰� ����
     }
+
+    public void Heal(float amount)
+    {
+        if (!GameManager.instance.isLive) return;
+
+        // 절대값 보장
+        amount = Mathf.Abs(amount);
+
+        GameManager.instance.health += amount;
+
+        // 최대 체력 초과 방지
+        GameManager.instance.health =
+            Mathf.Clamp(GameManager.instance.health, 0f, GameManager.instance.maxHealth);
+
+        // 힐 이펙트, 힐 텍스트 같은 것 원하면 여기에 추가하면 된다
+    }
+
 
     void Die()
     {

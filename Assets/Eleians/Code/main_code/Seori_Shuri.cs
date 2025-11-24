@@ -12,4 +12,26 @@ public class Seori_Shuri : MonoBehaviour
         this.per = per;
         this.slowRate = slowRate;
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // Enemy 태그로 비교
+        if (!collision.CompareTag("Enemy"))
+            return;
+
+        // Enemy → MonsterBase 가져와서 데미지 적용
+        MonsterBase monster = collision.GetComponent<MonsterBase>();
+        if (monster == null)
+            return;
+
+        // 데미지 적용
+        monster.ApplyDamage(damage);
+
+        // 슬로우 적용 (서리 스킬 특징)
+        if (slowRate > 0f)
+            monster.ApplySlow(slowRate);
+
+        // 관통(per) 처리
+        
+    }
 }

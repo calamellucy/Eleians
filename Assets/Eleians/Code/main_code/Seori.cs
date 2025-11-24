@@ -4,7 +4,7 @@ using UnityEngine;
 public class Seori : MonoBehaviour
 {
     public int id;
-    public int prefabId = 5;
+    public int prefabId = 9;
     public float damage;
     public int count = 1;
     public float speed;
@@ -23,6 +23,9 @@ public class Seori : MonoBehaviour
     // 둔화 영역
     public GameObject dhwyyPrefab;
     private GameObject dhwyyInstance;
+    public GameObject iceZonePrefab;
+    float iceZoneCooldown = 30f;
+    float iceZoneTimer = 0f;
 
 
     void Start()
@@ -42,6 +45,8 @@ public class Seori : MonoBehaviour
             SyncWithStats();   // 먼저 업데이트
             Init();            // 그 다음 표창 재생성
         }
+
+        IceZoneSkill();
     }
 
     // 원소 변화 감지
@@ -72,6 +77,9 @@ public class Seori : MonoBehaviour
     // 🔥 스킬 재등록
     public void Init()
     {
+        float atk = StatsManager.instance.Attack / 10;
+
+
         // ============================
         // 1) 표창만 끄기 (dhwyy 영향 X)
         // ============================
@@ -85,7 +93,7 @@ public class Seori : MonoBehaviour
         // 2) 각종 진화 계산
         // ============================
         speed = 270f;
-        damage = (fireCount * 1.5f) * earthCount * 1.08f;
+        damage = (atk * 1.5f) * Mathf.Pow(1.08f, electricCount);
         count = 1 + (int)(iceCount * 0.25f);
         range = 1 + iceCount * 0.025f;
         slowRate = 0.3f + (iceCount * 0.04f);
@@ -137,6 +145,28 @@ public class Seori : MonoBehaviour
     }
 
 
+    void IceZoneSkill()
+    {
+        if (iceCount < 10) return;
+        iceZoneTimer = 30f;
+
+        iceZoneTimer += Time.deltaTime;
+        if (iceZoneTimer < iceZoneCooldown) return;
+
+        iceZoneTimer = 0f;
+
+        // 플레이어 기준 랜덤 고정 위치
+        Vector3 basePos = GameManager.instance.player.transform.position;
+        Vector2 offset = Random.insideUnitCircle * 3f;
+        Vector3 spawnPos = basePos + (Vector3)offset;
+
+        // 🔥 부모 없이 단독 생성
+        GameObject zone = Instantiate(iceZonePrefab, spawnPos, Quaternion.identity);
+    }
+
+
+
+
     // 🔥 dhwyy 생성 / 유지
     void ActivateDhwyy()
     {
@@ -156,3 +186,5 @@ public class Seori : MonoBehaviour
     }
 
 }
+
+
