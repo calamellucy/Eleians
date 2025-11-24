@@ -26,19 +26,56 @@ public class DarkVisionController : MonoBehaviour
 
         if (overlay != null)
         {
-            overlay.alpha = 1f;
+            overlay.alpha = 0f;
             overlay.blocksRaycasts = true;
             overlay.interactable = false;
         }
 
+        if (routine != null)
+            StopCoroutine(routine);
+
+        routine = StartCoroutine(FadeInAndWait(duration));
+
+        /*
         if (autoDisableOnDuration)
         {
             if (routine != null)
                 StopCoroutine(routine);
             routine = StartCoroutine(AutoDisableRoutine(duration));
         }
+        */
     }
 
+    IEnumerator FadeInAndWait(float duration)
+    {
+        // ----- 1) 페이드 인 (0 → 1) -----
+        float fadeDuration = 2.0f; // 페이드인 시간 원하는 만큼 조절 가능
+        float t = 0f;
+
+        while (t < fadeDuration)
+        {
+            t += Time.unscaledDeltaTime;
+            if (overlay != null)
+                overlay.alpha = Mathf.Lerp(0f, 1f, t / fadeDuration);
+            yield return null;
+        }
+
+        if (overlay != null) overlay.alpha = 1f;
+
+        // ----- 2) duration 만큼 유지 -----
+        float holdTime = duration;
+        float timer = 0f;
+        while (timer < holdTime)
+        {
+            timer += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        // ----- 3) 자동 종료 -----
+        Disable();
+    }
+
+    /*
     IEnumerator AutoDisableRoutine(float duration)
     {
         float t = 0f;
@@ -50,6 +87,7 @@ public class DarkVisionController : MonoBehaviour
 
         Disable();
     }
+    */
 
     /// <summary>
     /// 부드럽게 끌 필요 없으면 그냥 호출
