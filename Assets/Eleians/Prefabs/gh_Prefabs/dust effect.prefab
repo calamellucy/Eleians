@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3140858909655477472}
   - component: {fileID: 4521280711136858263}
   - component: {fileID: 161719883621589611}
-  - component: {fileID: 4691923175683234864}
+  - component: {fileID: 298621037302665911}
   - component: {fileID: 2387586053923382312}
   m_Layer: 0
   m_Name: dust effect
@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.96, y: -1.93, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -143,8 +143,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!60 &4691923175683234864
-PolygonCollider2D:
+--- !u!68 &298621037302665911
+EdgeCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -173,36 +173,24 @@ PolygonCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
+  m_EdgeRadius: 0
   m_Points:
-    m_Paths:
-    - - {x: 0.1875, y: 0}
-      - {x: 0.1754775, y: 0.014052033}
-      - {x: 0.15836585, y: 0.03683877}
-      - {x: 0.13342011, y: 0.053722143}
-      - {x: 0.109375, y: 0.078125}
-      - {x: -0.171875, y: 0.078125}
-      - {x: -0.21875, y: 0.0625}
-      - {x: -0.22595489, y: -0.29417312}
-      - {x: -0.17759323, y: -0.32001948}
-      - {x: 0.109375, y: -0.30470908}
-      - {x: 0.37409925, y: -0.24491096}
-      - {x: 0.34978294, y: -0.17637801}
-      - {x: 0.30952668, y: -0.10906041}
-  m_UseDelaunayMesh: 0
+  - {x: 0.3656575, y: -0.23686278}
+  - {x: 0.13735366, y: -0.27344996}
+  - {x: -0.16600609, y: -0.3220653}
+  - {x: -0.23097199, y: -0.123827875}
+  - {x: -0.17798531, y: 0.0511384}
+  - {x: 0.19162488, y: 0.07621306}
+  - {x: 0.36538005, y: -0.23515886}
+  m_AdjacentStartPoint: {x: 0, y: 0}
+  m_AdjacentEndPoint: {x: 0, y: 0}
+  m_UseAdjacentStartPoint: 0
+  m_UseAdjacentEndPoint: 0
 --- !u!114 &2387586053923382312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,4 +206,4 @@ MonoBehaviour:
   explosionPrefabId: 5
   forwardOffset: 0.3
   clockwiseRotationOffset: 164
-  Scale: {x: 2, y: 2, z: 2}
+  Scale: {x: 1, y: 1, z: 1}

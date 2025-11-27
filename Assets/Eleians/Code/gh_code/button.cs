@@ -21,5 +21,6 @@ public class button : MonoBehaviour
                 StatsManager.instance.EarthCnt++;
                 break;
         }
+        StatsManager.instance.LevelUpdate();
     }
 }

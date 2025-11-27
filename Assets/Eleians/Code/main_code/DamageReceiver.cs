@@ -66,12 +66,5 @@ public class DamageReceiver : MonoBehaviour
             monster.ApplyDamage(dhw.baseDamage);
             monster.ApplySlow(dhw.slowRate);
         }
-
-        if (collision.CompareTag("FireSlashShots"))
-        {
-            FireSlashShots bu = collision.GetComponent<FireSlashShots>();
-            monster.ApplyDamage(bu.damage);
-            return;
-        }
     }
 }
