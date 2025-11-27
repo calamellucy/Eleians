@@ -4519,6 +4519,7 @@ MonoBehaviour:
   hitStart: 0.1
   hitEnd: 0.3
   damage: 25
+  fireStack: 0
 --- !u!1 &923122991
 GameObject:
   m_ObjectHideFlags: 0
@@ -75350,7 +75351,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1602427834}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 49d5b4958869f6548bb0e4eb9dd65863, type: 3}
   m_Name: 
@@ -75418,7 +75419,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 1.0000153}
+  m_AnchoredPosition: {x: 0, y: 1}
   m_SizeDelta: {x: 0, y: 14}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1606321023
@@ -77708,7 +77709,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1949113737
 Transform:
   m_ObjectHideFlags: 0
@@ -77964,7 +77965,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 2.5078125
+  orthographic size: 4.15625
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
