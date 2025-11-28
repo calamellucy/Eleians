@@ -97,7 +97,7 @@ public class GameManager : MonoBehaviour
             gameTime = maxGameTime;
         }
 
-        // ÆäÀÌÁî °è»ê ·ÎÁ÷
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         phaseTimer += Time.deltaTime;
 
         /*
@@ -105,15 +105,15 @@ public class GameManager : MonoBehaviour
         {
             isTowerPhase = true;
             phaseTimer = 0f;
-            Debug.Log("°ÅÁ¡ ÆäÀÌÁî ½ÃÀÛ!");
-            tower.GetComponent<Tower>().OnTowerPhaseStart(); // È£Ãâ
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!");
+            tower.GetComponent<Tower>().OnTowerPhaseStart(); // È£ï¿½ï¿½
         }
         else if (isTowerPhase && phaseTimer >= towerPhaseDuration)
         {
             isTowerPhase = false;
             phaseTimer = 0f;
-            Debug.Log("°ÅÁ¡ ÆäÀÌÁî Á¾·á, ÀÏ¹Ý ÆäÀÌÁî Àç°³!");
-            tower.GetComponent<Tower>().OnTowerPhaseEnd();   // È£Ãâ
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½Ï¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ç°³!");
+            tower.GetComponent<Tower>().OnTowerPhaseEnd();   // È£ï¿½ï¿½
         }
         */
 
