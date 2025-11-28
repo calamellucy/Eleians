@@ -1,123 +1,218 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
+
+[System.Serializable]
+public struct Wave
+{
+    public string waveName;
+    public float startTime;
+    public float endTime;
+    public float spawnInterval;
+
+    [Header("Spawn Settings")]
+    public MonsterType type;
+    public int[] spriteIndices;
+    public int spawnAmountOnce; // 0이면 1로 취급
+}
 
 public class Spawner : MonoBehaviour
 {
-    [Header("Spawn Settings")]
-    public Transform[] spawnPoint;
+    [Header("Settings")]
     public SpawnData[] spawnData;
-    [Header("Battle Area (Manual)")]
-    [Tooltip("전투 가능한 내부 구역의 좌측하단 (x, y)")]
+
+    [Header("Wave Config")]
+    public Wave[] waves;
+    public Wave towerWave;
+
+    [Header("Runtime Check")]
+    private Wave currentWave;
+    // [중요] 타이머를 2개로 분리!
+    private float normalSpawnTimer;
+    private float towerSpawnTimer;
+
+    [Header("Battle Area")]
     public Vector2 innerMin = new Vector2(-16.0f, -37.0f);
-    [Tooltip("전투 가능한 내부 구역의 우측상단 (x, y)")]
     public Vector2 innerMax = new Vector2(50.0f, 13.0f);
 
-    float timer;
+    // private float timer; // [삭제] spawnTimer가 그 역할을 대신함
+    // private int currentWaveIndex = -1; // [삭제] 매 프레임 시간 체크하므로 필요 없음
 
-    int level;
+    // [삭제] Awake도 이제 필요 없습니다. (spawnPoints를 안 쓰니까요)
+    // private void Awake() { }
 
-    float spawnTime;
-
-    private void Awake()
+    private void Update()
     {
-        spawnPoint = GetComponentsInChildren<Transform>();
-    }
-
-    void Update()
-    {
-        Debug.Log("Spawner Running... " + Time.time);
-
         if (!GameManager.instance.isLive) return;
+        // 보스 페이즈 예외 처리
+        if (GameManager.instance.isBossPhase) return;
 
-        timer += Time.deltaTime;
-        level = Mathf.Min(Mathf.FloorToInt(GameManager.instance.gameTime / 10f), spawnData.Length - 1);
+        // 1. 일반 몬스터 웨이브 로직 (항상 실행)
+        UpdateNormalWave();
+        // 일반 타이머(normalSpawnTimer)를 넘겨줌
+        ProcessWave(currentWave, ref normalSpawnTimer);
 
-        float difficulty = 1f + (GameManager.instance.gameTime / 60f);
-        float currentSpawnTime = spawnData[0].spawnTime / difficulty;
-
-        if (timer > currentSpawnTime)
+        // 2. 거점 몬스터 웨이브 로직 (거점 페이즈일 때만 추가 실행)
+        if (GameManager.instance.isTowerPhase)
         {
-            timer = 0;
-
-            // int spawnCount = 1 + Mathf.FloorToInt(GameManager.instance.gameTime / 30f);
-            // for (int i = 0; i < spawnCount; i++) Spawn();
-
-            Spawn();
+            // 타워 타이머(towerSpawnTimer)를 넘겨줌
+            ProcessWave(towerWave, ref towerSpawnTimer);
         }
     }
 
-    void Spawn()
+    void UpdateNormalWave()
     {
-        // 스폰 가능한 스폰 포인트 계산
+        float currentTime = GameManager.instance.gameTime;
 
-        List<Transform> validPoints = new List<Transform>();
+        // 최적화: 현재 웨이브가 아직 유효하다면 굳이 다시 찾지 않음
+        if (currentWave.endTime > currentTime && currentWave.startTime <= currentTime)
+            return;
 
-        foreach (Transform point in spawnPoint)
+        bool found = false;
+        foreach (var wave in waves)
         {
-            if (point == transform) continue;
-
-            // 벽 내부에 있는 포인트만 허용
-            if (IsInsideBattleArea(point.position))
+            if (currentTime >= wave.startTime && currentTime < wave.endTime)
             {
-                validPoints.Add(point);
+                currentWave = wave;
+                found = true;
+                break;
             }
         }
 
-        if (validPoints.Count == 0)
-        {
-            Debug.Log("스폰 가능한 포인트 없음 (모두 벽 밖)");
-            return;
-        }
-
-        Transform spawnPos = validPoints[Random.Range(0, validPoints.Count)];
-
-
-        // 페이즈 별 몬스터 스폰 결정
-        // 현재 페이즈 구분 (거점 페이즈 여부)
-        bool isTowerPhase = GameManager.instance.isTowerPhase;
-        // 몬스터 종류 비율 결정
-        float rand = Random.value;
-
-        MonsterType selectedType;
-        if (!isTowerPhase) // 일반 페이즈
-        {
-            selectedType = MonsterType.Normal; 
-        }
-        else // 거점 페이즈일 때 (예: 일반 0.6, 거점 0.4)
-        {
-            if (rand < 0.6f)
-                selectedType = MonsterType.Normal;
-            else 
-                selectedType = MonsterType.Tower;
-            // else
-                // selectedType = MonsterType.Elite;
-        }
-
-        // Spawn Data 선택
-        SpawnData data = GetSpawnData(selectedType);
-        int spriteIndex = Random.Range(0, data.spriteCount);
-
-        // 프리펩 선택
-        int prefabIndex = GetPoolIndexByType(selectedType);
-        GameObject enemy = GameManager.instance.pool.Get(prefabIndex);
-        enemy.transform.position = spawnPos.position;
-
-        // 몬스터 설정
-        var monster = enemy.GetComponent<NormalMonster>();
-        monster.Init(data, spriteIndex); // spriteIndex 함께 전달
-
-        /*
-        GameObject enemy = GameManager.instance.pool.Get(0);
-        // enemy.transform.position = spawnPoint[Random.Range(1, spawnPoint.Length)].position;
-        enemy.transform.position = spawnPos.position;
-        // enemy.GetComponent<NormalMonster>().Init(spawnData[level]);
-        enemy.GetComponent<NormalMonster>().Init(spawnData[Random.Range(1, spawnData.Length)]);
-        */
+        // 해당하는 웨이브가 없으면 빈 웨이브 (스폰 안 함)
+        if (!found) currentWave = new Wave();
     }
 
-    // 수동 경계 체크 함수
+    // 타이머 변수를 ref로 받아서 각각 관리
+    void ProcessWave(Wave wave, ref float timer)
+    {
+        if (wave.spawnInterval <= 0) return;
+
+        timer += Time.deltaTime;
+
+        if (timer > wave.spawnInterval)
+        {
+            timer = 0f;
+            SpawnMob(wave);
+        }
+    }
+
+    // [수정됨] 매개변수로 받은 wave 데이터를 사용하도록 변경
+    void SpawnMob(Wave wave)
+    {
+        // 1. 몬스터 종류 데이터 체크
+        if (wave.spriteIndices == null || wave.spriteIndices.Length == 0) return;
+
+        // 2. 위치 선정
+        Vector3 spawnPos = Vector3.zero;
+        bool found = false;
+
+        for (int i = 0; i < 10; i++)
+        {
+            Vector3 randomPos = GetRandomPosOnViewport();
+            if (IsInsideBattleArea(randomPos))
+            {
+                spawnPos = randomPos;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) return; // 위치 못 잡으면 이번엔 스킵
+
+        // 3. 몬스터 선택 (넘겨받은 wave의 indices를 써야 함!)
+        // [버그 수정] currentWave -> wave 로 변경
+        int randIndex = Random.Range(0, wave.spriteIndices.Length);
+        int targetSpriteIndex = wave.spriteIndices[randIndex];
+
+        // 4. 실체화 (역시 wave의 정보를 넘겨줌)
+        SpawnProcess(wave, wave.type, targetSpriteIndex, spawnPos);
+    }
+
+    // [수정됨] wave.spawnAmountOnce 처리를 위해 wave 매개변수 추가 (혹은 int amount 직접 전달)
+    public void SpawnProcess(Wave wave, MonsterType type, int spriteIndex, Vector3 pos)
+    {
+        int prefabIndex = GetPoolIndexByType(type);
+        SpawnData data = GetSpawnData(type);
+
+        // spawnAmountOnce가 0일 수도 있으니 최소 1로 보정
+        int count = Mathf.Max(1, wave.spawnAmountOnce);
+
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 finalPos = pos;
+
+            // 여러 마리일 경우 흩뿌리기
+            if (count > 1) finalPos += (Vector3)Random.insideUnitCircle * 1.5f;
+
+            if (!IsInsideBattleArea(finalPos)) finalPos = pos;
+
+            GameObject enemy = GameManager.instance.pool.Get(prefabIndex);
+            enemy.transform.position = finalPos;
+
+            var monster = enemy.GetComponent<NormalMonster>();
+            if (monster != null)
+            {
+                monster.Init(data, spriteIndex);
+            }
+        }
+    }
+
+    // [수정됨] 엘리트도 뷰포트 랜덤 위치에서 나오게 변경
+    public void SpawnElite(int spriteIndex)
+    {
+        Vector3 spawnPos = Vector3.zero;
+        bool found = false;
+
+        for (int i = 0; i < 10; i++)
+        {
+            Vector3 randomPos = GetRandomPosOnViewport();
+            if (IsInsideBattleArea(randomPos))
+            {
+                spawnPos = randomPos;
+                found = true;
+                break;
+            }
+        }
+
+        if (found)
+        {
+            // 엘리트는 Wave 정보가 없으므로 가짜 Wave 정보를 만들거나 
+            // SpawnProcess 오버로딩을 만들어서 처리. 
+            // 여기서는 직접 구현부를 복사해서 단순화함.
+
+            int prefabIndex = GetPoolIndexByType(MonsterType.Elite);
+            SpawnData data = GetSpawnData(MonsterType.Elite);
+
+            GameObject enemy = GameManager.instance.pool.Get(prefabIndex);
+            enemy.transform.position = spawnPos;
+
+            var monster = enemy.GetComponent<NormalMonster>();
+            if (monster != null)
+            {
+                monster.Init(data, spriteIndex);
+            }
+        }
+    }
+
+    Vector3 GetRandomPosOnViewport()
+    {
+        Camera cam = Camera.main;
+        int side = Random.Range(0, 4);
+        Vector2 spawnPoint = Vector2.zero;
+
+        switch (side)
+        {
+            case 0: spawnPoint = new Vector2(Random.value, 1.1f); break; // 상
+            case 1: spawnPoint = new Vector2(Random.value, -0.1f); break; // 하
+            case 2: spawnPoint = new Vector2(-0.1f, Random.value); break; // 좌
+            case 3: spawnPoint = new Vector2(1.1f, Random.value); break; // 우
+        }
+
+        Vector3 worldPos = cam.ViewportToWorldPoint(spawnPoint);
+        worldPos.z = 0;
+        return worldPos;
+    }
+
     bool IsInsideBattleArea(Vector3 pos)
     {
         return (pos.x >= innerMin.x && pos.x <= innerMax.x &&
@@ -128,10 +223,8 @@ public class Spawner : MonoBehaviour
     {
         foreach (var data in spawnData)
         {
-            if (data.monsterType == type)
-                return data;
+            if (data.monsterType == type) return data;
         }
-        // 기본값 (안전장치)
         return spawnData[0];
     }
 
@@ -146,6 +239,7 @@ public class Spawner : MonoBehaviour
         }
     }
 }
+
 public enum MonsterType
 {
     Normal,
