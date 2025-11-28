@@ -48,7 +48,7 @@ public class MonsterBase : MonoBehaviour
         anim.ResetTrigger("hit");
         anim.SetBool("dead", false);
 
-        originalSpeed = speed;
+        //originalSpeed = speed;
         slowMultiplier = 1f;
     }
 
@@ -108,11 +108,41 @@ public class MonsterBase : MonoBehaviour
         KnockBack(target.position);
     }
 
+    public void ApplyDamageWithoutKonckback(float dmg)
+    {
+        if (!isLive) return;
+
+        float finalDamage = dmg;
+        bool isCrit = false; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ũ�� ���� �߰�
+
+        if (StatsManager.instance.RollCrit())
+        {
+            isCrit = true;
+            finalDamage *= StatsManager.instance.CritDamage;
+        }
+
+        health -= finalDamage;
+
+        // !!!!!!!! isCrit�� �Ѱܼ� Ǯ�Ŵ����� �������ؽ�Ʈ���� ���� ��¦ �� ��.
+        // Ǯ�Ŵ������� �׳� SetDamage���� isCirt�� �߰��߰�
+        // �������ؽ�Ʈ���� if (isCrit) text.color = Color.red; �� ����� SetDamage���� �߰���.
+        PoolManager.instance.ShowDamage(7, finalDamage, transform.position + Vector3.up * 0.5f, isCrit);
+
+        if (health <= 0)
+        {
+            Die(true);
+            return;
+        }
+
+        anim.SetTrigger("hit");
+        //KnockBack(target.position);
+    }
+
     public void ApplySlow(float slowRate)
     {
         float newMultiplier = 1f - slowRate;
         slowMultiplier = Mathf.Min(slowMultiplier, newMultiplier);
-        slowMultiplier = Mathf.Clamp(slowMultiplier, 0.5f, 1f);
+        slowMultiplier = Mathf.Clamp(slowMultiplier, 0.2f, 1f);
         speed = originalSpeed * slowMultiplier;
     }
 

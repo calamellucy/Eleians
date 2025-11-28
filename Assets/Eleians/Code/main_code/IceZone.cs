@@ -9,8 +9,20 @@ public class IceZone : MonoBehaviour
     float duration = 5f;
     bool isRunning = false;
 
+    bool playerInside = false;
+    bool monsterInside = false;
+
+    float healTimer = 1f;
+    float damageTimer = 1f;
+
     void OnEnable()
     {
+        healTimer = 1f;
+        damageTimer = 1f;
+
+        playerInside = false;
+        monsterInside = false;
+
         if (!isRunning)
             StartCoroutine(ZoneLife());
     }
@@ -23,22 +35,59 @@ public class IceZone : MonoBehaviour
         isRunning = false;
     }
 
-    void OnTriggerStay2D(Collider2D collision)
+    void Update()
     {
-        // 몬스터 피해
-        if (collision.CompareTag("Enemy"))
+        // 1) 플레이어 힐 처리
+        if (playerInside)
         {
-            MonsterBase mob = collision.GetComponent<MonsterBase>();
-            if (mob != null)
-                mob.ApplyDamage(damagePerSecond * Time.deltaTime);
+            healTimer -= Time.deltaTime;
+            if (healTimer <= 0f)
+            {
+                playerCache.Heal(healPerSecond);
+                Debug.Log("HEAL!!");
+                healTimer = 1f;
+            }
         }
 
-        // 플레이어 회복
+        // 2) 몬스터 피해 처리
+        if (monsterInside)
+        {
+            damageTimer -= Time.deltaTime;
+            if (damageTimer <= 0f)
+            {
+                if (monsterCache != null && monsterCache.isLive)
+                    monsterCache.ApplyDamageWithoutKonckback(damagePerSecond);
+
+                Debug.Log("DAMAGE!!");
+                damageTimer = 1f;
+            }
+        }
+    }
+
+    Player playerCache;
+    MonsterBase monsterCache;
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
         if (collision.CompareTag("Player"))
         {
-            Player player = collision.GetComponent<Player>();
-            if (player != null)
-                player.Heal(healPerSecond * Time.deltaTime);
+            playerInside = true;
+            playerCache = collision.GetComponent<Player>();
         }
+
+        if (collision.CompareTag("Enemy"))
+        {
+            monsterInside = true;
+            monsterCache = collision.GetComponent<MonsterBase>();
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+            playerInside = false;
+
+        if (collision.CompareTag("Enemy"))
+            monsterInside = false;
     }
 }

@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8198667843123264715
 Transform:
   m_ObjectHideFlags: 0
@@ -153,6 +153,7 @@ MonoBehaviour:
   iceCount: 0
   earthCount: 0
   dhwyyPrefab: {fileID: 0}
+  iceZonePrefab: {fileID: 0}
 --- !u!114 &6189962949381303918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,4 +168,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Seori_Shuri
   damage: 0
   per: 0
-  slowRate: 0
+  slowRate: 0.2

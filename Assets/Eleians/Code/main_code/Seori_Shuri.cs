@@ -25,11 +25,11 @@ public class Seori_Shuri : MonoBehaviour
             return;
 
         // 데미지 적용
-        monster.ApplyDamage(damage);
+        monster.ApplyDamageWithoutKonckback(damage);
 
         // 슬로우 적용 (서리 스킬 특징)
-        if (slowRate > 0f)
-            monster.ApplySlow(slowRate);
+   
+        monster.ApplySlow(slowRate);
 
         // 관통(per) 처리
         

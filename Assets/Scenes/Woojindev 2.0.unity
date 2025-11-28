@@ -3456,6 +3456,10 @@ PrefabInstance:
       value: fire slash
       objectReference: {fileID: 0}
     - target: {fileID: 2470306138378775369, guid: 3c522333db9a80944b67daa492c8c674, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2470306138378775369, guid: 3c522333db9a80944b67daa492c8c674, type: 3}
       propertyPath: m_TagString
       value: FireSlash
       objectReference: {fileID: 0}
@@ -4565,7 +4569,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 658217447}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2197f2ef2292bb74aae0486d00754b35, type: 3}
   m_Name: 
@@ -74885,6 +74889,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1530393367}
   m_CullTransparentMesh: 1
+--- !u!1 &1533350103
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1533350105}
+  - component: {fileID: 1533350104}
+  m_Layer: 0
+  m_Name: DamageReduction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1533350104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1533350103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f0abdcd952511f4c9984fa7f4de04f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageReduction
+  IsIceShield: 1
+--- !u!4 &1533350105
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1533350103}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -10.61627, y: -28.91067, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1546279693
 GameObject:
   m_ObjectHideFlags: 0
@@ -75199,6 +75248,7 @@ GameObject:
   - component: {fileID: 1602427841}
   - component: {fileID: 1602427842}
   - component: {fileID: 1602427843}
+  - component: {fileID: 1602427844}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -75354,7 +75404,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: -1912012431566861492, guid: 75338db034f6856479bc262c89ca17e3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -75441,6 +75491,22 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   nearestTargets: []
+--- !u!114 &1602427844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1602427834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d877808348b6c4eb8c3094f24fc47e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IceShield
+  requiredIce: 15
+  duration: 4
+  cooldown: 8
+  shieldPrefab: {fileID: 1829672016724653697, guid: 67ccca4e6d9298c45b03f1a24bab48a2, type: 3}
 --- !u!1 &1606321021
 GameObject:
   m_ObjectHideFlags: 0
@@ -75586,7 +75652,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -15}
+  m_AnchoredPosition: {x: 0, y: -14.999908}
   m_SizeDelta: {x: 0, y: -30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1610793795
@@ -77189,7 +77255,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 00000000
+  m_ApplyToSortingLayers: 0000000093788463
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -78023,7 +78089,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5.625
+  orthographic size: 5.0234375
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -78741,3 +78807,4 @@ SceneRoots:
   - {fileID: 1750179145}
   - {fileID: 1094237270}
   - {fileID: 1928181040}
+  - {fileID: 1533350105}

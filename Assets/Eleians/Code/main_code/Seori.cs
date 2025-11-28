@@ -23,31 +23,61 @@ public class Seori : MonoBehaviour
     // 둔화 영역
     public GameObject dhwyyPrefab;
     private GameObject dhwyyInstance;
+
+    // 얼음 영역
     public GameObject iceZonePrefab;
-    float iceZoneCooldown = 30f;
+
+    // 15진화 즉시 발동 플래그
+    float iceZoneCooldown = 7f;
     float iceZoneTimer = 0f;
+    bool iceZoneFirstTriggered = false;
+
+
+    Transform player;
 
 
     void Start()
     {
-        SyncWithStats();    // 처음 원소값 동기화
-        Init();             // 표창 생성
+        player = GameManager.instance.player.transform;
+
+        SyncWithStats();
+        Init();
     }
 
     void Update()
     {
-        // 표창 회전
+        // 회전 중심 = 플레이어
+        transform.position = player.position;
         transform.Rotate(Vector3.back * speed * Time.deltaTime);
 
-        // 원소 변경 감지 → 스킬 재등록
+        // 원소 변화 감지
         if (StatsChanged())
         {
-            SyncWithStats();   // 먼저 업데이트
-            Init();            // 그 다음 표창 재생성
+            SyncWithStats();
+            Init();
+
+            // 10개 달성 순간 → 즉시 1회 발동
+            if (iceCount >= 10 && !iceZoneFirstTriggered)
+            {
+                ActivateIceZoneRandom();
+                iceZoneTimer = 0f;               // 쿨타임 초기화
+                iceZoneFirstTriggered = true;
+            }
         }
 
-        IceZoneSkill();
+        // 10개 이상 유지 → 쿨타임 발동
+        if (iceZoneFirstTriggered && iceCount >= 10)
+        {
+            iceZoneTimer += Time.deltaTime;
+
+            if (iceZoneTimer >= iceZoneCooldown)
+            {
+                ActivateIceZoneRandom();
+                iceZoneTimer = 0f;
+            }
+        }
     }
+
 
     // 원소 변화 감지
     bool StatsChanged()
@@ -74,29 +104,24 @@ public class Seori : MonoBehaviour
     }
 
 
-    // 🔥 스킬 재등록
+    // 스킬 재등록
     public void Init()
     {
         float atk = StatsManager.instance.Attack / 10;
 
-
-        // ============================
-        // 1) 표창만 끄기 (dhwyy 영향 X)
-        // ============================
+        // 기존 표창 비활성화
         foreach (Transform child in transform)
         {
             if (child.GetComponent<Seori_Shuri>() != null)
                 child.gameObject.SetActive(false);
         }
 
-        // ============================
-        // 2) 각종 진화 계산
-        // ============================
+        // 진화 옵션 계산
         speed = 270f;
-        damage = (atk * 1.5f) * Mathf.Pow(1.08f, electricCount);
+        damage = 1;//(atk * 1.5f) * Mathf.Pow(1.08f, earthCount);
         count = 1 + (int)(iceCount * 0.25f);
         range = 1 + iceCount * 0.025f;
-        slowRate = 0.3f + (iceCount * 0.04f);
+        slowRate = 0.3f + (electricCount * 0.04f);
 
         if (iceCount >= 5)
         {
@@ -104,17 +129,13 @@ public class Seori : MonoBehaviour
             slowRate += 0.15f;
         }
 
-        // ============================
-        // 3) 얼음 20 진화 → dhwyy 생성
-        // ============================
+        // 얼음 20 진화
         if (iceCount >= 20)
             ActivateDhwyy();
         else if (dhwyyInstance != null)
             dhwyyInstance.SetActive(false);
 
-        // ============================
-        // 4) 표창 재배치
-        // ============================
+        // 표창 재배치
         Batch();
     }
 
@@ -136,55 +157,40 @@ public class Seori : MonoBehaviour
             Vector3 rot = Vector3.forward * (360f * i / count);
             bullet.Rotate(rot);
 
-            // 바깥으로 내보내기
+            // 바깥으로 보내기
             bullet.Translate(bullet.up * range, Space.World);
 
-            // 표창 데이터 전달
+            // 데이터 전달
             bullet.GetComponent<Seori_Shuri>().Init(damage, -1, slowRate);
         }
     }
 
 
-    void IceZoneSkill()
+    // ============================
+    // ★ 15진화: 즉시 발동 얼음장판
+    void ActivateIceZoneRandom()
     {
-        if (iceCount < 10) return;
-        iceZoneTimer = 30f;
-
-        iceZoneTimer += Time.deltaTime;
-        if (iceZoneTimer < iceZoneCooldown) return;
-
-        iceZoneTimer = 0f;
-
-        // 플레이어 기준 랜덤 고정 위치
-        Vector3 basePos = GameManager.instance.player.transform.position;
+        Vector3 basePos = player.position;
         Vector2 offset = Random.insideUnitCircle * 3f;
         Vector3 spawnPos = basePos + (Vector3)offset;
 
-        // 🔥 부모 없이 단독 생성
-        GameObject zone = Instantiate(iceZonePrefab, spawnPos, Quaternion.identity);
+        Instantiate(iceZonePrefab, spawnPos, Quaternion.identity);
     }
 
 
 
-
-    // 🔥 dhwyy 생성 / 유지
+    // 20진화: dhwyy 생성 / 유지
     void ActivateDhwyy()
     {
-        Transform player = GameManager.instance.player.transform;
-
         if (dhwyyInstance == null)
         {
             dhwyyInstance = Instantiate(dhwyyPrefab, player);
             dhwyyInstance.transform.localPosition = Vector3.zero;
         }
 
-        // 🔥 크기 조절 (전체 스케일)
-        float size = 1f + (iceCount * 0.025f);  // 예: 얼음 1개당 10% 증가
+        float size = 1f + (iceCount * 0.025f);
         dhwyyInstance.transform.localScale = Vector3.one * size;
 
         dhwyyInstance.SetActive(true);
     }
-
 }
-
-

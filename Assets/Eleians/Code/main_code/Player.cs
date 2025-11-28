@@ -66,6 +66,8 @@ public class Player : MonoBehaviour
     {
         if (!GameManager.instance.isLive) return;
 
+        dmg = DamageReduction.instance.ProcessDamage(dmg);
+
         GameManager.instance.health -= dmg;
 
         if (GameManager.instance.health <= 0)
@@ -88,6 +90,8 @@ public class Player : MonoBehaviour
         // 최대 체력 초과 방지
         GameManager.instance.health =
             Mathf.Clamp(GameManager.instance.health, 0f, GameManager.instance.maxHealth);
+
+        Debug.Log("HEAL!!");
 
         // 힐 이펙트, 힐 텍스트 같은 것 원하면 여기에 추가하면 된다
     }
