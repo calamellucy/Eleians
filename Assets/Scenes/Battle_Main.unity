@@ -5391,6 +5391,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 872331415}
   m_CullTransparentMesh: 1
+--- !u!1 &873292381
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 873292382}
+  - component: {fileID: 873292383}
+  m_Layer: 0
+  m_Name: Seori
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &873292382
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 873292381}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -17.38183, y: 12.02024, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1602427840}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &873292383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 873292381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06eb713188ab93740939060c707abe48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Seori
+  id: 0
+  prefabId: 10
+  damage: 0
+  count: 1
+  speed: 0
+  range: 0
+  slowRate: 0.3
+  electricCount: 0
+  fireCount: 0
+  iceCount: 0
+  earthCount: 0
+  dhwyyPrefab: {fileID: 1829672016724653697, guid: 11325668a96cf314a95a30fa79153859, type: 3}
+  iceZonePrefab: {fileID: 156783304334103038, guid: 56f6cfb6d50488349837b2dfcb0dcf5a, type: 3}
 --- !u!1 &891159347
 GameObject:
   m_ObjectHideFlags: 0
@@ -6808,6 +6865,7 @@ MonoBehaviour:
   - {fileID: 3865099264875038361, guid: d9aec4fa773463d4a97565da3edf0157, type: 3}
   - {fileID: 1173744099418082040, guid: 97f8700dba78271409c1cb11a501c2fe, type: 3}
   - {fileID: 332078509570368957, guid: 1d9fcf42f913b0c4abffc58f0ec53540, type: 3}
+  - {fileID: 3308559911533539408, guid: 3928043ecae524e4dac4cd65fa0f3217, type: 3}
   damageCanvas: {fileID: 1928181040}
 --- !u!4 &1224013707
 Transform:
@@ -77004,6 +77062,7 @@ GameObject:
   - component: {fileID: 1602427843}
   - component: {fileID: 1602427844}
   - component: {fileID: 1602427845}
+  - component: {fileID: 1602427846}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -77186,6 +77245,7 @@ Transform:
   m_Children:
   - {fileID: 389764140}
   - {fileID: 1246111560}
+  - {fileID: 873292382}
   - {fileID: 1949113737}
   - {fileID: 588036421}
   - {fileID: 1337961717}
@@ -77282,6 +77342,22 @@ MonoBehaviour:
   forwardOffset: 0.3
   clockwiseRotationOffset: 170
   Scale: {x: 1.5, y: 1.5, z: 1.5}
+--- !u!114 &1602427846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1602427834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d877808348b6c4eb8c3094f24fc47e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IceShield
+  requiredIce: 15
+  duration: 4
+  cooldown: 8
+  shieldPrefab: {fileID: 1829672016724653697, guid: 67ccca4e6d9298c45b03f1a24bab48a2, type: 3}
 --- !u!1 &1606321021
 GameObject:
   m_ObjectHideFlags: 0
