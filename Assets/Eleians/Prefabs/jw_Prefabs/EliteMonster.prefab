@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &641570731576117388
+--- !u!1 &4494518972741288548
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,42 +8,42 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4994491351207363899}
-  - component: {fileID: 3793591075452457291}
-  - component: {fileID: 7017067633471774943}
-  - component: {fileID: 3572292703986221049}
-  - component: {fileID: 8850149410203235170}
-  - component: {fileID: -7832555614685385140}
-  - component: {fileID: 2982861548057514276}
-  m_Layer: 7
-  m_Name: NormalMonster
-  m_TagString: Enemy
+  - component: {fileID: 1642961532199147475}
+  - component: {fileID: 7125165154111769411}
+  - component: {fileID: -7448490325277844083}
+  - component: {fileID: 2007727681707042537}
+  - component: {fileID: 5484080470477227625}
+  - component: {fileID: -8808301833418854130}
+  - component: {fileID: -1563120707753054699}
+  m_Layer: 0
+  m_Name: EliteMonster
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4994491351207363899
+--- !u!4 &1642961532199147475
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 641570731576117388}
+  m_GameObject: {fileID: 4494518972741288548}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &3793591075452457291
+--- !u!212 &7125165154111769411
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 641570731576117388}
+  m_GameObject: {fileID: 4494518972741288548}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -84,30 +84,30 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 2601025511636809342, guid: fe119182dde7afe46afc583bb0cef6ad, type: 3}
+  m_Sprite: {fileID: -2180847809187414082, guid: b8482e7c0516554448a0d832a037fb76, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.56, y: 0.58}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!50 &7017067633471774943
+--- !u!50 &-7448490325277844083
 Rigidbody2D:
   serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 641570731576117388}
+  m_GameObject: {fileID: 4494518972741288548}
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 2
+  m_Mass: 5
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 0
@@ -120,15 +120,15 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
   m_Constraints: 4
---- !u!70 &3572292703986221049
+--- !u!70 &2007727681707042537
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 641570731576117388}
+  m_GameObject: {fileID: 4494518972741288548}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -156,20 +156,20 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.05}
-  m_Size: {x: 0.31151843, y: 0.6384815}
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 0.56, y: 0.58}
   m_Direction: 0
---- !u!95 &8850149410203235170
+--- !u!95 &5484080470477227625
 Animator:
   serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 641570731576117388}
+  m_GameObject: {fileID: 4494518972741288548}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: d1740ccdeee7002449607e75e907e4de, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -181,18 +181,30 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-7832555614685385140
+--- !u!114 &-8808301833418854130
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 641570731576117388}
+  m_GameObject: {fileID: 4494518972741288548}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6ccc0341eaced245a2744ea217294e5, type: 3}
+  m_Script: {fileID: 11500000, guid: 428839e766b754346bd4a7bccd7ef283, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NormalMonster
+  m_EditorClassIdentifier: Assembly-CSharp::DamageReceiver
+--- !u!114 &-1563120707753054699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4494518972741288548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2167fbdff85e64440a69dbb40e78887f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EliteMonster
   speed: 0
   health: 0
   maxHealth: 0
@@ -201,20 +213,4 @@ MonoBehaviour:
   slowMultiplier: 1
   isLive: 0
   target: {fileID: 0}
-  animCon:
-  - {fileID: 9100000, guid: 2c6f20883ecef9241b7a91146d859961, type: 2}
-  - {fileID: 9100000, guid: 2f155edfe4e0aff4781835b478a191bd, type: 2}
-  - {fileID: 9100000, guid: 3b9283527009617439b303a3783a61c8, type: 2}
-  - {fileID: 9100000, guid: e04967d81e219c740aa5a316bb23dff6, type: 2}
---- !u!114 &2982861548057514276
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 641570731576117388}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 428839e766b754346bd4a7bccd7ef283, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DamageReceiver
+  animCon: []
