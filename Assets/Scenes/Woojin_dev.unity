@@ -5219,7 +5219,7 @@ MonoBehaviour:
   - {fileID: 2934488521162555772, guid: 5078619d94a97df4ab111745b70c9ab5, type: 3}
   - {fileID: 641570731576117388, guid: 7d1c3b4b16bf6ab498f71bf0ec8428d8, type: 3}
   - {fileID: 6793793243088334630, guid: 2fde159fbb004ba40ad88752b12499fd, type: 3}
-  - {fileID: 3308559911533539408, guid: 3928043ecae524e4dac4cd65fa0f3217, type: 3}
+  - {fileID: 1688397079997569225, guid: 70ed8e32c15edda408a06e5e067778c9, type: 3}
   - {fileID: 1829672016724653697, guid: 11325668a96cf314a95a30fa79153859, type: 3}
   damageCanvas: {fileID: 0}
 --- !u!4 &1224013707
@@ -40771,7 +40771,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d70d5990d310a2a4ca5f8f438309fb48, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -77732,7 +77732,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 1.359375
+  orthographic size: 2.9609375
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -78234,14 +78234,6 @@ PrefabInstance:
     - target: {fileID: 486534827732295373, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
       propertyPath: m_Name
       value: Tower
-      objectReference: {fileID: 0}
-    - target: {fileID: 3987084870330700451, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3987084870330700451, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6547262138910496747, guid: 9cb3b6f198a16b74780376d76c2cdbe4, type: 3}
       propertyPath: m_LocalPosition.x
