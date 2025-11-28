@@ -32,9 +32,9 @@ public class TowerMonster : NormalMonster
     {
         // 아무것도 안 함
     }
-
-    public override void ApplyDamage(float dmg)
+    
+    public override void ApplyDamage(float dmg, ElementType element = ElementType.None)
     {
-        base.ApplyDamage(dmg);
+        base.ApplyDamage(dmg, ElementType.None);
     }
 }
