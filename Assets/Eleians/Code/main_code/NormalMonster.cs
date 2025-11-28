@@ -38,6 +38,8 @@ public class NormalMonster : MonsterBase
         anim.runtimeAnimatorController = animCon[spriteIndex];
         monsterType = spriteIndex;
         speed = data.speed;
+        originalSpeed = speed;
+
         maxHealth = data.health;
         damage = data.damage;
         health = maxHealth;

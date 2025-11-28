@@ -19,6 +19,12 @@ public class Skill1_Re : MonoBehaviour
     float timer;
     Player player;
 
+    // ----- Active Skill -----
+    float activeCooldown = 5f;    // 기본 쿨타임
+    float activeTimer = 0f;
+    bool isActiveReady = true;
+
+
     void Awake()
     {
         player = GetComponentInParent<Player>();
@@ -34,19 +40,31 @@ public class Skill1_Re : MonoBehaviour
     void Update()
     {
         timer += Time.deltaTime;
+        activeTimer += Time.deltaTime;
+
         if (timer >= 1f / attackRate)
         {
             timer = 0f;
             TryFire();
-            Debug.Log("Update"); // 오류 검사
         }
+
+        // Q키 입력 시 사용 스킬 발동
+        if (Input.GetKeyDown(KeyCode.Q) && isActiveReady)
+        {
+            StartCoroutine(UseActiveSkill());
+        }
+
+        if (activeTimer >= activeCooldown)
+            isActiveReady = true;
+
         SyncWithStats();
     }
+
 
     public void Init()
     {
         prefabId = 2;
-        attackRate = 1f + 0.08f * electricCount;        
+        attackRate = 1f + 0.08f * electricCount;
         damage = 10f + 0.6f * electricCount + fireCount;             
         count = 0 + (int)((fireCount * 0.25) / 1);      
         projectileSize = (1 + earthCount * 0.08f);   
@@ -109,8 +127,53 @@ public class Skill1_Re : MonoBehaviour
             evo.Setup(this);
 
         bullet.GetComponent<Bullet_Re>().Init(damage, per, dir, electricCount);
-        Debug.Log("Fire");
+        //Debug.Log("Fire");
     }
+
+    void Fire8Directions()
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            float angle = Random.Range(0f, 360f);
+            Vector3 dir = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad),
+                                      Mathf.Sin(angle * Mathf.Deg2Rad),
+                                      0f);
+
+            FireDirectionalBullet(dir);
+        }
+    }
+
+    void FireDirectionalBullet(Vector3 dir)
+    {
+        Transform bullet = GameManager.instance.pool.Get(prefabId).transform;
+        bullet.position = transform.position;
+        bullet.rotation = Quaternion.FromToRotation(Vector3.up, dir);
+        bullet.localScale = Vector3.one * projectileSize;
+
+        BulletEvolution evo = bullet.GetComponent<BulletEvolution>();
+        if (evo != null)
+            evo.Setup(this);
+
+        bullet.GetComponent<Bullet_Re>().Init(damage, count, dir, electricCount);
+    }
+
+
+
+    IEnumerator UseActiveSkill()
+    {
+        isActiveReady = false;
+        activeTimer = 0f;
+
+        int cycles = 5;
+
+        for (int i = 0; i < cycles; i++)
+        {
+            Fire8Directions();       // 8발 동시 발사
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+
 
     void SyncWithStats()
     {

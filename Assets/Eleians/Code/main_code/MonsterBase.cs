@@ -49,7 +49,7 @@ public class MonsterBase : MonoBehaviour
         anim.ResetTrigger("hit");
         anim.SetBool("dead", false);
 
-        originalSpeed = speed;
+        //originalSpeed = speed;
         slowMultiplier = 1f;
     }
 
@@ -85,7 +85,7 @@ public class MonsterBase : MonoBehaviour
         if (!isLive) return;
 
         float finalDamage = dmg;
-        bool isCrit = false; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Å©¸® ¿©ºÎ Ãß°¡
+        bool isCrit = false; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
 
         if (StatsManager.instance.RollCrit()) {
             isCrit = true;
@@ -94,9 +94,9 @@ public class MonsterBase : MonoBehaviour
 
         health -= finalDamage;
 
-        // !!!!!!!! isCritµµ ³Ñ°Ü¼­ Ç®¸Å´ÏÀú¶û µ¥¹ÌÁöÅØ½ºÆ®±îÁö ¾ÆÁÖ »ìÂ¦ ¼Õ º½.
-        // Ç®¸Å´ÏÀú¿¡¼± ±×³É SetDamage¿¡¼­ isCirt¸¸ Ãß°¡Çß°í
-        // µ¥¹ÌÁöÅØ½ºÆ®¿¡¼± if (isCrit) text.color = Color.red; ·Î ½á³õ°í SetDamageÀÎÀÚ Ãß°¡ÇÔ.
+        // !!!!!!!! isCritï¿½ï¿½ ï¿½Ñ°Ü¼ï¿½ Ç®ï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Â¦ ï¿½ï¿½ ï¿½ï¿½.
+        // Ç®ï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×³ï¿½ SetDamageï¿½ï¿½ï¿½ï¿½ isCirtï¿½ï¿½ ï¿½ß°ï¿½ï¿½ß°ï¿½
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ if (isCrit) text.color = Color.red; ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ SetDamageï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½.
         PoolManager.instance.ShowDamage(7, finalDamage, transform.position + Vector3.up * 0.5f, isCrit); 
 
         if (health <= 0)
@@ -107,6 +107,36 @@ public class MonsterBase : MonoBehaviour
 
         anim.SetTrigger("hit");
         KnockBack(target.position);
+    }
+
+    public void ApplyDamageWithoutKonckback(float dmg)
+    {
+        if (!isLive) return;
+
+        float finalDamage = dmg;
+        bool isCrit = false; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
+
+        if (StatsManager.instance.RollCrit())
+        {
+            isCrit = true;
+            finalDamage *= StatsManager.instance.CritDamage;
+        }
+
+        health -= finalDamage;
+
+        // !!!!!!!! isCritï¿½ï¿½ ï¿½Ñ°Ü¼ï¿½ Ç®ï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Â¦ ï¿½ï¿½ ï¿½ï¿½.
+        // Ç®ï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×³ï¿½ SetDamageï¿½ï¿½ï¿½ï¿½ isCirtï¿½ï¿½ ï¿½ß°ï¿½ï¿½ß°ï¿½
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ if (isCrit) text.color = Color.red; ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ SetDamageï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½.
+        PoolManager.instance.ShowDamage(7, finalDamage, transform.position + Vector3.up * 0.5f, isCrit);
+
+        if (health <= 0)
+        {
+            Die(true);
+            return;
+        }
+
+        anim.SetTrigger("hit");
+        //KnockBack(target.position);
     }
 
     public void ApplySlow(float slowRate)
@@ -141,7 +171,7 @@ public class MonsterBase : MonoBehaviour
         isKnockback = false;
     }
     /*
-     * ¾È ¾²´Â ¾ÖÀÓ
+     * ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void Dead()
     {
         if (isDeadProcessed) return;

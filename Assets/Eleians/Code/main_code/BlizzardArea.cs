@@ -32,23 +32,23 @@ public class BlizzardArea : MonoBehaviour
         // 1초 지남 → 효과 적용
         timer = 0f;
 
-        //if (collision.CompareTag("Monster"))
-        //{
-        //    MonsterBase m = collision.GetComponent<MonsterBase>();
-        //    if (m != null)
-        //    {
-        //        // StatsManager의 공격력 적용 + 크리티컬 적용
-        //        float damage = StatsManager.instance.ApplyCrit(
-        //            StatsManager.instance.Attack * 0.25f   // 공격력 25% 비율 데미지 예시
-        //        );
+        if (collision.CompareTag("Monster"))
+        {
+            MonsterBase m = collision.GetComponent<MonsterBase>();
+            if (m != null)
+            {
+                // StatsManager의 공격력 적용 + 크리티컬 적용
+                float damage = StatsManager.instance.ApplyCrit(
+                    StatsManager.instance.Attack * 0.25f   // 공격력 25% 비율 데미지 예시
+                );
 
-        //        // iceCount에 비례해 눈보라 강화 (원하면 조정 가능)
-        //        damage += baseDamage + (StatsManager.instance.IceCnt * 0.4f);
+                // iceCount에 비례해 눈보라 강화 (원하면 조정 가능)
+                damage += baseDamage + (StatsManager.instance.IceCnt * 0.4f);
 
-        //        m.ApplyDamage(damage);
-        //        m.ApplySlow(slowRate);
-        //    }
-        //}
+                m.ApplyDamage(damage);
+                m.ApplySlow(slowRate);
+            }
+        }
     }
 
     void SyncWithStats()
