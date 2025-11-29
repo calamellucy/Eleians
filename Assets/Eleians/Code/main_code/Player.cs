@@ -13,6 +13,9 @@ public class Player : MonoBehaviour
     public bool IsFacingRight { get; private set; } = true;
     public Vector2 MoveDir => inputVec;
 
+    public bool isInvincible = false; // 현재 무적 상태인가?
+    private float invincibleTimer = 0f; // 무적 남은 시간
+
     Rigidbody2D rigid;
     SpriteRenderer spriter;
     Animator anim;
@@ -30,6 +33,33 @@ public class Player : MonoBehaviour
     {
         inputVec.x = Input.GetAxisRaw("Horizontal");
         inputVec.y = Input.GetAxisRaw("Vertical");
+
+        // [추가] 무적 타이머 및 깜빡임 효과 로직
+        if (isInvincible)
+        {
+            invincibleTimer -= Time.deltaTime;
+
+            if (invincibleTimer <= 0)
+            {
+                // 무적 종료
+                isInvincible = false;
+                invincibleTimer = 0;
+
+                // 색깔 원상복구 (투명도 100%)
+                Color color = spriter.color;
+                color.a = 1f;
+                spriter.color = color;
+            }
+            else
+            {
+                // 무적 중 깜빡임 효과 (투명도를 0.4 ~ 1.0 사이로 왔다갔다)
+                // Sine 함수를 이용해 부드럽게 깜빡임
+                Color color = spriter.color;
+                // Time.time * 30 하면 빠르게 깜빡임
+                color.a = Mathf.Abs(Mathf.Sin(Time.time * 30f)) * 0.5f + 0.5f;
+                spriter.color = color;
+            }
+        }
     }
 
     void FixedUpdate()
@@ -47,28 +77,39 @@ public class Player : MonoBehaviour
         }
     }
 
-    /*
-    private void OnCollisionStay2D(Collision2D collision)
+    // [추가] 외부(ArtifactManager 등)에서 무적을 걸어주는 함수
+    public void SetInvincible(float duration)
     {
-        if (!GameManager.instance.isLive)
-            return;
-
-        GameManager.instance.health -= Time.deltaTime * 10;
-
-        if (GameManager.instance.health < 0)
-        {
-            // anim.SetTrigger("Dead");
-        }
+        isInvincible = true;
+        invincibleTimer = duration;
+        Debug.Log($"플레이어 {duration}초간 무적!");
     }
-    */
 
     public void ApplyDamage(float dmg)
     {
         if (!GameManager.instance.isLive) return;
 
-        dmg = DamageReduction.instance.ProcessDamage(dmg);
+        // [추가] 무적 상태면 데미지 무시 (가장 먼저 체크!)
+        if (isInvincible) return;
+
+        // [추가] 위기 탈출 넘버원 체크!
+        // 아티팩트가 "true"를 반환하면(발동하면) 데미지 무시하고 리턴
+        if (ArtifactManager.instance.OnPlayerTakeDamage())
+        {
+            return;
+        }
+
+        // 기존 데미지 감소 로직
+        // dmg = DamageReduction.instance.ProcessDamage(dmg); 
+
+        // [추가] 아티팩트 (도파민, 한화팬 등 받는데미지 감소) 적용
+        // StatsManager에 DamageTakenMultiplier(받는 피해 계수)가 있으니 적용
+        dmg *= StatsManager.instance.DamageTakenMultiplier;
 
         GameManager.instance.health -= dmg;
+
+        // [추가] 맞았을 때 발동하는 아티팩트가 있다면 여기서 호출 (예: 반사 데미지)
+        // ArtifactManager.instance.OnPlayerHit();
 
         if (GameManager.instance.health <= 0)
         {
@@ -99,6 +140,12 @@ public class Player : MonoBehaviour
 
     void Die()
     {
+        // 아티팩트로 부활 가능한지 체크
+        if (ArtifactManager.instance.TryRevive())
+        {
+            return;
+        }
+
         GameManager.instance.isLive = false;
         // anim.SetTrigger("Dead");
         // rigid.simulated = false;

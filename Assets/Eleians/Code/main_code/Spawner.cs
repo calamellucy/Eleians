@@ -193,7 +193,7 @@ public class Spawner : MonoBehaviour
             var monster = enemy.GetComponent<NormalMonster>();
             if (monster != null)
             {
-                monster.Init(data, spriteIndex);
+                monster.Init(data, spriteIndex, type);
             }
         }
     }
@@ -230,7 +230,7 @@ public class Spawner : MonoBehaviour
             var monster = enemy.GetComponent<NormalMonster>();
             if (monster != null)
             {
-                monster.Init(data, spriteIndex);
+                monster.Init(data, spriteIndex, MonsterType.Elite);
             }
         }
     }

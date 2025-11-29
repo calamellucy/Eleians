@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72cf24f9046563949a8aea03ca25aab8, type: 3}
-  m_Name: Artifact_Overthink
+  m_Name: Artifact_Caffeine
   m_EditorClassIdentifier: Assembly-CSharp::ArtifactData
-  id: 7
-  artifactName: "\uACE0\uBBFC\uC911\uB3C5"
-  description: "\uCD9C\uD604\uD55C \uC544\uD2F0\uD399\uD2B8 1\uD68C \uB9AC\uB864"
-  icon: {fileID: 8251420737353713725, guid: 14eeb2cd6e4f06f4bb06e163ed903352, type: 3}
+  id: 0
+  artifactName: "\uCE74\uD398\uC778 \uC218\uD608"
+  description: "\uC774\uB3D9\uC18D\uB3C4 10% \uC99D\uAC00\n5\uCD08\uB9C8\uB2E4 \uCD5C\uB300
+    \uCCB4\uB825\uC758\n2%\uB97C \uD68C\uBCF5\uD55C\uB2E4."
+  icon: {fileID: -3516637482284730083, guid: 74dc553ceee4df74bac566f1a888b9ea, type: 3}
