@@ -18,10 +18,12 @@ public class MonsterBase : MonoBehaviour
     public float originalSpeed;
     public float slowMultiplier = 1f;
     public int monsterType;
+    public MonsterType myType;
 
     public bool isLive;
     protected bool isDeadProcessed = false;
     protected bool isKnockback = false;
+    protected virtual bool IsSuperArmor => false;
 
     // 전기 속성 스턴 확인용 변수
     public bool isStunned = false;
@@ -107,18 +109,28 @@ public class MonsterBase : MonoBehaviour
         {
             isCrit = true;
             finalDamage *= StatsManager.instance.CritDamage;
+            ArtifactManager.instance.OnCritProc(); // 크리티컬 체인 발동
         }
+
+        // [연결] 아티팩트: 컴파일 에러, 접근금지령, 도파민 등 데미지 보정
+        // ref로 finalDamage를 넘겨서 함수 안에서 수정되게 함
+        ArtifactManager.instance.OnPlayerAttack(this, ref finalDamage, isCrit);
 
         health -= finalDamage;
         PoolManager.instance.ShowDamage(7, finalDamage, transform.position + Vector3.up * 0.5f, isCrit);
 
         if (health <= 0)
         {
+            // [연결] 아티팩트: 깃허브 충돌, 스택오버플로우 (적 처치 시)
+            ArtifactManager.instance.OnEnemyKilled(this);
             Die(true);
             return;
         }
 
-        anim.SetTrigger("hit");
+        if (!IsSuperArmor)
+        {
+            anim.SetTrigger("hit");
+        }
 
         // ★★★ 속성별 특수 능력 적용 ★★★
         switch (element)
