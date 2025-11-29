@@ -4,7 +4,7 @@ using UnityEngine;
 public class Seori : MonoBehaviour
 {
     public int id;
-    public int prefabId = 9;
+    public int prefabId = 10;
     public float damage;
     public int count = 1;
     public float speed;

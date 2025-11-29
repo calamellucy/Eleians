@@ -97,25 +97,8 @@ public class GameManager : MonoBehaviour
             gameTime = maxGameTime;
         }
 
-        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // ÆäÀÌÁî °è»ê ·ÎÁ÷
         phaseTimer += Time.deltaTime;
-
-        /*
-        if (!isTowerPhase && phaseTimer >= normalPhaseDuration)
-        {
-            isTowerPhase = true;
-            phaseTimer = 0f;
-            Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!");
-            tower.GetComponent<Tower>().OnTowerPhaseStart(); // È£ï¿½ï¿½
-        }
-        else if (isTowerPhase && phaseTimer >= towerPhaseDuration)
-        {
-            isTowerPhase = false;
-            phaseTimer = 0f;
-            Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½Ï¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ç°³!");
-            tower.GetComponent<Tower>().OnTowerPhaseEnd();   // È£ï¿½ï¿½
-        }
-        */
 
         if (gameTime > bossPhaseStartTime)
         {
