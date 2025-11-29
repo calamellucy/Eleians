@@ -7191,6 +7191,14 @@ MonoBehaviour:
     spawnTime: 10
     eliteIndex: 2
     isSpawned: 0
+  - note: test
+    spawnTime: 10
+    eliteIndex: 1
+    isSpawned: 0
+  - note: test
+    spawnTime: 10
+    eliteIndex: 0
+    isSpawned: 0
   - note: "stage1 \uC77C\uBC18"
     spawnTime: 125
     eliteIndex: 1
@@ -75866,7 +75874,7 @@ Tilemap:
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 0.4566037, g: 0.4566037, b: 0.4566037, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: -17, y: -37, z: 0}
   m_Size: {x: 67, y: 51, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
@@ -78032,6 +78040,7 @@ MonoBehaviour:
   slowMultiplier: 1
   monsterType: 0
   isLive: 0
+  isStunned: 0
   target: {fileID: 0}
   animCon: []
   player: {fileID: 0}
