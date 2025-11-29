@@ -1,6 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine; // HashSet을 안 쓰니까 Collections.Generic 삭제
 
 public class FlameSword : MonoBehaviour
 {
@@ -12,18 +11,20 @@ public class FlameSword : MonoBehaviour
     [Header("히트 타이밍")]
     public float hitStart = 0.1f;
     public float hitEnd = 0.3f;
+
+    // DamageReceiver가 가져갈 데미지 변수
     public float damage = 150f;
 
     [Header("2차 각성 (Fire 20)")]
-    public int fireStack = 0; // 현재 중첩 스택
-    private const int MaxFireStack = 7; // 최대 스택(발동 조건)
+    public int fireStack = 0;
+    private const int MaxFireStack = 7;
 
     Animator anim;
     Collider2D col;
     SpriteRenderer sr;
 
     float timer;
-    private HashSet<Collider2D> hitTargets = new HashSet<Collider2D>();
+    // HashSet 삭제됨 (DamageReceiver가 처리함)
 
     void Awake()
     {
@@ -48,7 +49,6 @@ public class FlameSword : MonoBehaviour
         }
     }
 
-    // 레벨에 따른 기본 스탯 계산 (Slash 할 때마다 초기화용으로 사용)
     public void GiveLevelSystemToSkill2()
     {
         interval = 1.5f / (StatsManager.instance.AttackSpeed);
@@ -67,25 +67,19 @@ public class FlameSword : MonoBehaviour
 
     void Slash()
     {
-        // 1. 먼저 기본 스탯으로 초기화 (이전 스택 효과가 영구 누적되지 않도록)
         GiveLevelSystemToSkill2();
 
-        // ===============================================
-        // [2차 각성] 불 20레벨: 타오르는 맹세 (스택 쌓기)
-        // ===============================================
-        bool isTriggerAttack = false; // 3방향 발사 타이밍인지 체크
+        bool isTriggerAttack = false;
 
         if (StatsManager.instance.FireCnt >= 20)
         {
             fireStack++;
 
-            // 스택당 크기/공격력 15% 증가 (합연산)
             float bonusMultiplier = 1f + (fireStack * 0.15f);
 
             scale *= bonusMultiplier;
             damage *= bonusMultiplier;
 
-            // 7회 중첩 시 발동 준비 및 스택 초기화
             if (fireStack >= MaxFireStack)
             {
                 isTriggerAttack = true;
@@ -93,10 +87,8 @@ public class FlameSword : MonoBehaviour
             }
         }
 
-        // 실제 크기 적용
         transform.localScale = Vector3.one * scale;
 
-        // 적 탐색 및 방향 설정
         Transform target = GameManager.instance.player.scans.GetNearest(1)[0];
         Vector2 dir = Vector2.right;
 
@@ -107,42 +99,29 @@ public class FlameSword : MonoBehaviour
             transform.rotation = Quaternion.AngleAxis(angle - subAngle, Vector3.forward);
         }
 
-        // ===============================================
-        // [발사 로직] 10레벨(1발) vs 20레벨(3발)
-        // ===============================================
-        if (isTriggerAttack) // 20레벨 7스택 터짐: 3방향 발사
+        if (isTriggerAttack)
         {
-            FireProjectile(dir); // 정면
-
-            // 위쪽 (+30도)
+            FireProjectile(dir);
             Vector2 dirUp = Quaternion.AngleAxis(30f, Vector3.forward) * dir;
             FireProjectile(dirUp);
-
-            // 아래쪽 (-30도)
             Vector2 dirDown = Quaternion.AngleAxis(-30f, Vector3.forward) * dir;
             FireProjectile(dirDown);
         }
-        else if (StatsManager.instance.FireCnt >= 10) // 평소(10레벨 이상)에는 1발 발사
+        else if (StatsManager.instance.FireCnt >= 10)
         {
             FireProjectile(dir);
         }
-        // ===============================================
 
         sr.enabled = true;
-        hitTargets.Clear();
+        // hitTargets 초기화 로직 삭제됨
         anim.Play("fire slash", -1, 0f);
     }
 
-    // 투사체 발사 헬퍼 함수
     void FireProjectile(Vector2 direction)
     {
-        // 1. PoolManager에서 8번(FireSlashShots) 가져오기
         GameObject shotObj = PoolManager.instance.Get(8);
-
-        // 2. 위치 설정
         shotObj.transform.position = transform.parent.position;
 
-        // 3. 발사
         FireSlashShots shotScript = shotObj.GetComponent<FireSlashShots>();
         if (shotScript != null)
         {
@@ -150,6 +129,7 @@ public class FlameSword : MonoBehaviour
         }
     }
 
+    // 애니메이션 이벤트에서 호출
     void MakeHitBox()
     {
         col.enabled = true;
@@ -166,18 +146,5 @@ public class FlameSword : MonoBehaviour
         col.enabled = false;
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (!col.enabled) return;
-        if (!other.CompareTag("Enemy")) return;
-        if (hitTargets.Contains(other)) return;
-
-        hitTargets.Add(other);
-
-        NormalMonster monster = other.GetComponent<NormalMonster>();
-        if (monster != null)
-        {
-            monster.ApplyDamage(damage);
-        }
-    }
+    // OnTriggerEnter2D 삭제됨 (DamageReceiver로 이관)
 }

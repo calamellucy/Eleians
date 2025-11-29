@@ -81,10 +81,11 @@ public class BossMonster : NormalMonster
         gameObject.SetActive(true);
     }
 
-    public override void ApplyDamage(float dmg)
+    public override void ApplyDamage(float dmg, ElementType element = ElementType.None)
     {
-        base.ApplyDamage(dmg);
+        base.ApplyDamage(dmg, ElementType.None);
     }
+    
 
     // 보스 패턴
     IEnumerator PatternLoop()
