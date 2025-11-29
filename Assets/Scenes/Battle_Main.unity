@@ -5229,6 +5229,7 @@ GameObject:
   - component: {fileID: 817935900}
   - component: {fileID: 817935902}
   - component: {fileID: 817935901}
+  - component: {fileID: 817935903}
   m_Layer: 5
   m_Name: Ice Skill
   m_TagString: Untagged
@@ -5296,6 +5297,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 817935899}
   m_CullTransparentMesh: 1
+--- !u!114 &817935903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 817935899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b523c685753fe14499aa379d287ddb14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IceActive
+  coolTime: 12
+  borderImage: {fileID: 1253620564}
+  iceSkill: {fileID: 1602427847}
 --- !u!1 &872331415
 GameObject:
   m_ObjectHideFlags: 0
@@ -6866,6 +6882,7 @@ MonoBehaviour:
   - {fileID: 1173744099418082040, guid: 97f8700dba78271409c1cb11a501c2fe, type: 3}
   - {fileID: 332078509570368957, guid: 1d9fcf42f913b0c4abffc58f0ec53540, type: 3}
   - {fileID: 3308559911533539408, guid: 3928043ecae524e4dac4cd65fa0f3217, type: 3}
+  - {fileID: 4494518972741288548, guid: 0c4959f33e38f7d4094d2d750a61eb9e, type: 3}
   damageCanvas: {fileID: 1928181040}
 --- !u!4 &1224013707
 Transform:
@@ -7038,6 +7055,12 @@ MonoBehaviour:
     health: 35
     speed: 1
     damage: 0
+  - monsterType: 2
+    spriteCount: 4
+    spawnTime: 0.7
+    health: 1000
+    speed: 1
+    damage: 0
   waves:
   - waveName: S1_Easy
     startTime: 0
@@ -7159,6 +7182,79 @@ MonoBehaviour:
     type: 1
     spriteIndices: 0000000001000000
     spawnAmountOnce: 1
+  eliteEvents:
+  - note: test
+    spawnTime: 10
+    eliteIndex: 3
+    isSpawned: 0
+  - note: test
+    spawnTime: 10
+    eliteIndex: 2
+    isSpawned: 0
+  - note: "stage1 \uC77C\uBC18"
+    spawnTime: 125
+    eliteIndex: 1
+    isSpawned: 0
+  - note: "stage1 \uAC70\uC810"
+    spawnTime: 150
+    eliteIndex: 1
+    isSpawned: 0
+  - note: "stage1 \uAC70\uC810"
+    spawnTime: 160
+    eliteIndex: 1
+    isSpawned: 0
+  - note: "stage2 \uC77C\uBC18"
+    spawnTime: 310
+    eliteIndex: 2
+    isSpawned: 0
+  - note: "stage2 \uAC70\uC810"
+    spawnTime: 330
+    eliteIndex: 2
+    isSpawned: 0
+  - note: "stage2 \uAC70\uC810"
+    spawnTime: 330
+    eliteIndex: 2
+    isSpawned: 0
+  - note: "stage2 \uAC70\uC810"
+    spawnTime: 345
+    eliteIndex: 2
+    isSpawned: 0
+  - note: "stage3 \uC77C\uBC18"
+    spawnTime: 485
+    eliteIndex: 0
+    isSpawned: 0
+  - note: "stage3 \uAC70\uC810"
+    spawnTime: 510
+    eliteIndex: 0
+    isSpawned: 0
+  - note: "stage3 \uAC70\uC810"
+    spawnTime: 520
+    eliteIndex: 0
+    isSpawned: 0
+  - note: "stage3 \uAC70\uC810"
+    spawnTime: 525
+    eliteIndex: 0
+    isSpawned: 0
+  - note: "stage4 \uC77C\uBC18"
+    spawnTime: 670
+    eliteIndex: 3
+    isSpawned: 0
+  - note: "stage4 \uAC70\uC810"
+    spawnTime: 690
+    eliteIndex: 3
+    isSpawned: 0
+  - note: "stage4 \uAC70\uC810"
+    spawnTime: 695
+    eliteIndex: 0
+    isSpawned: 0
+  - note: "stage4 \uAC70\uC810"
+    spawnTime: 700
+    eliteIndex: 1
+    isSpawned: 0
+  - note: "stage4 \uAC70\uC810"
+    spawnTime: 705
+    eliteIndex: 2
+    isSpawned: 0
   innerMin: {x: -16, y: -37}
   innerMax: {x: 50, y: 13}
 --- !u!1 &1253620562
@@ -77063,6 +77159,7 @@ GameObject:
   - component: {fileID: 1602427844}
   - component: {fileID: 1602427845}
   - component: {fileID: 1602427846}
+  - component: {fileID: 1602427847}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -77349,7 +77446,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1602427834}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 15d877808348b6c4eb8c3094f24fc47e, type: 3}
   m_Name: 
@@ -77357,6 +77454,20 @@ MonoBehaviour:
   requiredIce: 15
   duration: 4
   cooldown: 8
+  shieldPrefab: {fileID: 1829672016724653697, guid: 67ccca4e6d9298c45b03f1a24bab48a2, type: 3}
+--- !u!114 &1602427847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1602427834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1e867c8e97ab7048b8ef9f051159514, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IceShieldSkill
+  duration: 4
   shieldPrefab: {fileID: 1829672016724653697, guid: 67ccca4e6d9298c45b03f1a24bab48a2, type: 3}
 --- !u!1 &1606321021
 GameObject:
@@ -79138,6 +79249,7 @@ GameObject:
   - component: {fileID: 1855029807}
   - component: {fileID: 1855029809}
   - component: {fileID: 1855029808}
+  - component: {fileID: 1855029810}
   m_Layer: 5
   m_Name: Electric Skill
   m_TagString: Untagged
@@ -79205,6 +79317,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1855029806}
   m_CullTransparentMesh: 1
+--- !u!114 &1855029810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1855029806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea04872129d592b4db6a039ce3b2d093, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ElectricActive
+  coolTime: 5
+  borderImage: {fileID: 1568925941}
+  skillScript: {fileID: 1602427842}
 --- !u!1 &1884702737
 GameObject:
   m_ObjectHideFlags: 0
@@ -80738,7 +80865,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 3.75
+  orthographic size: 4.21875
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -81207,6 +81334,51 @@ MonoBehaviour:
   nameText: {fileID: 1569587050}
   descText: {fileID: 469543180}
   data: {fileID: 0}
+--- !u!1 &2119353749
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2119353751}
+  - component: {fileID: 2119353750}
+  m_Layer: 0
+  m_Name: DamageReduction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2119353750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2119353749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f0abdcd952511f4c9984fa7f4de04f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageReduction
+  IsIceShield: 0
+--- !u!4 &2119353751
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2119353749}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 16.13204, y: -12.89997, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2123818919
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -81828,3 +82000,4 @@ SceneRoots:
   - {fileID: 1688122727}
   - {fileID: 190634463}
   - {fileID: 1111401954}
+  - {fileID: 2119353751}

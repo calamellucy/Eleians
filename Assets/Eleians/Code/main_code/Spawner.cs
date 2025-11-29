@@ -1,6 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// [추가] 엘리트 등장을 예약하는 구조체
+[System.Serializable]
+public class EliteSpawnEvent
+{
+    public string note;         // 메모용 (예: "1스테이지 중간보스")
+    public float spawnTime;     // 등장 시간 (초)
+    public int eliteIndex;      // 엘리트 종류 (0~3)
+    [HideInInspector] public bool isSpawned; // 이미 소환됐는지 체크하는 플래그
+}
+
 [System.Serializable]
 public struct Wave
 {
@@ -24,6 +34,9 @@ public class Spawner : MonoBehaviour
     public Wave[] waves;
     public Wave towerWave;
 
+    [Header("Elite Schedule")]
+    public List<EliteSpawnEvent> eliteEvents; // [추가] 엘리트 편성표 리스트
+
     [Header("Runtime Check")]
     private Wave currentWave;
     // [중요] 타이머를 2개로 분리!
@@ -40,6 +53,14 @@ public class Spawner : MonoBehaviour
     // [삭제] Awake도 이제 필요 없습니다. (spawnPoints를 안 쓰니까요)
     // private void Awake() { }
 
+    private void OnEnable()
+    {
+        // 게임 재시작 시 엘리트 소환 기록 초기화
+        foreach (var evt in eliteEvents)
+        {
+            evt.isSpawned = false;
+        }
+    }
     private void Update()
     {
         if (!GameManager.instance.isLive) return;
@@ -56,6 +77,26 @@ public class Spawner : MonoBehaviour
         {
             // 타워 타이머(towerSpawnTimer)를 넘겨줌
             ProcessWave(towerWave, ref towerSpawnTimer);
+        }
+
+        // 3. [추가] 엘리트 스케줄 체크
+        CheckEliteSchedule();
+    }
+
+    // [추가] 시간이 되면 엘리트 소환
+    void CheckEliteSchedule()
+    {
+        float currentTime = GameManager.instance.gameTime;
+
+        foreach (var evt in eliteEvents)
+        {
+            // 시간이 됐고, 아직 소환 안 했으면
+            if (!evt.isSpawned && currentTime >= evt.spawnTime)
+            {
+                SpawnElite(evt.eliteIndex);
+                evt.isSpawned = true; // 소환 완료 체크
+                Debug.Log($"엘리트 소환됨! (Time: {evt.spawnTime}, ID: {evt.eliteIndex})");
+            }
         }
     }
 
@@ -234,7 +275,7 @@ public class Spawner : MonoBehaviour
         {
             case MonsterType.Normal: return 0;
             case MonsterType.Tower: return 3;
-            case MonsterType.Elite: return 0;
+            case MonsterType.Elite: return 11;
             default: return 0;
         }
     }

@@ -19,10 +19,12 @@ public class Skill1_Re : MonoBehaviour
     float timer;
     Player player;
 
+    /*
     // ----- Active Skill -----
     float activeCooldown = 5f;    // 기본 쿨타임
     float activeTimer = 0f;
     bool isActiveReady = true;
+    */
 
 
     void Awake()
@@ -40,7 +42,7 @@ public class Skill1_Re : MonoBehaviour
     void Update()
     {
         timer += Time.deltaTime;
-        activeTimer += Time.deltaTime;
+        // activeTimer += Time.deltaTime;
 
         if (timer >= 1f / attackRate)
         {
@@ -48,6 +50,7 @@ public class Skill1_Re : MonoBehaviour
             TryFire();
         }
 
+        /*
         // Q키 입력 시 사용 스킬 발동
         if (Input.GetKeyDown(KeyCode.Q) && isActiveReady)
         {
@@ -56,6 +59,7 @@ public class Skill1_Re : MonoBehaviour
 
         if (activeTimer >= activeCooldown)
             isActiveReady = true;
+        */
 
         SyncWithStats();
     }
@@ -158,11 +162,16 @@ public class Skill1_Re : MonoBehaviour
     }
 
 
+    // 외부에서 참조 가능하도록
+    public void CastActiveSkill()
+    {
+        StartCoroutine(UseActiveSkill());
+    }
 
     IEnumerator UseActiveSkill()
     {
-        isActiveReady = false;
-        activeTimer = 0f;
+        // isActiveReady = false;
+        // activeTimer = 0f;
 
         int cycles = 5;
 
