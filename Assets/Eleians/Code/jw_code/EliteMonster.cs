@@ -22,6 +22,15 @@ public class EliteMonster : NormalMonster
     // 방어 스킬용 변수
     private bool isDefending = false;
 
+    protected override bool IsSuperArmor
+    {
+        get
+        {
+            // 스킬 사용 중이거나, 방어 스킬 중이면 -> 슈퍼아머 발동 (true)
+            return isUsingSkill || isDefending;
+        }
+    }
+
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -199,7 +208,7 @@ public class EliteMonster : NormalMonster
     }
 
     // 피격 함수 오버라이드 (방어 스킬 적용을 위해)
-    public override void ApplyDamage(float dmg)
+    public override void ApplyDamage(float dmg, ElementType element = ElementType.None)
     {
         if (isDefending)
         {
@@ -207,6 +216,6 @@ public class EliteMonster : NormalMonster
             dmg *= 0.1f;
             // 팅~ 하는 소리나 이펙트 추가 가능
         }
-        base.ApplyDamage(dmg);
+        base.ApplyDamage(dmg, ElementType.None);
     }
 }

@@ -22,6 +22,7 @@ public class MonsterBase : MonoBehaviour
     public bool isLive;
     protected bool isDeadProcessed = false;
     protected bool isKnockback = false;
+    protected virtual bool IsSuperArmor => false;
 
     // 전기 속성 스턴 확인용 변수
     public bool isStunned = false;
@@ -118,7 +119,10 @@ public class MonsterBase : MonoBehaviour
             return;
         }
 
-        anim.SetTrigger("hit");
+        if (!IsSuperArmor)
+        {
+            anim.SetTrigger("hit");
+        }
 
         // ★★★ 속성별 특수 능력 적용 ★★★
         switch (element)
