@@ -40,7 +40,7 @@ public class NormalMonster : MonsterBase
         spriter.flipX = target.position.x > rigid.position.x;
     }
 
-    public void Init(SpawnData data, int spriteIndex)
+    public void Init(SpawnData data, int spriteIndex, MonsterType typeEnum)
     {
         /*
         anim.runtimeAnimatorController = animCon[spriteIndex];
@@ -56,6 +56,7 @@ public class NormalMonster : MonsterBase
         */
 
         // 1. 기본 설정 (외형 및 타입)
+        this.myType = typeEnum;
         anim.runtimeAnimatorController = animCon[spriteIndex];
         monsterType = spriteIndex;
 

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72cf24f9046563949a8aea03ca25aab8, type: 3}
   m_Name: Artifact_CompileError
   m_EditorClassIdentifier: Assembly-CSharp::ArtifactData
-  id: 2
+  id: 4
   artifactName: "\uCEF4\uD30C\uC77C \uC5D0\uB7EC"
   description: "\uACF5\uACA9 \uC2DC 50% \uD655\uB960\uB85C\n\uD53C\uD574\uB7C9\uC774
     \uC808\uBC18\uC774 \uB418\uAC70\uB098\n2\uBC30\uAC00 \uB41C\uB2E4."
