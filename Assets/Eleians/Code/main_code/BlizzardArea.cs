@@ -10,10 +10,11 @@ public class BlizzardArea : MonoBehaviour
     public int fireCount = 0;
     public int iceCount = 0;
     public int earthCount = 0;
+    public float atk = 0f;
 
     float timer = 0f;
 
-    int prevElectric, prevFire, prevIce, prevEarth;
+    int prevElectric, prevFire, prevIce, prevEarth, prevAtk;
 
 
     private void OnEnable()
@@ -39,7 +40,7 @@ public class BlizzardArea : MonoBehaviour
             {
                 // StatsManager의 공격력 적용 + 크리티컬 적용
                 float damage = StatsManager.instance.ApplyCrit(
-                    StatsManager.instance.Attack * 0.25f   // 공격력 25% 비율 데미지 예시
+                    StatsManager.instance.Attack * 4f * 0.25f   // 공격력 25% 비율 데미지 예시
                 );
 
                 // iceCount에 비례해 눈보라 강화 (원하면 조정 가능)
@@ -57,10 +58,12 @@ public class BlizzardArea : MonoBehaviour
         fireCount = StatsManager.instance.FireCnt;
         iceCount = StatsManager.instance.IceCnt;
         earthCount = StatsManager.instance.EarthCnt;
+        atk = StatsManager.instance.Attack;
 
         prevElectric = electricCount;
         prevFire = fireCount;
         prevIce = iceCount;
         prevEarth = earthCount;
+        prevAtk = (int)atk;
     }
 }

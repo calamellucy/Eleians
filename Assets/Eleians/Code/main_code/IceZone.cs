@@ -3,9 +3,6 @@ using System.Collections;
 
 public class IceZone : MonoBehaviour
 {
-    public float damagePerSecond = 5f;
-    public float healPerSecond = 10f;
-
     float duration = 5f;
     bool isRunning = false;
 
@@ -14,6 +11,9 @@ public class IceZone : MonoBehaviour
 
     float healTimer = 1f;
     float damageTimer = 1f;
+
+    Player playerCache;
+    MonsterBase monsterCache;
 
     void OnEnable()
     {
@@ -37,35 +37,45 @@ public class IceZone : MonoBehaviour
 
     void Update()
     {
+        // =========================
         // 1) 플레이어 힐 처리
-        if (playerInside)
+        // =========================
+        if (playerInside && playerCache != null)
         {
             healTimer -= Time.deltaTime;
             if (healTimer <= 0f)
             {
-                playerCache.Heal(healPerSecond);
-                Debug.Log("HEAL!!");
+                float maxHp = GameManager.instance.maxHealth;
+                float curHp = GameManager.instance.health;
+
+                float missingHp = maxHp - curHp;
+                float healAmount = 10f + (missingHp * 0.10f);
+
+                playerCache.Heal(healAmount);
+                Debug.Log($"HEAL: {healAmount}");
+
                 healTimer = 1f;
             }
         }
 
+        // =========================
         // 2) 몬스터 피해 처리
-        if (monsterInside)
+        // =========================
+        if (monsterInside && monsterCache != null && monsterCache.isLive)
         {
             damageTimer -= Time.deltaTime;
             if (damageTimer <= 0f)
             {
-                if (monsterCache != null && monsterCache.isLive)
-                    monsterCache.ApplyDamageWithoutKonckback(damagePerSecond);
+                float monsterMaxHp = monsterCache.maxHealth;
+                float dmg = 10f + (monsterMaxHp * 0.04f);
 
-                Debug.Log("DAMAGE!!");
+                monsterCache.ApplyDamageWithoutKonckback(dmg);
+                Debug.Log($"DAMAGE: {dmg}");
+
                 damageTimer = 1f;
             }
         }
     }
-
-    Player playerCache;
-    MonsterBase monsterCache;
 
     void OnTriggerEnter2D(Collider2D collision)
     {
