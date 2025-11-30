@@ -131,6 +131,7 @@ public class Skill1_Re : MonoBehaviour
             evo.Setup(this);
 
         bullet.GetComponent<Bullet_Re>().Init(damage, per, dir, electricCount);
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.ele_shot);
         //Debug.Log("Fire");
     }
 

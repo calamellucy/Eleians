@@ -15,6 +15,7 @@ public class LvUp : MonoBehaviour
     {
         rect.localScale = Vector3.one;
         GameManager.instance.Stop();
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Lvup);
     }
 
     public void Hide()

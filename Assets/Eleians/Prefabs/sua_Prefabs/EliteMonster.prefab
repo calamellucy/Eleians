@@ -354,9 +354,9 @@ GameObject:
   - component: {fileID: 5484080470477227625}
   - component: {fileID: -8808301833418854130}
   - component: {fileID: -1563120707753054699}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: EliteMonster
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
