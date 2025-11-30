@@ -18,7 +18,6 @@ public class StatsManager : MonoBehaviour
 
     [Header("Final Stats (Read Only)")]
     public float Attack;
-    public float HP;
     public float MaxHP; // MaxHP 분리 필요
     public float MovementSpeed;
     public float AttackSpeed;

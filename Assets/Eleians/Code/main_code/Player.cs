@@ -102,6 +102,10 @@ public class Player : MonoBehaviour
         // 기존 데미지 감소 로직
         // dmg = DamageReduction.instance.ProcessDamage(dmg); 
 
+        // ★★★ [디버깅용 로그 추가] 이 줄을 넣어보세요! ★★★
+        float multiplier = StatsManager.instance.DamageTakenMultiplier;
+        Debug.Log($"[피격 분석] 몬스터공격력: {dmg} | 받는피해계수: {multiplier} | 최종데미지: {dmg * multiplier}");
+
         // [추가] 아티팩트 (도파민, 한화팬 등 받는데미지 감소) 적용
         // StatsManager에 DamageTakenMultiplier(받는 피해 계수)가 있으니 적용
         dmg *= StatsManager.instance.DamageTakenMultiplier;

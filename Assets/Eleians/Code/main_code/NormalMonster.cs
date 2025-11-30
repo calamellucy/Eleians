@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class NormalMonster : MonsterBase
 {
-    public RuntimeAnimatorController[] animCon;
+    // public RuntimeAnimatorController[] animCon;
     // public Rigidbody2D target; // MonsterBase에 target이 이미 있다면 주석 유지 혹은 삭제
 
     protected override void OnEnable()
@@ -40,63 +40,30 @@ public class NormalMonster : MonsterBase
         spriter.flipX = target.position.x > rigid.position.x;
     }
 
-    public void Init(SpawnData data, int spriteIndex, MonsterType typeEnum)
+    public void Init(MonsterStats stats, MonsterType typeEnum)
     {
-        /*
-        anim.runtimeAnimatorController = animCon[spriteIndex];
-        monsterType = spriteIndex;
-        speed = data.speed;
-
-        // ★ [중요] 초기화할 때 원래 속도를 저장해둬야 슬로우가 풀릴 때 돌아갈 곳이 생김
-        originalSpeed = speed;
-
-        maxHealth = data.health;
-        damage = data.damage;
-        health = maxHealth;
-        */
-
         // 1. 기본 설정 (외형 및 타입)
         this.myType = typeEnum;
-        anim.runtimeAnimatorController = animCon[spriteIndex];
-        monsterType = spriteIndex;
+        this.monsterType = stats.patternId;
 
-        // 2. 기본 데이터 적용 (SpawnData 기준)
-        float speedMultiplier = 1f;
-        float hpMultiplier = 1f;
-        float dmgMultiplier = 1f;
-
-        // 3. 몬스터 타입별 특성 적용 (비율 조정)
-        switch (monsterType)
+        // ★★★ [핵심 변경] 데이터에 들어있는 애니메이션을 적용
+        if (stats.animatorController != null)
         {
-            case 0: // 나무더지 (기본) 
-                // 변화 없음
-                break;
-
-            case 1: // 송충충 (빠른 속도)
-                speedMultiplier = 1.5f; // 50% 더 빠름
-                break;
-
-            case 2: // 돌순이 (체력 높음, 공격력 낮음)
-                hpMultiplier = 2.0f;    // 체력 2배
-                dmgMultiplier = 0.5f;   // 공격력 절반
-                break;
-
-            case 3: // 버섯탱이 (공격력 높음, 체력 낮음)
-                hpMultiplier = 0.6f;    // 체력 40% 감소
-                dmgMultiplier = 2.0f;   // 공격력 2배
-                break;
+            anim.runtimeAnimatorController = stats.animatorController;
         }
 
-        // 4. 최종 스탯 계산 및 적용
-        speed = data.speed * speedMultiplier;
-        maxHealth = data.health * hpMultiplier;
-        damage = data.damage * dmgMultiplier;
-
-        // 5. 중요: 변경된 MaxHealth를 현재 체력에 적용
+        // 2. ★ 스탯 적용 (인스펙터에서 설정한 값 그대로 대입!) ★
+        // 더 이상 switch문으로 배율 계산할 필요 없음!
+        maxHealth = stats.maxHealth;
         health = maxHealth;
+        damage = stats.damage;
+        speed = stats.speed;
+        originalSpeed = speed; // 슬로우 복구용
+        this.exp = stats.exp;
 
-        // 6. 중요: MonsterBase의 감속 로직을 위해 originalSpeed 갱신
-        originalSpeed = speed;
+        // 3. ★ 내성 정보 저장 (MonsterBase 변수에 저장) ★
+        this.myResistance = stats.resistance;
+
     }
 
     // ---------------------
@@ -111,28 +78,9 @@ public class NormalMonster : MonsterBase
 
         if (attackTimer <= 0f)
         {
+            Debug.Log($"[공격] {gameObject.name}이 때림! 데미지: {damage}, 딜레이: {attackDelay}");
             player.ApplyDamage(damage);
             attackTimer = attackDelay;
         }
     }
-
-    /*
-   public override void ApplyDamage(float dmg)
-   {
-       switch(monsterType)
-       {
-           case 0:
-               break;
-           case 1:
-               break;
-           case 2:
-               break;
-           case 3:
-               break;
-           default:
-               break;
-       }
-       base.ApplyDamage(dmg);
-   }
-   */
 }
