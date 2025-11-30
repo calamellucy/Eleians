@@ -59,6 +59,7 @@ public class NormalMonster : MonsterBase
         damage = stats.damage;
         speed = stats.speed;
         originalSpeed = speed; // 슬로우 복구용
+        this.exp = stats.exp;
 
         // 3. ★ 내성 정보 저장 (MonsterBase 변수에 저장) ★
         this.myResistance = stats.resistance;

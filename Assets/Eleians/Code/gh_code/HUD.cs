@@ -23,6 +23,7 @@ public class HUD : MonoBehaviour
             case InfoType.Exp:
                 float curExp = GameManager.instance.exp;
                 float maxExp = GameManager.instance.nextExp[GameManager.instance.level];
+                if (maxExp == 0) maxExp = 1;
                 mySlider.value = curExp / maxExp;
                 break;
             case InfoType.Level:

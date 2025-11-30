@@ -48,6 +48,12 @@ public class Spawner : MonoBehaviour
     private float normalSpawnTimer;
     private float towerSpawnTimer;
 
+    [Header("Difficulty Scaling")]
+    public float stageDuration = 180f; // 한 스테이지의 길이 (3분 = 180초)
+    [Range(0f, 1f)] public float hpIncreaseRate = 0.3f;  // 스테이지당 체력 30% 증가
+    [Range(0f, 1f)] public float dmgIncreaseRate = 0.2f; // 스테이지당 공격력 20% 증가
+    [Range(0f, 1f)] public float expIncreaseRate = 0.3f; // 스테이지당 경험치 30% 증가
+
     [Header("Battle Area")]
     public Vector2 innerMin = new Vector2(-16.0f, -37.0f);
     public Vector2 innerMax = new Vector2(50.0f, 13.0f);
@@ -178,15 +184,16 @@ public class Spawner : MonoBehaviour
     public void SpawnProcess(Wave wave, MonsterType type, int spriteIndex, Vector3 pos)
     {
         int prefabIndex = GetPoolIndexByType(type, spriteIndex);
-        SpawnData data = GetSpawnData(type);
-
         // ★ 타입에 맞는 스탯 가져오기
         MonsterStats stats = new MonsterStats();
 
         if (type == MonsterType.Normal)
-            stats = normalStats[spriteIndex]; // 0:나무, 1:송충...
+            stats = normalStats[spriteIndex];
         else if (type == MonsterType.Tower)
             stats = towerStats[spriteIndex];
+
+        // 2. ★★★ 스탯 강화 (여기 한 줄만 추가하면 끝!) ★★★
+        stats = GetScaledStats(stats);
 
         // spawnAmountOnce가 0일 수도 있으니 최소 1로 보정
         int count = Mathf.Max(1, wave.spawnAmountOnce);
@@ -238,6 +245,8 @@ public class Spawner : MonoBehaviour
             int prefabIndex = GetPoolIndexByType(MonsterType.Elite, spriteIndex);
             SpawnData data = GetSpawnData(MonsterType.Elite);
             MonsterStats stats = eliteStats[spriteIndex];
+            // 2. ★★★ 스탯 강화 ★★★
+            stats = GetScaledStats(stats);
 
             GameObject enemy = GameManager.instance.pool.Get(prefabIndex);
             enemy.transform.position = spawnPos;
@@ -297,6 +306,31 @@ public class Spawner : MonoBehaviour
             default: return 0;
         }
     }
+
+    // ★★★ [추가] 스탯을 뻥튀기 해주는 도우미 함수 ★★★
+    MonsterStats GetScaledStats(MonsterStats baseStats)
+    {
+        // 1. 현재 스테이지 계산 (0, 1, 2...)
+        // 게임 시간이 흐름에 따라 자동으로 스테이지가 올라감
+        int currentStage = Mathf.FloorToInt(GameManager.instance.gameTime / stageDuration);
+
+        // 2. 구조체 복사 (원본 데이터 오염 방지)
+        MonsterStats newStats = baseStats;
+
+        // 3. 배율 적용
+        // 예: 2스테이지(Index 2)면 -> 1 + (2 * 0.3) = 1.6배 (60% 증가)
+        float hpMultiplier = 1f + (currentStage * hpIncreaseRate);
+        float dmgMultiplier = 1f + (currentStage * dmgIncreaseRate);
+
+        newStats.maxHealth *= hpMultiplier;
+        newStats.damage *= dmgMultiplier;
+
+        // ★★★ [추가] 경험치도 스테이지마다 30%씩 더 줌!
+        // (정수로 변환)
+        newStats.exp = Mathf.RoundToInt(baseStats.exp * (1f + (currentStage * expIncreaseRate)));
+
+        return newStats;
+    }
 }
 
 public enum MonsterType
@@ -334,6 +368,7 @@ public struct MonsterStats
     public string name;              // 에디터 식별용 이름 (예: "나무더지")
     public RuntimeAnimatorController animatorController;
     public int patternId;            // 엘리트용 패턴 아이디
+    public int exp;                // 경험치
     public float maxHealth;          // 최대 체력
     public float damage;             // 공격력
     public float speed;              // 이동 속도

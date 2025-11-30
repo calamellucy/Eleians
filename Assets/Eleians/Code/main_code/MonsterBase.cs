@@ -13,6 +13,7 @@ public enum ElementType
 public class MonsterBase : MonoBehaviour
 {
     [Header("Stats")]
+    public int exp; // Spawner에서 Init으로 받아온 값
     public float speed;
     public float health;
     public float maxHealth;
@@ -34,7 +35,6 @@ public class MonsterBase : MonoBehaviour
     // 전기 스턴 확인용
     public bool isStunned = false;
 
-    // ★★★ [추가] 이펙트 오브젝트 (인스펙터 연결) ★★★
     [Header("Effects Objects")]
     public GameObject effectFire;
     public GameObject effectIce;
@@ -285,7 +285,7 @@ public class MonsterBase : MonoBehaviour
         if (giveReward)
         {
             GameManager.instance.kill++;
-            GameManager.instance.GetExp();
+            GameManager.instance.GetExp(this.exp);
         }
 
         anim.SetBool("dead", true);
