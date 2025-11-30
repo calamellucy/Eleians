@@ -21,7 +21,7 @@ public class EliteMonster : NormalMonster
 
     // 방어 스킬용 변수
     private bool isDefending = false;
-
+    
     protected override bool IsSuperArmor
     {
         get
@@ -216,6 +216,16 @@ public class EliteMonster : NormalMonster
             dmg *= 0.1f;
             // 팅~ 하는 소리나 이펙트 추가 가능
         }
-        base.ApplyDamage(dmg, ElementType.None);
+
+        // [추가] 슈퍼아머(스킬 중)일 때는 상태이상 무시
+        if (IsSuperArmor)
+        {
+            base.ApplyDamage(dmg, ElementType.None);
+        }
+        else
+        {
+            // [추가] 평소에는 속성 효과(이펙트/상태이상) 그대로 적용
+            base.ApplyDamage(dmg, element);
+        }
     }
 }
