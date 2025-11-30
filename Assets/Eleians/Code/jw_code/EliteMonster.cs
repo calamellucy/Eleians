@@ -11,6 +11,11 @@ public class EliteMonster : NormalMonster
     [Header("Projectile (For Type 2, 3)")]
     public GameObject[] projectilePrefabs; // 인스펙터에서 총알 프리팹 연결
 
+    [Header("Dash Settings")]
+    public float dashForce = 20f;    // 돌진 힘 (기존 10 -> 20으로 증가 추천)
+    public float dashSpeed = 15f;    // 돌진 '속도' (힘 아님!)
+    public float dashDuration = 1.0f; // 돌진 유지 시간 (기존 0.5 -> 1.0으로 증가 추천)
+
     [Header("Attack Timing")]
     public float rockThrowDelay = 0.12f; // 돌 던지기 전 딜레이 (인스펙터에서 조절!)
     public float spitThrowDelay = 0.12f; // 침 뱉기 전 딜레이
@@ -43,7 +48,12 @@ public class EliteMonster : NormalMonster
     // 스킬 쓰는 중(돌진 준비 등)에는 움직이지 않도록 막습니다.
     protected new void FixedUpdate()
     {
-        if (isUsingSkill) return; // 스킬 중엔 이동 로직 정지
+        // ★★★ [핵심] 스킬(방어) 중이면 여기서 멈춤!
+        if (isUsingSkill)
+        {
+            // rigid.linearVelocity = Vector2.zero; // 미끄러짐 방지용 정지
+            return;
+        }
         base.FixedUpdate();       // 평소엔 NormalMonster 이동
     }
 
@@ -85,34 +95,67 @@ public class EliteMonster : NormalMonster
     IEnumerator DashRoutine()
     {
         isUsingSkill = true; // 이동 멈춤
-        anim.SetTrigger("skill"); // 공격 애니메이션 있다면 실행
+        anim.SetTrigger("attack");
 
         // 1. 텔레그래프 (빨개지면서 경고)
         spriter.color = Color.red;
         yield return new WaitForSeconds(0.5f); // 0.5초 대기
         spriter.color = Color.white;
 
-        // 2. 플레이어 방향으로 돌진
-        Vector2 dir = (target.position - rigid.position).normalized;
-        rigid.AddForce(dir * 10f, ForceMode2D.Impulse); // 팍 튀어나감
+        // 돌진 시작!
+        if (target != null)
+        {
+            Vector2 dir = (target.position - rigid.position).normalized;
 
-        yield return new WaitForSeconds(0.5f); // 돌진 시간
-        rigid.linearVelocity = Vector2.zero;   // 정지
+            // [수정] 마찰력 0으로 만드는 코드 삭제 (미끄러짐 방지)
+            // float originalDrag = rigid.linearDamping; 
+            // rigid.linearDamping = 0f;
 
+            // [핵심] 질량(50)을 고려해서 힘을 가함 (F = m * v)
+            // Impulse 모드는 '순간적인 힘'이라서 속도랑 비슷하게 적용됨
+            // 이렇게 하면 Mass가 50이어도 50배의 힘으로 밀어버림
+            float finalForce = dashSpeed * rigid.mass;
+            rigid.AddForce(dir * finalForce, ForceMode2D.Impulse);
+
+            // 3. 지속 시간만큼 대기
+            // (이 시간 동안 마찰력 때문에 자연스럽게 속도가 줄어듦 -> 덜 미끄러움)
+            yield return new WaitForSeconds(dashDuration);
+
+            // 4. 강제 정지 (원하는 위치에 딱 멈추게)
+            rigid.linearVelocity = Vector2.zero;
+
+            // 마찰력 복구 코드도 필요 없음
+        }
+        else
+        {
+            // 타겟 없어도 일단 멈춤 처리
+            rigid.linearVelocity = Vector2.zero;
+        }
+
+        // [수정] 변수로 설정한 시간만큼 미끄러짐
+        //yield return new WaitForSeconds(dashDuration);
+
+        //rigid.linearVelocity = Vector2.zero;   // 정지
         isUsingSkill = false; // 다시 추격 시작
     }
 
     // --- 스킬 1: 방어 ---
     IEnumerator DefenseRoutine()
     {
+        isUsingSkill = true; // ★ 이동 멈춤 (FixedUpdate에서 return됨)
+
         isDefending = true;
-        spriter.color = Color.blue; // 파랗게 변함 (방어 상태 표시)
+        anim.SetBool("isDefending", true);
+        // spriter.color = Color.blue; // 파랗게 변함 (방어 상태 표시)
 
         // 3초간 방어 상태
         yield return new WaitForSeconds(3f);
 
         spriter.color = Color.white;
+        anim.SetBool("isDefending", false); // ★ 다시 걷는 모션으로 복귀
+
         isDefending = false;
+        isUsingSkill = false; // ★ 이동 재개
     }
 
 
@@ -190,7 +233,7 @@ public class EliteMonster : NormalMonster
         bullet.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
         EnemyProjectile projScript = bullet.GetComponent<EnemyProjectile>();
-        projScript.Init(damage, direction);
+        projScript.Init(damage, direction, "Player");
     }
 
     // [핵심] 벡터 회전 도우미 함수 (수학 공식)

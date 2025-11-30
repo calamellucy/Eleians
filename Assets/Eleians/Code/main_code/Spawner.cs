@@ -30,6 +30,11 @@ public class Spawner : MonoBehaviour
     [Header("Settings")]
     public SpawnData[] spawnData;
 
+    [Header("Monster Stats Config")]
+    public MonsterStats[] normalStats; // 일반 몬스터 스탯 (인덱스 0~3)
+    public MonsterStats[] eliteStats;  // 엘리트 몬스터 스탯 (인덱스 0~3)
+    public MonsterStats[] towerStats;    // 거점 몬스터 스탯 (1개)
+
     [Header("Wave Config")]
     public Wave[] waves;
     public Wave towerWave;
@@ -172,8 +177,16 @@ public class Spawner : MonoBehaviour
     // [수정됨] wave.spawnAmountOnce 처리를 위해 wave 매개변수 추가 (혹은 int amount 직접 전달)
     public void SpawnProcess(Wave wave, MonsterType type, int spriteIndex, Vector3 pos)
     {
-        int prefabIndex = GetPoolIndexByType(type);
+        int prefabIndex = GetPoolIndexByType(type, spriteIndex);
         SpawnData data = GetSpawnData(type);
+
+        // ★ 타입에 맞는 스탯 가져오기
+        MonsterStats stats = new MonsterStats();
+
+        if (type == MonsterType.Normal)
+            stats = normalStats[spriteIndex]; // 0:나무, 1:송충...
+        else if (type == MonsterType.Tower)
+            stats = towerStats[spriteIndex];
 
         // spawnAmountOnce가 0일 수도 있으니 최소 1로 보정
         int count = Mathf.Max(1, wave.spawnAmountOnce);
@@ -193,7 +206,8 @@ public class Spawner : MonoBehaviour
             var monster = enemy.GetComponent<NormalMonster>();
             if (monster != null)
             {
-                monster.Init(data, spriteIndex, type);
+                // ★ Init에 stats 전달
+                monster.Init(stats, type);
             }
         }
     }
@@ -221,8 +235,9 @@ public class Spawner : MonoBehaviour
             // SpawnProcess 오버로딩을 만들어서 처리. 
             // 여기서는 직접 구현부를 복사해서 단순화함.
 
-            int prefabIndex = GetPoolIndexByType(MonsterType.Elite);
+            int prefabIndex = GetPoolIndexByType(MonsterType.Elite, spriteIndex);
             SpawnData data = GetSpawnData(MonsterType.Elite);
+            MonsterStats stats = eliteStats[spriteIndex];
 
             GameObject enemy = GameManager.instance.pool.Get(prefabIndex);
             enemy.transform.position = spawnPos;
@@ -230,7 +245,7 @@ public class Spawner : MonoBehaviour
             var monster = enemy.GetComponent<NormalMonster>();
             if (monster != null)
             {
-                monster.Init(data, spriteIndex, MonsterType.Elite);
+                monster.Init(stats, MonsterType.Elite);
             }
         }
     }
@@ -269,12 +284,15 @@ public class Spawner : MonoBehaviour
         return spawnData[0];
     }
 
-    int GetPoolIndexByType(MonsterType type)
+    int GetPoolIndexByType(MonsterType type, int spriteIndex)
     {
         switch (type)
         {
             case MonsterType.Normal: return 0;
-            case MonsterType.Tower: return 3;
+            case MonsterType.Tower:
+                // 0번(근거리)이면 3번 풀, 1번(원거리)이면 4번 풀 반환 (예시)
+                if (spriteIndex == 0) return 3;
+                else return 12;
             case MonsterType.Elite: return 11;
             default: return 0;
         }
@@ -297,4 +315,27 @@ public class SpawnData
     public int health;
     public float speed;
     public float damage;
+}
+
+// 1. 내성 정보 (어떤 속성을 얼마나 막을지)
+[System.Serializable]
+public struct Resistance
+{
+    public ElementType element;      // 저항할 속성 (예: Earth)
+    [Range(0f, 1f)]
+    public float damageReduction;    // 데미지 감소율 (0.3 = 30% 감소)
+    public bool ignoreCC;            // 상태이상(CC) 무시 여부
+}
+
+// 2. 몬스터 스탯 정보 (HP, 공격력, 내성 등)
+[System.Serializable]
+public struct MonsterStats
+{
+    public string name;              // 에디터 식별용 이름 (예: "나무더지")
+    public RuntimeAnimatorController animatorController;
+    public int patternId;            // 엘리트용 패턴 아이디
+    public float maxHealth;          // 최대 체력
+    public float damage;             // 공격력
+    public float speed;              // 이동 속도
+    public Resistance resistance;    // 이 몬스터의 내성 정보
 }

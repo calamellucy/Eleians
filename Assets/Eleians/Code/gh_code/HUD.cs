@@ -50,7 +50,7 @@ public class HUD : MonoBehaviour
                 break;
             case InfoType.Health:
                 float curHP = GameManager.instance.health;
-                float maxHP = StatsManager.instance.HP;
+                float maxHP = StatsManager.instance.MaxHP;
                 mySlider.value = curHP / maxHP;
                 break;
 

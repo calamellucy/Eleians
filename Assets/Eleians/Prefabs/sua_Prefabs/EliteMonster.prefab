@@ -356,7 +356,7 @@ GameObject:
   - component: {fileID: -1563120707753054699}
   m_Layer: 0
   m_Name: EliteMonster
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -449,7 +449,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 5
+  m_Mass: 50
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 0
@@ -561,15 +561,13 @@ MonoBehaviour:
   effectIce: {fileID: 2814158342315031345}
   effectLightning: {fileID: 1471159769021574883}
   target: {fileID: 0}
-  animCon:
-  - {fileID: 9100000, guid: bbab03722b754dc40b56a82769b18467, type: 2}
-  - {fileID: 9100000, guid: 05d9886e1b24c434db5909de73d07ad7, type: 2}
-  - {fileID: 9100000, guid: dbf89a76d0708cb468009c62ff672e3f, type: 2}
-  - {fileID: 9100000, guid: 82b770f0d4686784f8fa6adcabdd0287, type: 2}
   skillCooldown: 5
   projectilePrefabs:
   - {fileID: 3635255534534366405, guid: f8ec3603e20f63d4d885ff39d5da584e, type: 3}
   - {fileID: 4286612523824311922, guid: 52b098a98fd6f2b4198dd401b6589d33, type: 3}
+  dashForce: 1000
+  dashSpeed: 15
+  dashDuration: 0.3
   rockThrowDelay: 0.5
   spitThrowDelay: 0.5
   rapidShotCount: 3
