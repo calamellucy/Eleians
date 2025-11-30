@@ -69,7 +69,7 @@ public class Skill1_Re : MonoBehaviour
     {
         prefabId = 2;
         attackRate = 1f + 0.08f * electricCount;
-        damage = 10f + 0.6f * electricCount + (fireCount * 8);             
+        damage = 10f + 0.6f * electricCount + (fireCount * 4);             
         count = 0 + (int)((fireCount * 0.25) / 1);      
         projectileSize = (1 + earthCount * 0.08f);   
         projectileCount = 1 + (int)((iceCount * 0.34f)/1);
