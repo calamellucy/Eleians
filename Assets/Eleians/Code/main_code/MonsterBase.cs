@@ -9,8 +9,10 @@ public enum ElementType
     Earth,
     Lightning
 }
+
 public class MonsterBase : MonoBehaviour
 {
+    [Header("Stats")]
     public float speed;
     public float health;
     public float maxHealth;
@@ -18,16 +20,26 @@ public class MonsterBase : MonoBehaviour
     public float originalSpeed;
     public float slowMultiplier = 1f;
     public int monsterType;
+
+    // [중요] 아티팩트 매니저 오류 방지용 (절대 삭제 X)
     public MonsterType myType;
 
+    [Header("State")]
     public bool isLive;
     protected bool isDeadProcessed = false;
     protected bool isKnockback = false;
     protected virtual bool IsSuperArmor => false;
 
-    // 전기 속성 스턴 확인용 변수
+    // 전기 스턴 확인용
     public bool isStunned = false;
 
+    // ★★★ [추가] 이펙트 오브젝트 (인스펙터 연결) ★★★
+    [Header("Effects Objects")]
+    public GameObject effectFire;
+    public GameObject effectIce;
+    public GameObject effectLightning;
+
+    [Header("Components")]
     public Rigidbody2D target;
     protected Rigidbody2D rigid;
     protected Collider2D coll;
@@ -50,7 +62,7 @@ public class MonsterBase : MonoBehaviour
         isLive = true;
         isKnockback = false;
         isDeadProcessed = false;
-        isStunned = false; // 스턴 초기화
+        isStunned = false;
         attackTimer = 0f;
 
         rigid.bodyType = RigidbodyType2D.Dynamic;
@@ -64,9 +76,13 @@ public class MonsterBase : MonoBehaviour
         anim.ResetTrigger("hit");
         anim.SetBool("dead", false);
 
-        // originalSpeed는 각 몬스터(NormalMonster 등)의 Init에서 설정됨
         slowMultiplier = 1f;
-        spriter.color = Color.white; // 색깔 복구
+        spriter.color = Color.white;
+
+        // ★ 부활 시 이펙트 초기화 (다 끄기)
+        if (effectFire != null) effectFire.SetActive(false);
+        if (effectIce != null) effectIce.SetActive(false);
+        if (effectLightning != null) effectLightning.SetActive(false);
     }
 
     protected void OnCollisionStay2D(Collision2D collision)
@@ -95,8 +111,7 @@ public class MonsterBase : MonoBehaviour
     protected virtual void OnHitPlayer(Player player) { }
     protected virtual void OnHitTower(Tower tower) { }
 
-
-    // ★★★ ApplyDamage : 속성(element) 인자 포함 ★★★
+    // ★★★ 데미지 적용 함수 ★★★
     public virtual void ApplyDamage(float dmg, ElementType element = ElementType.None)
     {
         if (!isLive) return;
@@ -109,11 +124,10 @@ public class MonsterBase : MonoBehaviour
         {
             isCrit = true;
             finalDamage *= StatsManager.instance.CritDamage;
-            ArtifactManager.instance.OnCritProc(); // 크리티컬 체인 발동
+            ArtifactManager.instance.OnCritProc();
         }
 
-        // [연결] 아티팩트: 컴파일 에러, 접근금지령, 도파민 등 데미지 보정
-        // ref로 finalDamage를 넘겨서 함수 안에서 수정되게 함
+        // 아티팩트 데미지 보정
         ArtifactManager.instance.OnPlayerAttack(this, ref finalDamage, isCrit);
 
         health -= finalDamage;
@@ -121,9 +135,8 @@ public class MonsterBase : MonoBehaviour
 
         if (health <= 0)
         {
-            // [연결] 아티팩트: 깃허브 충돌, 스택오버플로우 (적 처치 시)
             ArtifactManager.instance.OnEnemyKilled(this);
-            Die(true);
+            Die(true); // 에러 났던 부분 (이제 정상 작동함)
             return;
         }
 
@@ -132,29 +145,21 @@ public class MonsterBase : MonoBehaviour
             anim.SetTrigger("hit");
         }
 
-        // ★★★ 속성별 특수 능력 적용 ★★★
+        // 속성별 효과
         switch (element)
         {
             case ElementType.Fire:
-                // 3초간 도트 데미지
                 StartCoroutine(BurnRoutine());
                 break;
-
             case ElementType.Ice:
-                // 얼음은 슬로우 (기본 30% 감속)
                 ApplySlow(0.3f);
                 break;
-
             case ElementType.Earth:
-                // 흙은 넉백
-                KnockBack(target.position);
+                KnockBack(target.position); // 에러 났던 부분 (이제 정상 작동함)
                 break;
-
             case ElementType.Lightning:
-                // 전기는 스턴
                 StartCoroutine(StunRoutine());
                 break;
-
             case ElementType.None:
                 break;
         }
@@ -165,15 +170,14 @@ public class MonsterBase : MonoBehaviour
         ApplyDamage(dmg, ElementType.None);
     }
 
-    // --- [불] 도트 데미지 코루틴 (수정됨) ---
+    // --- [불] 도트 데미지 ---
     IEnumerator BurnRoutine()
     {
-        // 너무 쨍한 빨강 대신 부드러운 붉은색 (1, 0.6, 0.6)
-        spriter.color = new Color(1f, 0.6f, 0.6f);
+        if (effectFire != null) effectFire.SetActive(true);
 
-        float dotDamage = StatsManager.instance.Attack * 0.05f; // 공격력의 5%
+        float dotDamage = StatsManager.instance.Attack * 0.05f;
 
-        for (int i = 0; i < 3; i++) // 3회 반복 (3초)
+        for (int i = 0; i < 3; i++)
         {
             yield return new WaitForSeconds(1f);
             if (!isLive) break;
@@ -187,25 +191,25 @@ public class MonsterBase : MonoBehaviour
                 yield break;
             }
         }
-        spriter.color = Color.white; // 색상 복귀
+        if (effectFire != null) effectFire.SetActive(false);
     }
 
-    // --- [전기] 스턴 코루틴 (수정됨) ---
+    // --- [전기] 스턴 ---
     IEnumerator StunRoutine()
     {
-        if (isStunned) yield break; // 이미 스턴이면 무시
+        if (isStunned) yield break;
 
         isStunned = true;
-
+        if (effectLightning != null) effectLightning.SetActive(true);
         rigid.linearVelocity = Vector2.zero;
 
-        // 노란색 변경 삭제 (원래 색 유지)
+        yield return new WaitForSeconds(0.15f);
 
-        yield return new WaitForSeconds(0.15f); // 0.15초 (아주 짧은 경직)
-
+        if (effectLightning != null) effectLightning.SetActive(false);
         isStunned = false;
     }
 
+    // --- [얼음] 슬로우 ---
     public void ApplySlow(float slowRate)
     {
         float newMultiplier = 1f - slowRate;
@@ -213,16 +217,15 @@ public class MonsterBase : MonoBehaviour
         slowMultiplier = Mathf.Clamp(slowMultiplier, 0.2f, 1f);
         speed = originalSpeed * slowMultiplier;
 
-        // 슬로우 시각적 효과 (파란색)
-        spriter.color = new Color(0.6f, 0.6f, 1f);
+        if (effectIce != null) effectIce.SetActive(true);
     }
 
+    // --- [흙] 넉백 ---
     protected virtual void KnockBack(Vector3 from)
     {
         StartCoroutine(KnockBackRoutine(from));
     }
 
-    // --- [흙] 넉백 코루틴 (수정됨) ---
     protected IEnumerator KnockBackRoutine(Vector3 from)
     {
         if (!isLive) yield break;
@@ -233,7 +236,7 @@ public class MonsterBase : MonoBehaviour
         if (!isLive) yield break;
 
         Vector2 dir = (transform.position - from).normalized;
-        float force = 4f; // 넉백 파워 절반으로 감소 (8 -> 4)
+        float force = 4f;
         rigid.AddForce(dir * force, ForceMode2D.Impulse);
 
         yield return new WaitForSeconds(0.1f);
@@ -242,15 +245,21 @@ public class MonsterBase : MonoBehaviour
         isKnockback = false;
     }
 
+    // --- 사망 처리 ---
     public virtual void Die(bool giveReward)
     {
         if (isDeadProcessed) return;
         isDeadProcessed = true;
         isLive = false;
 
-        StopAllCoroutines(); // 도트딜, 스턴 등 모든 코루틴 정지
-        spriter.color = Color.white;
+        StopAllCoroutines();
 
+        // 이펙트 끄기
+        if (effectFire != null) effectFire.SetActive(false);
+        if (effectIce != null) effectIce.SetActive(false);
+        if (effectLightning != null) effectLightning.SetActive(false);
+
+        spriter.color = Color.white;
         rigid.simulated = false;
         rigid.linearVelocity = Vector2.zero;
         rigid.angularVelocity = 0f;
