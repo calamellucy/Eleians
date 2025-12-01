@@ -4757,6 +4757,7 @@ MonoBehaviour:
   iceCount: 0
   earthCount: 0
   dhwyyPrefab: {fileID: 1829672016724653697, guid: 11325668a96cf314a95a30fa79153859, type: 3}
+  dhwyyBaseScale: 0.7
   iceZonePrefab: {fileID: 156783304334103038, guid: 56f6cfb6d50488349837b2dfcb0dcf5a, type: 3}
 --- !u!1 &891159347
 GameObject:
@@ -4879,7 +4880,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -7131844271009652847, guid: a77f4769a3966b2459ab0b7ac50de54b, type: 3}
+  m_Sprite: {fileID: -6582943680183228059, guid: 63658ae7dff06e541acb443409aeadaa, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -74889,7 +74890,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -271619530544243188, guid: a5ea5e4311ff1fd4ba134cce7df7adc2, type: 3}
+  m_Sprite: {fileID: -1380468431886862941, guid: 0b9916e92f1420d4d846a38bebda7553, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -75368,7 +75369,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3579443882918443359, guid: 9236074192fd116449faa9b52839ded1, type: 3}
+  m_Sprite: {fileID: -2573873886981496050, guid: eb136f0d44bc7bd4b8481a4607deb3ef, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -77078,7 +77079,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -5460777677784576783, guid: 28f8335156713464fa25bab0170d821d, type: 3}
+  m_Sprite: {fileID: 3811385135440305602, guid: 03622335930a575458c1820c1bdbf16c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

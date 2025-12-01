@@ -23,6 +23,7 @@ public class Seori : MonoBehaviour
     // 둔화 영역
     public GameObject dhwyyPrefab;
     private GameObject dhwyyInstance;
+    public float dhwyyBaseScale = 1.0f;
 
     // 얼음 영역
     public GameObject iceZonePrefab;
@@ -188,8 +189,16 @@ public class Seori : MonoBehaviour
             dhwyyInstance.transform.localPosition = Vector3.zero;
         }
 
+        /*
         float size = 1f + (iceCount * 0.025f);
         dhwyyInstance.transform.localScale = Vector3.one * size;
+        */
+
+        // 공식: (기본 1 + 증가분) * 설정한_기본_크기
+        float sizeMultiplier = 1f + (iceCount * 0.025f);
+
+        // ★ Vector3.one 대신, 설정한 BaseScale을 곱해줍니다.
+        dhwyyInstance.transform.localScale = Vector3.one * sizeMultiplier * dhwyyBaseScale;
 
         dhwyyInstance.SetActive(true);
     }
