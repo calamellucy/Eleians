@@ -114,6 +114,8 @@ public class FlameSword : MonoBehaviour
 
         sr.enabled = true;
         // hitTargets 초기화 로직 삭제됨
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.flame_sword);
+
         anim.Play("fire slash", -1, 0f);
     }
 

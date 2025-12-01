@@ -35,6 +35,7 @@ public class FireExplosion : MonoBehaviour
     {
         yield return new WaitForFixedUpdate();
         yield return new WaitForFixedUpdate();
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.fire_Ex);
 
         col.enabled = true;
     }

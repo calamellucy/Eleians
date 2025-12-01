@@ -79,6 +79,8 @@ public class Bullet : MonoBehaviour
 
     IEnumerator SpawnAndFireRoutine(Vector3 dir, float speed, float lifeTime)
     {
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.stoneSummon);
+
         // --- [1] 대기 (페이드 인) ---
         float fadeTime = 0.4f;
         float waitTime = 0.8f;
@@ -94,6 +96,7 @@ public class Bullet : MonoBehaviour
         }
 
         SetAlpha(1f);
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.stoneShot);
 
         // --- [2] 발사 ---
         gameObject.tag = "Bullet";

@@ -6,7 +6,6 @@ public class StoneDust : MonoBehaviour
     [Header("Stone Dust Explosion")]
     public int explosionPrefabId = 5;
     public float forwardOffset = 0.3f;
-    public float clockwiseRotationOffset = 170f;
     public Vector3 Scale = Vector3.one;
 
     public void SpawnExplosion(Vector3 hitPos, Vector2 dir)
@@ -28,15 +27,14 @@ public class StoneDust : MonoBehaviour
         }
 
         t.position = pos;
-        t.localScale = Scale * (1f + StatsManager.instance.EarthCnt * 0.08f);
+        t.localScale = Scale * (1f + StatsManager.instance.EarthCnt * 0.08f) * 0.7f;
 
         // 각도 설정 (탄알 진행 방향 기준)
-        float baseAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        float finalAngle = baseAngle - clockwiseRotationOffset;
+        float Angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
-        t.rotation = Quaternion.Euler(0, 0, finalAngle);
+        t.rotation = Quaternion.Euler(0, 0, Angle);
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.stoneDust);
+
         exp.SetActive(true);
     }
-
-    // delete() 함수는 삭제했어. 플레이어가 사라지면 안 되니까!
 }

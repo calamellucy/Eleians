@@ -23,6 +23,9 @@ public class IceZone : MonoBehaviour
     float damageTimer = 0f;
     public float damageInterval = 0.2f;
 
+    // Player playerCache;
+    // MonsterBase monsterCache;
+
     void OnEnable()
     {
         healTimer = 1f;
@@ -46,18 +49,28 @@ public class IceZone : MonoBehaviour
 
     void Update()
     {
+        // =========================
         // 1) 플레이어 힐 처리
+        // =========================
         if (playerInside && playerCache != null)
         {
             healTimer -= Time.deltaTime;
             if (healTimer <= 0f)
             {
-                playerCache.Heal(healPerSecond);
-                Debug.Log("HEAL!!");
+                float maxHp = GameManager.instance.maxHealth;
+                float curHp = GameManager.instance.health;
+
+                float missingHp = maxHp - curHp;
+                float healAmount = 10f + (missingHp * 0.10f);
+
+                playerCache.Heal(healAmount);
+                Debug.Log($"HEAL: {healAmount}");
+
                 healTimer = 1f;
             }
         }
 
+        // =========================
         // 2) 몬스터 피해 처리
         if (monsterList.Count > 0)
         {
@@ -65,10 +78,12 @@ public class IceZone : MonoBehaviour
             damageTimer -= Time.deltaTime;
             if (damageTimer <= 0f)
             {
-                if (monsterCache != null && monsterCache.isLive)
-                    monsterCache.ApplyDamageWithoutKonckback(damagePerSecond);
+                float monsterMaxHp = monsterCache.maxHealth;
+                float dmg = 10f + (monsterMaxHp * 0.04f);
 
-                Debug.Log("DAMAGE!!");
+                monsterCache.ApplyDamageWithoutKonckback(dmg);
+                Debug.Log($"DAMAGE: {dmg}");
+
                 damageTimer = 1f;
             }
             */
