@@ -18,7 +18,15 @@ public class AudioManager : MonoBehaviour
     AudioSource[] sfxPlayers;
     int channelIndex;
 
-    public enum Sfx { mouse_on_button = 0, click = 1, Lvup = 2, slash_shot, ele_shot, ele_explo, fire_Ex, flame_sword};
+    public enum Sfx
+    {
+        mouse_on_button = 0,
+        click = 1, Lvup = 2,
+        slash_shot, ele_shot, ele_explo, fire_Ex, flame_sword,
+        Lvup2 = 8, PerksAcqui, earthBump, stoneDust, stoneShot, stoneSummon
+
+    
+    };
 
     void Awake()
     {
