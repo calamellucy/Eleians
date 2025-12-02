@@ -108,7 +108,7 @@ public class Seori : MonoBehaviour
     // 스킬 재등록
     public void Init()
     {
-        float atk = StatsManager.instance.Attack / 10;
+        float atk = StatsManager.instance.Attack;
 
         // 기존 표창 비활성화
         foreach (Transform child in transform)
