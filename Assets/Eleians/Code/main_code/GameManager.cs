@@ -15,7 +15,9 @@ public class GameManager : MonoBehaviour
     public int level;
     public int kill;
     public int exp;
-    public int[] nextExp = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 , 5, 5, 5};
+    [Header("Level Info")]
+    public int maxLevel = 45;
+    public int[] nextExp; // 인스펙터에서 입력 X, 코드로 생성
     [Header("# Game Object")]
     public Player player;
     public GameObject boss;
@@ -56,7 +58,26 @@ public class GameManager : MonoBehaviour
         isLive = true;
         boss.SetActive(false);
 
+        InitLevelData(); // 레벨 데이터 생성
         InitTowerPhaseOrder();
+    }
+
+    // ★★★ [추가] 레벨업 테이블 자동 생성 함수
+    void InitLevelData()
+    {
+        nextExp = new int[maxLevel + 1];
+
+        // [수정] 0레벨(시작) -> 1레벨로 갈 때 필요한 경험치 설정
+        nextExp[0] = 10; // 예: 10xp 모으면 1레벨 됨
+
+        for (int i = 1; i <= maxLevel; i++)
+        {
+            // 밸런스 공식 (필요하면 숫자를 조절하세요)
+            // Lv 1->2 : 12 XP (몹 4~5마리)
+            // Lv 10->11 : 310 XP
+            // Lv 40->41 : 3600 XP (후반엔 몹이 쏟아지므로 적당함)
+            nextExp[i] = 10 + (i * 10) + (i * i * 2);
+        }
     }
 
     // 타워 순서 랜덤
@@ -228,14 +249,33 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
-    public void GetExp()
+    public void GetExp(int amount)
     {
-        exp++;
-        if(exp == nextExp[level])
+        Debug.Log($"[경험치 획득] 들어온 양: {amount} | 현재 EXP: {exp} | 목표 EXP: {nextExp[level]}");
+
+        if (level >= maxLevel) return; // 만렙이면 경험치 안 먹음
+
+        exp += amount;
+        /*
+        if (exp == nextExp[level])
         {
             level++;
             exp = 0;
             uiLevelUp.Show();
+        }
+        */
+        // 경험치 통 꽉 찼으면 레벨업 (반복문인 이유는 한번에 2업 할 수도 있어서)
+        while (exp >= nextExp[level])
+        {
+            exp -= nextExp[level];
+            level++;
+            uiLevelUp.Show();
+
+            if (level >= maxLevel)
+            {
+                exp = 0; // 만렙 경험치바 처리
+                break;
+            }
         }
     }
 

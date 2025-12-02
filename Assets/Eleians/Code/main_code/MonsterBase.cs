@@ -13,6 +13,7 @@ public enum ElementType
 public class MonsterBase : MonoBehaviour
 {
     [Header("Stats")]
+    public int exp; // Spawner에서 Init으로 받아온 값
     public float speed;
     public float health;
     public float maxHealth;
@@ -20,6 +21,7 @@ public class MonsterBase : MonoBehaviour
     public float originalSpeed;
     public float slowMultiplier = 1f;
     public int monsterType;
+    protected Resistance myResistance;
 
     // [중요] 아티팩트 매니저 오류 방지용 (절대 삭제 X)
     public MonsterType myType;
@@ -33,7 +35,6 @@ public class MonsterBase : MonoBehaviour
     // 전기 스턴 확인용
     public bool isStunned = false;
 
-    // ★★★ [추가] 이펙트 오브젝트 (인스펙터 연결) ★★★
     [Header("Effects Objects")]
     public GameObject effectFire;
     public GameObject effectIce;
@@ -117,6 +118,22 @@ public class MonsterBase : MonoBehaviour
         if (!isLive) return;
 
         float finalDamage = dmg;
+
+        // ★★★ [핵심 로직] 내성 계산 ★★★
+        // 공격 속성이 나의 내성 속성과 같다면?
+        if (element != ElementType.None && element == myResistance.element)
+        {
+            // 1. 데미지 감소 적용
+            finalDamage *= (1f - myResistance.damageReduction);
+
+            // 2. CC 무시 옵션이 켜져있다면? -> 속성을 None으로 바꿔서 효과 발동 막음
+            if (myResistance.ignoreCC)
+            {
+                element = ElementType.None;
+                // 이렇게 하면 아래 switch문에서 default로 빠져서 상태이상이 안 걸림!
+            }
+        }
+
         bool isCrit = false;
 
         // 크리티컬 계산
@@ -268,7 +285,7 @@ public class MonsterBase : MonoBehaviour
         if (giveReward)
         {
             GameManager.instance.kill++;
-            GameManager.instance.GetExp();
+            GameManager.instance.GetExp(this.exp);
         }
 
         anim.SetBool("dead", true);

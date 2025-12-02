@@ -110,7 +110,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 2
+  m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 0
@@ -210,11 +210,6 @@ MonoBehaviour:
   effectIce: {fileID: 1599125981036433278}
   effectLightning: {fileID: 2089003566130998150}
   target: {fileID: 0}
-  animCon:
-  - {fileID: 9100000, guid: 2c6f20883ecef9241b7a91146d859961, type: 2}
-  - {fileID: 9100000, guid: 2f155edfe4e0aff4781835b478a191bd, type: 2}
-  - {fileID: 9100000, guid: 3b9283527009617439b303a3783a61c8, type: 2}
-  - {fileID: 9100000, guid: e04967d81e219c740aa5a316bb23dff6, type: 2}
 --- !u!114 &2982861548057514276
 MonoBehaviour:
   m_ObjectHideFlags: 0
