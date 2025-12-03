@@ -65,6 +65,9 @@ public class BulletEvolution : MonoBehaviour
 
             GameObject split = GameManager.instance.pool.Get(skill.prefabId);
             split.transform.position = transform.position;
+
+            split.transform.rotation = Quaternion.AngleAxis(randAngle + 90f, Vector3.forward);
+
             split.transform.rotation = Quaternion.AngleAxis(randAngle, Vector3.forward);
             split.transform.localScale = Vector3.one * (skill.projectileSize * 0.7f);
             split.SetActive(true);

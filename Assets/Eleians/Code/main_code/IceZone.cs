@@ -96,16 +96,18 @@ public class IceZone : MonoBehaviour
                 {
                     MonsterBase monster = monsterList[i];
 
-                    // 몬스터가 죽거나 사라졌으면 리스트에서 제거
                     if (monster == null || !monster.gameObject.activeSelf || !monster.isLive)
                     {
                         monsterList.RemoveAt(i);
                         continue;
                     }
 
-                    // 데미지 적용
-                    monster.ApplyDamageWithoutKonckback(damagePerSecond);
+                    float monsterMaxHp = monster.maxHealth;
+                    float dmg = 10f + (monsterMaxHp * 0.04f);
+
+                    monster.ApplyDamageWithoutKonckback(dmg);
                 }
+
                 damageTimer = damageInterval;
             }
 
