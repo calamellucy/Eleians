@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -21,6 +23,7 @@ public class GameManager : MonoBehaviour
     [Header("# Game Object")]
     public Player player;
     public GameObject boss;
+    public Transform bossSpawnPoint;
     public GameObject tower;
     public GameObject elecTower;
     public GameObject fireTower;
@@ -46,6 +49,14 @@ public class GameManager : MonoBehaviour
     public float normalPhaseDuration = 150f;
     public float towerPhaseDuration = 30f;
 
+    // [변경] 보스방 입장 대기 상태 확인용 변수
+    private bool isWaitingForBossTrigger = false;
+
+    [Header("# Boss Cutscene Settings")]
+    public CinemachineCamera virtualCam;
+    public float bossZoomSize = 8f; // 보스전 때 줌아웃 할 사이즈 (기존 사이즈가 5라면 8~10 정도 추천)
+    private float originCamSize; // 원래 카메라 사이즈 저장용
+
     void Awake()
     {
         instance = this;
@@ -62,7 +73,7 @@ public class GameManager : MonoBehaviour
         InitTowerPhaseOrder();
     }
 
-    // ★★★ [추가] 레벨업 테이블 자동 생성 함수
+    // 레벨업 테이블 자동 생성 함수
     void InitLevelData()
     {
         nextExp = new int[maxLevel + 1];
@@ -125,8 +136,23 @@ public class GameManager : MonoBehaviour
         {
             if (!isBossPhase)
             {
-                isBossPhase = true;
-                SpawnBoss();
+                // 1. 아직 "위치 도달 대기" 상태가 아니라면 -> 유도 모드 시작
+                if (!isWaitingForBossTrigger)
+                {
+                    Debug.Log("보스전 시간 도달! 소환 위치로 이동하세요.");
+                    isWaitingForBossTrigger = true;
+
+                    // 화살표를 보스 소환 위치로 활성화
+                    if (bossSpawnPoint != null)
+                    {
+                        arrow.Activate(bossSpawnPoint);
+                    }
+                }
+                // 2. 유도 모드 중이라면 -> 플레이어가 도착했는지 체크
+                else
+                {
+                    CheckPlayerArrival();
+                }
             }
             else
             {
@@ -187,6 +213,118 @@ public class GameManager : MonoBehaviour
                 Debug.Log("타워 페이즈 종료 → 일반 페이즈 재개");
             }
         }
+    }
+
+    // [신규] 플레이어가 소환 위치에 도착했는지 확인
+    void CheckPlayerArrival()
+    {
+        if (bossSpawnPoint == null) return;
+
+        // 플레이어와 소환 지점 사이 거리 계산
+        float distance = Vector2.Distance(player.transform.position, bossSpawnPoint.position);
+
+        if (distance < 2.5f) // 조금 더 빡빡하게 도착 판정
+        {
+            isWaitingForBossTrigger = false;
+
+            // [핵심] 그냥 SpawnBoss()를 부르는 게 아니라 연출 코루틴을 시작
+            StartCoroutine(CoBossSequence());
+        }
+    }
+
+    // [신규] 보스 등장 시네마틱 코루틴
+    IEnumerator CoBossSequence()
+    {
+        // 1. 안전 확보 및 초기화
+        Debug.Log("연출 시작: 플레이어 조작 금지 & 무적");
+        // player.inputEnabled = false; // (플레이어 이동 스크립트에 조작 멈추는 기능이 있다면 호출)
+        // player.isInvincible = true;  // (플레이어 무적 기능이 있다면 호출)
+        arrow.Deactivate(); // 화살표 제거
+
+        // ★ [줌아웃 해결 1] Lens는 구조체(Struct)라 이렇게 값을 받아와야 합니다.
+        var currentLens = virtualCam.Lens;
+        originCamSize = currentLens.OrthographicSize;
+
+        // 2. 쾅! 임팩트 (화면 흔들림 + 잡몹 증발)
+        StartCoroutine(ShakeCinemachine(2.0f, 5.0f)); // 지속시간 2초 강도 5.0f
+        yield return new WaitForSeconds(0.5f);
+        ClearFieldMonsters(); // 흔들리는 순간 몬스터들이 펑! 하고 사라짐
+
+        yield return new WaitForSeconds(1f); // 흔들리는 시간동안 대기
+
+        // 5. 이제 흔들림이 멈추고 줌아웃 시작 (1.5초간)
+        float time = 0f;
+        float duration = 1.5f;
+
+        // 시작값은 저장해둔 원래 사이즈
+        float startSize = originCamSize;
+
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            float t = time / duration;
+
+            // 부드러운 보간
+            float newSize = Mathf.Lerp(startSize, bossZoomSize, t);
+
+            // ★ [줌아웃 해결 핵심 코드]
+            // 1. 구조체를 꺼낸다
+            var tempLens = virtualCam.Lens;
+            // 2. 값을 바꾼다
+            tempLens.OrthographicSize = newSize;
+            // 3. 다시 집어넣는다 (이래야 적용됨!)
+            virtualCam.Lens = tempLens;
+
+            yield return null;
+        }
+
+        // 혹시 모르니 최종값 한번 더 강제 적용
+        var finalLens = virtualCam.Lens;
+        finalLens.OrthographicSize = bossZoomSize;
+        virtualCam.Lens = finalLens;
+
+        // 4. 보스 소환
+        SpawnBoss(); // 보스 활성화
+
+        // 5. 보스전 시작 (게임 재개)
+        isBossPhase = true;
+
+        // player.inputEnabled = true; // 플레이어 조작 재개
+        // player.isInvincible = false; // 무적 해제 (필요시)
+    }
+
+    // 카메라 흔들기
+    IEnumerator ShakeCinemachine(float duration, float intensity)
+    {
+        if (virtualCam == null) yield break;
+
+        // ★ [변경 4] GetCinemachineComponent 대신 그냥 GetComponent 사용
+        var perlin = virtualCam.GetComponent<CinemachineBasicMultiChannelPerlin>();
+
+        if (perlin != null)
+        {
+            perlin.AmplitudeGain = intensity; // m_AmplitudeGain -> AmplitudeGain (m_ 빠짐)
+
+            yield return new WaitForSeconds(duration);
+
+            perlin.AmplitudeGain = 0f;
+        }
+    }
+
+    // [신규] 필드에 있는 잡몹들 제거 (보스 등장 시 방해 안 되게)
+    void ClearFieldMonsters()
+    {
+        // "Enemy" 태그를 가진 모든 오브젝트를 찾아서 제거 (태그 설정 필요)
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (GameObject enemyObj in enemies)
+        {
+            MonsterBase monster = enemyObj.GetComponent<MonsterBase>();
+            if (monster != null && monster.isLive)
+                monster.Die(false);
+            else
+                Destroy(enemyObj);
+        }
+        Debug.Log("필드 몬스터 정리 완료");
     }
 
     void StartTowerPhase(TowerType type)
@@ -297,11 +435,15 @@ public class GameManager : MonoBehaviour
 
     void SpawnBoss()
     {
+        Debug.Log("플레이어 도착! 보스 소환 시작!");
         arrow.Deactivate();
         arrowActivatedThisPhase = false;
 
         if (boss == null) return;
 
+        // 여기서 카메라 줌아웃이나 컷씬 코루틴을 실행하면 좋습니다.
+        // 지금은 즉시 활성화
+        boss.transform.position = bossSpawnPoint.position; // 보스 위치를 소환 지점으로 강제 이동
         boss.SetActive(true);  // 보스 밍부기 활성화
 
         BossMonster bm = boss.GetComponent<BossMonster>();
