@@ -17,6 +17,8 @@ public class FireSlashShots : MonoBehaviour
     // FlameSword에서 이 함수를 호출해서 발사 방향을 정해줄 거야
     public void Launch(Vector3 direction)
     {
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.flame_sword);
+
         moveDir = direction.normalized;
 
         // 투사체가 날아가는 방향을 바라보게 회전

@@ -67,12 +67,12 @@ public class Skill4 : MonoBehaviour
     public void GiveLevelSystemToSkill4()
     {
         baseBulletScale = Vector3.one * (1f + StatsManager.instance.FireCnt * 0.06f);
-        damage = StatsManager.instance.Attack * (0.3f + 0.08f * StatsManager.instance.IceCnt);
+        damage = StatsManager.instance.Attack * (1f + 0.08f * StatsManager.instance.IceCnt) * 0.5f;
         burstInterval = 1f / (StatsManager.instance.AttackSpeed * 0.3f);
         burstDuration = 1.5f / StatsManager.instance.AttackSpeed;
 
         shotsPerBurst = 30 + StatsManager.instance.EarthCnt;
-        if (StatsManager.instance.EarthCnt >= 5) { shotsPerBurst += 10; per = 1; }
+        if (StatsManager.instance.EarthCnt >= 5) { shotsPerBurst += 10; per = 4; }
         if (StatsManager.instance.EarthCnt >= 10) StoneDust = true;
         if (StatsManager.instance.EarthCnt >= 15) StoneActive = true;
         if (StatsManager.instance.EarthCnt >= 20) VibrationalWave = true;

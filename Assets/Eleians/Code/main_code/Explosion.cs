@@ -25,6 +25,7 @@ public class Explosion : MonoBehaviour
 
     IEnumerator DisableAfter(float t)
     {
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.ele_explo);
         yield return new WaitForSeconds(t);
         gameObject.SetActive(false);
     }

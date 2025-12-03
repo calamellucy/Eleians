@@ -69,7 +69,9 @@ public class Skill1_Re : MonoBehaviour
     {
         prefabId = 2;
         attackRate = 1f + 0.08f * electricCount;
-        damage = 10f + 0.6f * electricCount + (fireCount * 4);             
+
+        damage = 100f + 0.6f * electricCount + fireCount;             
+
         count = 0 + (int)((fireCount * 0.25) / 1);      
         projectileSize = (1 + earthCount * 0.08f);   
         projectileCount = 1 + (int)((iceCount * 0.34f)/1);
@@ -131,6 +133,7 @@ public class Skill1_Re : MonoBehaviour
             evo.Setup(this);
 
         bullet.GetComponent<Bullet_Re>().Init(damage, per, dir, electricCount);
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.ele_shot);
         //Debug.Log("Fire");
     }
 
