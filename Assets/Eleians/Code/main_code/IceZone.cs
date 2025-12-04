@@ -42,6 +42,7 @@ public class IceZone : MonoBehaviour
     IEnumerator ZoneLife()
     {
         //isRunning = true;
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Ice_10);
         yield return new WaitForSeconds(duration);
         gameObject.SetActive(false);
         //isRunning = false;

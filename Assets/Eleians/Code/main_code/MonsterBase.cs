@@ -287,7 +287,7 @@ public class MonsterBase : MonoBehaviour
             GameManager.instance.kill++;
             GameManager.instance.GetExp(this.exp);
         }
-
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.mobDead);
         anim.SetBool("dead", true);
     }
 
