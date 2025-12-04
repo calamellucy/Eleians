@@ -57,18 +57,20 @@ public class BulletEvolution : MonoBehaviour
 
     void SpawnSplitBullets()
     {
-        // 20전기: 3발 분열, 대미지/크기/관통 절반, 재분열 불가
         for (int i = 0; i < 3; i++)
         {
             float randAngle = Random.Range(0f, 360f);
-            Vector2 dir = new Vector2(Mathf.Cos(randAngle * Mathf.Deg2Rad), Mathf.Sin(randAngle * Mathf.Deg2Rad));
+
+            // 방향 벡터 생성
+            Vector2 dir = new Vector2(Mathf.Cos(randAngle * Mathf.Deg2Rad),
+                                      Mathf.Sin(randAngle * Mathf.Deg2Rad));
 
             GameObject split = GameManager.instance.pool.Get(skill.prefabId);
             split.transform.position = transform.position;
 
-            split.transform.rotation = Quaternion.AngleAxis(randAngle + 90f, Vector3.forward);
+            // **** 여기! 총알 기준 회전 공식 (Skill1_Re와 통일) ****
+            split.transform.rotation = Quaternion.FromToRotation(Vector3.up, dir);
 
-            split.transform.rotation = Quaternion.AngleAxis(randAngle, Vector3.forward);
             split.transform.localScale = Vector3.one * (skill.projectileSize * 0.7f);
             split.SetActive(true);
 
@@ -77,13 +79,14 @@ public class BulletEvolution : MonoBehaviour
             {
                 b.damage = skill.damage * 0.5f;
                 b.per = Mathf.Max(0, skill.count / 2);
-                b.GetComponent<BulletEvolution>().hasTriggered = true; // 재분열 방지
+                b.GetComponent<BulletEvolution>().hasTriggered = true;
                 b.Init(b.damage, b.per, dir, b.elecCount);
             }
 
             skill.StartCoroutine(DisableAfter(split, 1.5f));
         }
     }
+
 
     IEnumerator DisableAfter(GameObject go, float t)
     {
