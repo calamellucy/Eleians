@@ -17,7 +17,7 @@ public class Explosion : MonoBehaviour
         }
 
         // 폭발 반경에 따라 시각적 크기 조정
-        //transform.localScale = Vector3.one * (radius * 2f);
+        transform.localScale = Vector3.one * (radius * 100f);
 
         // 일정 시간 뒤 자동 비활성화
         StartCoroutine(DisableAfter(duration));
