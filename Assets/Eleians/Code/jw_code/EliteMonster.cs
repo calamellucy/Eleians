@@ -271,4 +271,27 @@ public class EliteMonster : NormalMonster
             base.ApplyDamage(dmg, element);
         }
     }
+
+    // [수정] 죽을 때 스킬 코루틴 강제 종료
+    public override void Die(bool giveReward)
+    {
+        // 1. 모든 코루틴(방어, 돌진, 공격 등) 즉시 중단
+        StopAllCoroutines();
+
+        // 2. 상태 변수들 강제 초기화
+        isUsingSkill = false;
+        isDefending = false;
+
+        // (중요) 방어 애니메이션 상태가 남아있으면 죽은 뒤 부활할 때 꼬일 수 있으니 끔
+        if (anim != null)
+        {
+            anim.SetBool("isDefending", false);
+        }
+
+        // 3. 색깔 원상복구 (방어 중 파랗게 변했거나 돌진 중 빨간색인 경우)
+        spriter.color = Color.white;
+
+        // 4. 부모의 Die 실행 (사망 애니메이션 -> 비활성화 로직)
+        base.Die(giveReward);
+    }
 }

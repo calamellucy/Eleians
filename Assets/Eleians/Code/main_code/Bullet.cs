@@ -96,10 +96,11 @@ public class Bullet : MonoBehaviour
         }
 
         SetAlpha(1f);
-        AudioManager.instance.PlaySfx(AudioManager.Sfx.stoneShot);
+
 
         // --- [2] 발사 ---
         gameObject.tag = "Bullet";
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.stoneShot);
 
         // ★ 출발 직전에 물리 켜기
         rigid.simulated = true;
