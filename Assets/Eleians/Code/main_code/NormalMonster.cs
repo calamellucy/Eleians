@@ -16,7 +16,7 @@ public class NormalMonster : MonsterBase
         target = GameManager.instance.player.GetComponent<Rigidbody2D>();
     }
 
-    protected void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         if (!isLive) return;
         if (isKnockback) return;

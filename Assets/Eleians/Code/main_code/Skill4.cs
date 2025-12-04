@@ -44,6 +44,7 @@ public class Skill4 : MonoBehaviour
         if (stoneDustComp == null) stoneDustComp = GetComponentInParent<StoneDust>();
     }
 
+    /*
     void Start()
     {
         if (loopCo != null) StopCoroutine(loopCo);
@@ -52,6 +53,27 @@ public class Skill4 : MonoBehaviour
         if (spikeCo != null) StopCoroutine(spikeCo);
         spikeCo = StartCoroutine(SpikeLoop());
     }
+    */
+    
+    //여기부터 수정
+    void OnEnable()
+    {
+        // 1. 혹시 돌고 있던 게 있다면 끄고 (안전장치)
+        if (loopCo != null) StopCoroutine(loopCo);
+        if (spikeCo != null) StopCoroutine(spikeCo);
+
+        // 2. 다시 코루틴 시작!
+        loopCo = StartCoroutine(Loop());
+        spikeCo = StartCoroutine(SpikeLoop());
+    }
+
+    // (보너스) 꺼질 때 코루틴 변수 정리
+    void OnDisable()
+    {
+        if (loopCo != null) StopCoroutine(loopCo);
+        if (spikeCo != null) StopCoroutine(spikeCo);
+    }
+    // 여기까지 수정
 
     void Update()
     {
@@ -66,11 +88,10 @@ public class Skill4 : MonoBehaviour
 
     public void GiveLevelSystemToSkill4()
     {
-        baseBulletScale = Vector3.one * (1f + StatsManager.instance.FireCnt * 0.06f);
-        damage = StatsManager.instance.Attack * (1f + 0.08f * StatsManager.instance.IceCnt) * 0.5f;
-        burstInterval = 1f / (StatsManager.instance.AttackSpeed * 0.3f);
-        burstDuration = 1.5f / StatsManager.instance.AttackSpeed;
-
+        baseBulletScale = Vector3.one * (1f + StatsManager.instance.FireCnt * 0.04f) * 1.4f;
+        damage = StatsManager.instance.Attack * (1f + 0.04f * StatsManager.instance.IceCnt) * 0.5f; burstInterval = 1f / (StatsManager.instance.AttackSpeed * 0.3f);
+        float baseInterval = 1f / (StatsManager.instance.AttackSpeed * 0.3f);
+        burstInterval = baseInterval * Mathf.Max(0.1f, (1f - StatsManager.instance.ElectricCnt * 0.05f));
         shotsPerBurst = 30 + StatsManager.instance.EarthCnt;
         if (StatsManager.instance.EarthCnt >= 5) { shotsPerBurst += 10; per = 4; }
         if (StatsManager.instance.EarthCnt >= 10) StoneDust = true;

@@ -6,6 +6,7 @@ public class BossMonster : NormalMonster
     [Header("Boss Settings")]
     public Transform player;           // 플레이어 위치
     public float patternInterval = 1f; // 패턴 사이 짧은 숨 고르기 시간
+    public bool isBattleReady = false;
 
     [Header("Shadow Rain")]
     public GameObject shadowSpearPrefab;  // 그림자 창 프리팹
@@ -29,16 +30,33 @@ public class BossMonster : NormalMonster
     {
         base.OnEnable();
 
+        isBattleReady = false;
+
         if (GameManager.instance != null && GameManager.instance.player != null)
         {
             player = GameManager.instance.player.transform;
             target = GameManager.instance.player.GetComponent<Rigidbody2D>();
         }
 
-        if (patternRoutine != null)
-            StopCoroutine(patternRoutine);
+        // if (patternRoutine != null) StopCoroutine(patternRoutine);
 
-        patternRoutine = StartCoroutine(PatternLoop());
+        // patternRoutine = StartCoroutine(PatternLoop());
+    }
+
+    // ★ [추가] 부모(NormalMonster)의 이동 로직을 멈추기 위해 추가
+    protected override void FixedUpdate()
+    {
+        // 전투 준비가 안 됐으면 움직이지 마라 (물리엔진 정지)
+        if (!isBattleReady)
+        {
+            rigid.linearVelocity = Vector2.zero; // 제자리 고정
+            return;
+        }
+
+        // 만약 부모 클래스(NormalMonster)에 이동 로직이 있다면 
+        // 여기서 base.FixedUpdate()를 호출해야 할 수도 있지만,
+        // 보통 보스는 패턴으로 움직이므로 여기선 그냥 둡니다.
+        base.FixedUpdate();
     }
 
     // NormalMonster의 LateUpdate를 덮어씌웁니다.
@@ -52,6 +70,18 @@ public class BossMonster : NormalMonster
 
         // 원본 그림이 반대라서, 로직도 반대로 뒤집어 줌
         spriter.flipX = target.position.x < rigid.position.x;
+    }
+
+    // ★★★ [핵심] GameManager가 호출해줄 "전투 시작" 함수 ★★★
+    public void StartBattle()
+    {
+        isBattleReady = true;
+
+        Debug.Log("보스 전투 시작!");
+
+        // 패턴 코루틴 시작
+        if (patternRoutine != null) StopCoroutine(patternRoutine);
+        patternRoutine = StartCoroutine(PatternLoop());
     }
 
     public override void Die(bool giveReward)
