@@ -44,6 +44,7 @@ public class Skill4 : MonoBehaviour
         if (stoneDustComp == null) stoneDustComp = GetComponentInParent<StoneDust>();
     }
 
+    /*
     void Start()
     {
         if (loopCo != null) StopCoroutine(loopCo);
@@ -52,6 +53,27 @@ public class Skill4 : MonoBehaviour
         if (spikeCo != null) StopCoroutine(spikeCo);
         spikeCo = StartCoroutine(SpikeLoop());
     }
+    */
+    
+    //여기부터 수정
+    void OnEnable()
+    {
+        // 1. 혹시 돌고 있던 게 있다면 끄고 (안전장치)
+        if (loopCo != null) StopCoroutine(loopCo);
+        if (spikeCo != null) StopCoroutine(spikeCo);
+
+        // 2. 다시 코루틴 시작!
+        loopCo = StartCoroutine(Loop());
+        spikeCo = StartCoroutine(SpikeLoop());
+    }
+
+    // (보너스) 꺼질 때 코루틴 변수 정리
+    void OnDisable()
+    {
+        if (loopCo != null) StopCoroutine(loopCo);
+        if (spikeCo != null) StopCoroutine(spikeCo);
+    }
+    // 여기까지 수정
 
     void Update()
     {

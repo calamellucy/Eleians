@@ -3,35 +3,37 @@ using UnityEngine;
 public class ArrowController : MonoBehaviour
 {
     public Transform player;
-    public Transform tower;
+    public Transform target;
 
     public float radius = 2.5f;
 
-    // ¾Ë¸² ¸Þ½ÃÁö ³»¿ë ¼³Á¤ (ÀÎ½ºÆåÅÍ¿¡¼­ ¼öÁ¤ °¡´É)
+    // ì•Œë¦¼ ë©”ì‹œì§€ ë‚´ìš© ì„¤ì • (ì¸ìŠ¤íŽ™í„°ì—ì„œ ìˆ˜ì • ê°€ëŠ¥)
     [TextArea]
-    public string phaseStartMessage = "°ÅÁ¡ ÆäÀÌÁî°¡ °ð ½ÃÀÛÇÕ´Ï´Ù!";
+    public string phaseStartMessage = "ê±°ì  íŽ˜ì´ì¦ˆê°€ ê³§ ì‹œìž‘í•©ë‹ˆë‹¤!";
 
     bool active = false;
+    bool hideWhenOnScreen = true;
 
     void Awake()
     {
-        transform.localScale = Vector3.zero;  // ÃÊ±â¿¡ ¼û±è
+        transform.localScale = Vector3.zero;  // ì´ˆê¸°ì— ìˆ¨ê¹€
     }
 
-    public void Activate(Transform towerTransform)
+    public void Activate(Transform targetTransform, bool _hideWhenOnScreen = true)
     {
-        tower = towerTransform;
+        target = targetTransform;
+        hideWhenOnScreen = _hideWhenOnScreen; // ì˜µì…˜ ì €ìž¥
         active = true;
         transform.localScale = Vector3.one;
 
-        // È­»ìÇ¥°¡ ÄÑÁú ¶§ SkillAlertSystem¿¡ ¸Þ½ÃÁö ¶ç¿ì¶ó°í ¿äÃ»
+        // í™”ì‚´í‘œê°€ ì¼œì§ˆ ë•Œ SkillAlertSystemì— ë©”ì‹œì§€ ë„ìš°ë¼ê³  ìš”ì²­
         if (SkillAlertSystem.instance != null)
         {
             SkillAlertSystem.instance.EnqueueMessage(phaseStartMessage);
         }
         else
         {
-            Debug.LogWarning("SkillAlertSystemÀÌ ¾À¿¡ ¾ø½À´Ï´Ù!");
+            Debug.LogWarning("SkillAlertSystemì´ ì”¬ì— ì—†ìŠµë‹ˆë‹¤!");
         }
     }
 
@@ -43,9 +45,9 @@ public class ArrowController : MonoBehaviour
 
     void Update()
     {
-        if (!active || player == null || tower == null) return;
+        if (!active || player == null || target == null) return;
 
-        if (IsTowerVisible())
+        if (hideWhenOnScreen && IsTowerVisible())
         {
             transform.localScale = Vector3.zero;
             return;
@@ -55,7 +57,8 @@ public class ArrowController : MonoBehaviour
             transform.localScale = Vector3.one;
         }
 
-        Vector3 dir = (tower.position - player.position).normalized;
+        // --- ì›”ë“œ ì¢Œí‘œ ê³„ì‚° ---
+        Vector3 dir = (target.position - player.position).normalized;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
         transform.position = player.position + dir * radius;
@@ -64,7 +67,7 @@ public class ArrowController : MonoBehaviour
 
     bool IsTowerVisible()
     {
-        Vector3 screen = Camera.main.WorldToScreenPoint(tower.position);
+        Vector3 screen = Camera.main.WorldToScreenPoint(target.position);
 
         return screen.z > 0 &&
                screen.x >= 0 && screen.x <= Screen.width &&

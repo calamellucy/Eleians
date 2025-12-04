@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
     public bool isInvincible = false; // 현재 무적 상태인가?
     private float invincibleTimer = 0f; // 무적 남은 시간
 
+    public bool isLocked = false;
+
     Rigidbody2D rigid;
     SpriteRenderer spriter;
     Animator anim;
@@ -31,6 +33,26 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        // ★ 이 코드를 Update 최상단에 넣으세요!
+        if (isLocked)
+        {
+            // 1. 입력값 초기화 (이래야 걷는 모션이 멈춤)
+            inputVec = Vector2.zero;
+
+            // 2. 애니메이션 멈춤 (Run -> Idle)
+            // 본인 애니메이터 파라미터 이름에 맞춰주세요! (예: Speed, IsRun 등)
+            if (anim != null)
+            {
+                anim.Play("Stand");
+                anim.Play("Stand");
+            }
+
+            // 3. 물리 속도 0으로 고정 (미끄러짐 방지)
+            rigid.linearVelocity = Vector2.zero;
+
+            return; // 아래쪽 이동 코드 실행 금지
+        }
+
         inputVec.x = Input.GetAxisRaw("Horizontal");
         inputVec.y = Input.GetAxisRaw("Vertical");
 
@@ -64,6 +86,13 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (isLocked)
+        {
+            // 물리 연산 중에도 속도를 0으로 꽉 잡고 있어야 함
+            rigid.linearVelocity = Vector2.zero;
+            return;
+        }
+
         Vector2 nextVec = inputVec.normalized * speed * Time.fixedDeltaTime;
         rigid.MovePosition(rigid.position + nextVec);
     }
@@ -153,5 +182,22 @@ public class Player : MonoBehaviour
         GameManager.instance.isLive = false;
         // anim.SetTrigger("Dead");
         // rigid.simulated = false;
+    }
+
+    // GameManager에서 호출할 함수
+    public void LockState(bool lockPlayer)
+    {
+        isLocked = lockPlayer;
+
+        if (lockPlayer)
+        {
+            // 잠그는 순간 즉시 멈춤!
+            inputVec = Vector2.zero;
+            if (rigid != null) rigid.linearVelocity = Vector2.zero;
+            if (anim != null)
+            {
+                anim.Play("Stand");
+            }
+        }
     }
 }
