@@ -3,20 +3,22 @@ using UnityEngine;
 public class ArrowController : MonoBehaviour
 {
     public Transform player;
-    public Transform tower;
+    public Transform target;
 
     public float radius = 2.5f;
 
     bool active = false;
+    bool hideWhenOnScreen = true;
 
     void Awake()
     {
         transform.localScale = Vector3.zero;  // 초기에 숨김
     }
 
-    public void Activate(Transform towerTransform)
+    public void Activate(Transform targetTransform, bool _hideWhenOnScreen = true)
     {
-        tower = towerTransform;
+        target = targetTransform;
+        hideWhenOnScreen = _hideWhenOnScreen; // 옵션 저장
         active = true;
         transform.localScale = Vector3.one;
     }
@@ -29,28 +31,9 @@ public class ArrowController : MonoBehaviour
 
     void Update()
     {
-        if (!active || player == null || tower == null) return;
+        if (!active || player == null || target == null) return;
 
-        /*
-        // 화면 안에 타워 있으면 숨김
-        Vector3 towerScreen = Camera.main.WorldToViewportPoint(tower.position);
-        bool isOnScreen =
-            towerScreen.x > 0 && towerScreen.x < 1 &&
-            towerScreen.y > 0 && towerScreen.y < 1 &&
-            towerScreen.z > 0;
-
-        if (isOnScreen)
-        {
-            transform.localScale = Vector3.zero;
-            return;
-        }
-        else
-        {
-            transform.localScale = Vector3.one;
-        }
-        */
-
-        if (IsTowerVisible())
+        if (hideWhenOnScreen && IsTowerVisible())
         {
             transform.localScale = Vector3.zero;
             return;
@@ -61,7 +44,7 @@ public class ArrowController : MonoBehaviour
         }
 
         // --- 월드 좌표 계산 ---
-        Vector3 dir = (tower.position - player.position).normalized;
+        Vector3 dir = (target.position - player.position).normalized;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
         // 위치 설정 (월드 좌표)
@@ -73,7 +56,7 @@ public class ArrowController : MonoBehaviour
 
     bool IsTowerVisible()
     {
-        Vector3 screen = Camera.main.WorldToScreenPoint(tower.position);
+        Vector3 screen = Camera.main.WorldToScreenPoint(target.position);
 
         return screen.z > 0 &&
                screen.x >= 0 && screen.x <= Screen.width &&
