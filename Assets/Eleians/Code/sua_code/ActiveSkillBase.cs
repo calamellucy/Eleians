@@ -1,25 +1,29 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems; // [필수] 이게 없으면 작동 안 함!
 
-// abstract: 이 클래스만으로는 사용할 수 없고 상속받아 써야 함
-public abstract class ActiveSkillBase : MonoBehaviour
+// 인터페이스에서 '클릭(IPointerClickHandler)'은 뺐어.
+public abstract class ActiveSkillBase : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [Header("Common Settings")]
     public float coolTime = 10f;
-    public Image borderImage; // 쿨타임 도는 테두리 이미지 (Filled 타입)
+    public Image borderImage;
 
-    protected bool isCooldown = false; // protected: 자식도 접근 가능
+    [Header("UI Info")]
+    public string skillName; // 인스펙터에서 "Fire", "Ice" 등을 꼭 적어줘!
+
+    protected bool isCooldown = false;
     protected float timer = 0f;
 
     protected virtual void Start()
     {
         if (borderImage != null)
-            borderImage.fillAmount = 1f; // 시작할 때 꽉 채워두기
+            borderImage.fillAmount = 1f;
     }
 
     protected virtual void Update()
     {
-        // 1. 스킬이 해금되었는지 체크 (자식마다 조건이 다름 -> 추상 함수로 위임)
+        // 1. 스킬 해금 체크
         if (!IsSkillUnlocked())
         {
             if (borderImage != null) borderImage.enabled = false;
@@ -30,29 +34,26 @@ public abstract class ActiveSkillBase : MonoBehaviour
             if (borderImage != null) borderImage.enabled = true;
         }
 
-        // 2. 쿨타임 계산 로직 (모든 스킬 공통)
+        // 2. 쿨타임 로직
         if (isCooldown)
         {
             HandleCooldown();
             return;
         }
 
-        // 3. 키 입력 및 스킬 발동 (자식마다 키와 스킬이 다름 -> 추상 함수로 위임)
+        // 3. 키 입력 (기존 T키 등)
         if (CheckInput())
         {
-            ActivateSkill(); // 실제 스킬 실행
-            StartCooldown(); // 쿨타임 시작
+            ActivateSkill();
+            StartCooldown();
         }
     }
 
-    // 쿨타임 UI 처리 함수
     private void HandleCooldown()
     {
         timer += Time.deltaTime;
         float ratio = Mathf.Clamp01(timer / coolTime);
-
-        if (borderImage != null)
-            borderImage.fillAmount = ratio; // 0에서 1로 차오름
+        if (borderImage != null) borderImage.fillAmount = ratio;
 
         if (timer >= coolTime)
         {
@@ -62,16 +63,40 @@ public abstract class ActiveSkillBase : MonoBehaviour
         }
     }
 
-    // 쿨타임 시작 함수
     protected void StartCooldown()
     {
         isCooldown = true;
         timer = 0f;
-        if (borderImage != null) borderImage.fillAmount = 0f; // 비우고 시작
+        if (borderImage != null) borderImage.fillAmount = 0f;
     }
 
-    // --- 자식 클래스에서 반드시 구현해야 할 내용들 ---
-    protected abstract bool IsSkillUnlocked(); // 언제 활성화되는가? (예: StoneActive)
-    protected abstract bool CheckInput();      // 무슨 키를 눌러야 하는가? (예: Q, W)
-    protected abstract void ActivateSkill();   // 무슨 스킬이 나가는가?
+    // ==========================================
+    // [마우스 감지 로직]
+    // ==========================================
+
+    // 마우스가 들어왔을 때 -> 툴팁 켜기
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        //if (!IsSkillUnlocked()) return;
+
+        if (SkillUIManager.instance != null)
+        {
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.mouse_on_button);
+            SkillUIManager.instance.ShowTooltip(skillName);
+        }
+    }
+
+    // 마우스가 나갔을 때 -> 툴팁 끄기
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (SkillUIManager.instance != null)
+        {
+            SkillUIManager.instance.HideTooltip();
+        }
+    }
+
+    // 추상 함수들
+    protected abstract bool IsSkillUnlocked();
+    protected abstract bool CheckInput();
+    protected abstract void ActivateSkill();
 }
