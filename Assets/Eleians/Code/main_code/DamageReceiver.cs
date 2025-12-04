@@ -53,7 +53,10 @@ public class DamageReceiver : MonoBehaviour
         if (collision.CompareTag("Seori"))
         {
             Seori_Shuri seo = collision.GetComponent<Seori_Shuri>();
-            if (seo != null) monster.ApplyDamage(seo.damage, ElementType.Ice);
+            if (seo != null){
+                AudioManager.instance.PlaySfx(AudioManager.Sfx.Ice);
+                monster.ApplyDamage(seo.damage, ElementType.Ice);
+            }
             return;
         }
 

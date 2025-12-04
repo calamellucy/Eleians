@@ -1,27 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI; // Legacy Text를 쓰기 위해 필수!
+using UnityEngine.UI;
 
 public class SkillAlertSystem : MonoBehaviour
 {
+    // 어디서든 이 스크립트를 부를 수 있게 만드는 변수
+    public static SkillAlertSystem instance;
+
     [Header("UI Components")]
-    public Text alertText; // TextMeshProUGUI 대신 일반 Text 사용
+    public Text alertText;
     public CanvasGroup canvasGroup;
 
     [Header("Settings")]
     public float displayTime = 2.0f;
     public float fadeDuration = 1.0f;
 
-    // --- 내부 감시용 변수 ---
     private int lastFireCnt = 0;
     private int lastIceCnt = 0;
     private int lastElectricCnt = 0;
     private int lastEarthCnt = 0;
 
-    // --- 메시지 대기열 ---
     private Queue<string> messageQueue = new Queue<string>();
     private bool isDisplaying = false;
+
+    void Awake()
+    {
+        // 싱글톤 설정: 게임 시작 시 이 스크립트를 instance에 저장
+        instance = this;
+    }
 
     void Start()
     {
@@ -31,7 +38,6 @@ public class SkillAlertSystem : MonoBehaviour
             canvasGroup.blocksRaycasts = false;
         }
 
-        // 초기 스탯 동기화
         if (StatsManager.instance != null)
         {
             lastFireCnt = StatsManager.instance.FireCnt;
@@ -88,7 +94,8 @@ public class SkillAlertSystem : MonoBehaviour
         }
     }
 
-    void EnqueueMessage(string message)
+    // public으로 변경하여 외부(ArrowController)에서 호출 가능하게 함
+    public void EnqueueMessage(string message)
     {
         messageQueue.Enqueue(message);
         if (!isDisplaying)
@@ -106,8 +113,12 @@ public class SkillAlertSystem : MonoBehaviour
             string msg = messageQueue.Dequeue();
 
             alertText.text = msg;
+
+            // 효과음 재생 (AudioManager가 있을 경우)
             if (AudioManager.instance != null)
             {
+                // 상황에 따라 다른 소리를 내고 싶다면 여기서 분기 처리 가능
+                // 지금은 기존 코드대로 유지
                 AudioManager.instance.PlaySfx(AudioManager.Sfx.PerksAcqui);
             }
 

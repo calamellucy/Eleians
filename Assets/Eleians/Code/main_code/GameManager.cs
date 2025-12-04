@@ -77,17 +77,24 @@ public class GameManager : MonoBehaviour
     void InitLevelData()
     {
         nextExp = new int[maxLevel + 1];
+        nextExp[0] = 10; // 1레벨 가는데 10 필요
 
-        // [수정] 0레벨(시작) -> 1레벨로 갈 때 필요한 경험치 설정
-        nextExp[0] = 10; // 예: 10xp 모으면 1레벨 됨
+        // 설정값
+        float baseExp = 10f;  // 기본 경험치
+        float growth = 1.3f;  // 성장 계수 (1.1~1.5 추천)
+                              // 1.1 : 엄청 빠름 (선형에 가까움)
+                              // 1.3 : 뱀서 느낌 (추천)
+                              // 1.5 : 약간 빡빡함
 
         for (int i = 1; i <= maxLevel; i++)
         {
-            // 밸런스 공식 (필요하면 숫자를 조절하세요)
-            // Lv 1->2 : 12 XP (몹 4~5마리)
-            // Lv 10->11 : 310 XP
-            // Lv 40->41 : 3600 XP (후반엔 몹이 쏟아지므로 적당함)
-            nextExp[i] = 10 + (i * 10) + (i * i * 2);
+            // 공식: 10 * (레벨 ^ 1.3)
+            // 레벨이 오를수록 요구량이 늘어나지만, 
+            // 몹 잡는 속도도 빨라지므로 체감상 템포는 유지됨.
+            float expCalc = baseExp * Mathf.Pow(i + 1, growth);
+
+            // 정수로 변환 시 5단위나 10단위로 끊어주면 깔끔함 (선택사항)
+            nextExp[i] = Mathf.RoundToInt(expCalc);
         }
     }
 

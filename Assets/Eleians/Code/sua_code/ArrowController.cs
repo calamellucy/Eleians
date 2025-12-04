@@ -7,6 +7,10 @@ public class ArrowController : MonoBehaviour
 
     public float radius = 2.5f;
 
+    // 알림 메시지 내용 설정 (인스펙터에서 수정 가능)
+    [TextArea]
+    public string phaseStartMessage = "거점 페이즈가 곧 시작합니다!";
+
     bool active = false;
 
     void Awake()
@@ -19,6 +23,16 @@ public class ArrowController : MonoBehaviour
         tower = towerTransform;
         active = true;
         transform.localScale = Vector3.one;
+
+        // 화살표가 켜질 때 SkillAlertSystem에 메시지 띄우라고 요청
+        if (SkillAlertSystem.instance != null)
+        {
+            SkillAlertSystem.instance.EnqueueMessage(phaseStartMessage);
+        }
+        else
+        {
+            Debug.LogWarning("SkillAlertSystem이 씬에 없습니다!");
+        }
     }
 
     public void Deactivate()
@@ -31,25 +45,6 @@ public class ArrowController : MonoBehaviour
     {
         if (!active || player == null || tower == null) return;
 
-        /*
-        // 화면 안에 타워 있으면 숨김
-        Vector3 towerScreen = Camera.main.WorldToViewportPoint(tower.position);
-        bool isOnScreen =
-            towerScreen.x > 0 && towerScreen.x < 1 &&
-            towerScreen.y > 0 && towerScreen.y < 1 &&
-            towerScreen.z > 0;
-
-        if (isOnScreen)
-        {
-            transform.localScale = Vector3.zero;
-            return;
-        }
-        else
-        {
-            transform.localScale = Vector3.one;
-        }
-        */
-
         if (IsTowerVisible())
         {
             transform.localScale = Vector3.zero;
@@ -60,14 +55,10 @@ public class ArrowController : MonoBehaviour
             transform.localScale = Vector3.one;
         }
 
-        // --- 월드 좌표 계산 ---
         Vector3 dir = (tower.position - player.position).normalized;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
-        // 위치 설정 (월드 좌표)
         transform.position = player.position + dir * radius;
-
-        // 회전 설정
         transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
     }
 
