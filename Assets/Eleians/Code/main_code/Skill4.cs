@@ -66,9 +66,9 @@ public class Skill4 : MonoBehaviour
 
     public void GiveLevelSystemToSkill4()
     {
-        baseBulletScale = Vector3.one * (1f + StatsManager.instance.FireCnt * 0.06f);
-        damage = StatsManager.instance.Attack * (1f + 0.08f * StatsManager.instance.IceCnt) * 0.5f;
-        burstInterval = 1f / (StatsManager.instance.AttackSpeed * 0.3f);
+        baseBulletScale = Vector3.one * (1f + StatsManager.instance.FireCnt * 0.04f);
+        damage = StatsManager.instance.Attack * (1f + 0.08f * StatsManager.instance.IceCnt) * 0.04f;
+        burstInterval = 1f / (StatsManager.instance.AttackSpeed * 0.5f);
         burstDuration = 1.5f / StatsManager.instance.AttackSpeed;
 
         shotsPerBurst = 30 + StatsManager.instance.EarthCnt;
