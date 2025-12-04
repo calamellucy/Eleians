@@ -153,7 +153,8 @@ MonoBehaviour:
   iceCount: 0
   earthCount: 0
   dhwyyPrefab: {fileID: 0}
-  iceZonePrefab: {fileID: 0}
+  dhwyyBaseScale: 1
+  iceZonePrefabId: 13
 --- !u!114 &6189962949381303918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,3 +170,4 @@ MonoBehaviour:
   damage: 0
   per: 0
   slowRate: 0.2
+  selfRotateSpeed: 1080

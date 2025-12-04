@@ -143,3 +143,4 @@ MonoBehaviour:
   damage: 0
   per: 0
   slowRate: 0
+  selfRotateSpeed: 720
