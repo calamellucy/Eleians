@@ -112,6 +112,8 @@ public class StatsManager : MonoBehaviour
         {
             GameManager.instance.maxHealth = MaxHP;
         }
+
+        GameManager.instance.player.speed = MovementSpeed;
     }
 
     /*

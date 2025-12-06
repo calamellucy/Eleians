@@ -79,7 +79,10 @@ public class Bullet : MonoBehaviour
 
     IEnumerator SpawnAndFireRoutine(Vector3 dir, float speed, float lifeTime)
     {
-        AudioManager.instance.PlaySfx(AudioManager.Sfx.stoneSummon);
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.stoneSummon);
+        }
 
         // --- [1] 대기 (페이드 인) ---
         float fadeTime = 0.4f;
