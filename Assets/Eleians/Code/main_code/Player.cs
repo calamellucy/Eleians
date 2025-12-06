@@ -22,6 +22,9 @@ public class Player : MonoBehaviour
     SpriteRenderer spriter;
     Animator anim;
 
+    [Header("Effects")]
+    public GameObject healEffectPrefab; // ★ 인스펙터에서 힐 이펙트 프리팹 연결!
+
     void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -168,6 +171,18 @@ public class Player : MonoBehaviour
         Debug.Log("HEAL!!");
 
         // 힐 이펙트, 힐 텍스트 같은 것 원하면 여기에 추가하면 된다
+        // ★★★ 이펙트 생성 ★★★
+        if (healEffectPrefab != null)
+        {
+            // 플레이어 위치에 생성 (플레이어의 자식으로 넣어서 따라다니게 함)
+            GameObject vfx = Instantiate(healEffectPrefab, transform.position, Quaternion.identity, transform);
+
+            // 이펙트가 너무 크면 가리니까 위치를 발 밑이나 머리 위로 조정 가능
+            // vfx.transform.localPosition += Vector3.up * 0.5f; 
+
+            // 2초 뒤에 삭제 (파티클 지속시간에 맞춰 조절)
+            Destroy(vfx, 2.0f);
+        }
     }
 
 

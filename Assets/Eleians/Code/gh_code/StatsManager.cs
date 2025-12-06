@@ -48,6 +48,9 @@ public class StatsManager : MonoBehaviour
     public int IceCnt;
     public int EarthCnt;
 
+    // ★ [추가] 이전 MaxHP를 기억하기 위한 변수
+    private float _prevMaxHP = 0f;
+
 
     void Awake()
     {
@@ -55,6 +58,7 @@ public class StatsManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         // ResetToBase();
         RecalculateStats(); // 시작할 때 계산
+        _prevMaxHP = MaxHP;
     }
 
     void Update()
@@ -62,7 +66,7 @@ public class StatsManager : MonoBehaviour
         // 레벨업 등으로 원소 카운트가 바뀌면 재계산이 필요하므로
         // GameManager에서 레벨업 할 때 RecalculateStats()를 호출하는 게 정석이지만
         // 편의상 여기서 계속 갱신해도 됩니다. (단, 아래 로직으로)
-        RecalculateStats();
+        // RecalculateStats();
     }
 
     public void RecalculateStats()
@@ -75,13 +79,39 @@ public class StatsManager : MonoBehaviour
 
         // 2. 아티팩트 보정치 적용 (여기가 핵심)
         Attack = elemAttack * (1f + artifactAtkMult);
-        MaxHP = elemHP; // HP는 현재 체력이 아니라 최대 체력이 변하는 것
+
+        // 체력 계산 (임시 변수에 먼저 담음)
+        float newMaxHP = elemHP;
+
+        // MaxHP = elemHP; // HP는 현재 체력이 아니라 최대 체력이 변하는 것
         AttackSpeed = elemAtkSpd * (1f + artifactAtkSpdMult);
         MovementSpeed = baseMoveSpeed * (1f + artifactSpeedMult);
         CritChance = Mathf.Clamp01(elemCrit + artifactCritChanceAdd);
         CritDamage = baseCritDamage + artifactCritDmgAdd;
-
         DamageTakenMultiplier = 1f + artifactDmgTakenMult;
+
+        // ★★★ [핵심 수정 로직] 체력 변동분 적용 ★★★
+        // 만약 이전에 알고 있던 MaxHP보다 새로 계산된 MaxHP가 더 크다면?
+        // (게임 시작 직후인 0일 때는 제외하기 위해 _prevMaxHP > 0 체크 추가 가능, 
+        //  단 Awake에서 초기화했으므로 바로 비교해도 무방)
+        if (GameManager.instance != null && newMaxHP > _prevMaxHP)
+        {
+            // 늘어난 양만큼 현재 체력도 회복
+            float diff = newMaxHP - _prevMaxHP;
+            GameManager.instance.health += diff;
+
+            // (선택) UI 갱신이 필요하다면 여기서 GameManager의 UI 업데이트 함수 호출
+        }
+
+        // 값 적용 및 기록 갱신
+        MaxHP = newMaxHP;
+        _prevMaxHP = MaxHP;
+
+        // (참고) GameManager의 maxHealth 변수와 StatsManager의 MaxHP가 따로 놀고 있다면 동기화 추천
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.maxHealth = MaxHP;
+        }
     }
 
     /*
