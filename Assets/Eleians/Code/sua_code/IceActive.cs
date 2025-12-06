@@ -30,6 +30,7 @@ public class IceActive : ActiveSkillBase
     // 3. 스킬 발동
     protected override void ActivateSkill()
     {
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Ice_15);
         // 플레이어에 있는 스킬 로직 실행
         iceSkill.ActiveIceShield();
     }

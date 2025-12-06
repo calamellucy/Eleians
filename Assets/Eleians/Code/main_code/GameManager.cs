@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class GameManager : MonoBehaviour
 {
@@ -54,8 +55,24 @@ public class GameManager : MonoBehaviour
 
     [Header("# Boss Cutscene Settings")]
     public CinemachineCamera virtualCam;
-    public float bossZoomSize = 8f; // 보스전 때 줌아웃 할 사이즈 (기존 사이즈가 5라면 8~10 정도 추천)
-    private float originCamSize; // 원래 카메라 사이즈 저장용
+    public RectTransform topUIPanel;     // 상단 UI 묶음 (위로 사라짐)
+    public RectTransform bottomUIPanel;  // 하단 UI 묶음 (아래로 사라짐)
+    public float uiSlideDuration = 1.0f; // UI 사라지는 데 걸리는 시간
+
+    [Header("# Boss Cutscene Effects")]
+    // [추가] 보스 연출이 시작되었는지 체크하는 변수
+    private bool isCutsceneStarted = false;
+    public Tilemap backgroundTilemap;    // ★ 배경 타일맵 (색 바꿀 대상)
+    public Color bossPhaseBgColor = new Color(0.6f, 0.4f, 0.8f); // 칙칙한 보라색
+    public Transform shockwaveEffect;    // 중앙에서 퍼질 링 모양 충격파 (Sprite)
+    public Transform magicCircle;
+    public GameObject bossBarrier;       // 결계 오브젝트 (네모난 테두리)
+    public GameObject bossSpawnEffect;   // 보스 등장 시 터질 파티클 (Explosion 등)
+
+    [Header("# Player Control")]
+    // ★ 여기에 스킬 관련 오브젝트(무기, 스캐너, 마법봉 등)를 다 넣으세요
+    public GameObject[] skillObjects;
+    public MonoBehaviour[] skillScripts;
 
     void Awake()
     {
@@ -69,6 +86,12 @@ public class GameManager : MonoBehaviour
         isLive = true;
         boss.SetActive(false);
 
+        // 연출용 오브젝트 초기화
+        if (bossBarrier != null) bossBarrier.SetActive(false);
+        if (shockwaveEffect != null) shockwaveEffect.gameObject.SetActive(false);
+        if (magicCircle != null) magicCircle.gameObject.SetActive(false);
+
+
         InitLevelData(); // 레벨 데이터 생성
         InitTowerPhaseOrder();
     }
@@ -77,17 +100,24 @@ public class GameManager : MonoBehaviour
     void InitLevelData()
     {
         nextExp = new int[maxLevel + 1];
+        nextExp[0] = 10; // 1레벨 가는데 10 필요
 
-        // [수정] 0레벨(시작) -> 1레벨로 갈 때 필요한 경험치 설정
-        nextExp[0] = 10; // 예: 10xp 모으면 1레벨 됨
+        // 설정값
+        float baseExp = 10f;  // 기본 경험치
+        float growth = 1.3f;  // 성장 계수 (1.1~1.5 추천)
+                              // 1.1 : 엄청 빠름 (선형에 가까움)
+                              // 1.3 : 뱀서 느낌 (추천)
+                              // 1.5 : 약간 빡빡함
 
         for (int i = 1; i <= maxLevel; i++)
         {
-            // 밸런스 공식 (필요하면 숫자를 조절하세요)
-            // Lv 1->2 : 12 XP (몹 4~5마리)
-            // Lv 10->11 : 310 XP
-            // Lv 40->41 : 3600 XP (후반엔 몹이 쏟아지므로 적당함)
-            nextExp[i] = 10 + (i * 10) + (i * i * 2);
+            // 공식: 10 * (레벨 ^ 1.3)
+            // 레벨이 오를수록 요구량이 늘어나지만, 
+            // 몹 잡는 속도도 빨라지므로 체감상 템포는 유지됨.
+            float expCalc = baseExp * Mathf.Pow(i + 1, growth);
+
+            // 정수로 변환 시 5단위나 10단위로 끊어주면 깔끔함 (선택사항)
+            nextExp[i] = Mathf.RoundToInt(expCalc);
         }
     }
 
@@ -136,22 +166,26 @@ public class GameManager : MonoBehaviour
         {
             if (!isBossPhase)
             {
-                // 1. 아직 "위치 도달 대기" 상태가 아니라면 -> 유도 모드 시작
-                if (!isWaitingForBossTrigger)
+                if (!isCutsceneStarted)
                 {
-                    Debug.Log("보스전 시간 도달! 소환 위치로 이동하세요.");
-                    isWaitingForBossTrigger = true;
-
-                    // 화살표를 보스 소환 위치로 활성화
-                    if (bossSpawnPoint != null)
+                    // 1. 유도 모드 시작
+                    if (!isWaitingForBossTrigger)
                     {
-                        arrow.Activate(bossSpawnPoint);
+                        Debug.Log("보스전 시간 도달! 소환 위치로 이동하세요.");
+                        isWaitingForBossTrigger = true;
+
+                        // 화살표를 보스 소환 위치로 활성화
+                        if (bossSpawnPoint != null)
+                        {
+                            arrow.Activate(bossSpawnPoint, false);
+                        }
+                        isWaitingForBossTrigger = true;
                     }
-                }
-                // 2. 유도 모드 중이라면 -> 플레이어가 도착했는지 체크
-                else
-                {
-                    CheckPlayerArrival();
+                    // 2. 플레이어가 도착했는지 체크
+                    else
+                    {
+                        CheckPlayerArrival();
+                    }
                 }
             }
             else
@@ -171,7 +205,7 @@ public class GameManager : MonoBehaviour
             {
                 TowerType nextTower = towerPhaseOrder[towerIndex];
                 Transform nextTowerTransform = GetTowerTransform(nextTower);
-                arrow.Activate(nextTowerTransform);
+                arrow.Activate(nextTowerTransform, true);
 
                 arrowActivatedThisPhase = true; // 다시 실행되지 않도록
             }
@@ -215,7 +249,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // [신규] 플레이어가 소환 위치에 도착했는지 확인
+    // 플레이어가 소환 위치에 도착했는지 확인
     void CheckPlayerArrival()
     {
         if (bossSpawnPoint == null) return;
@@ -225,72 +259,311 @@ public class GameManager : MonoBehaviour
 
         if (distance < 2.5f) // 조금 더 빡빡하게 도착 판정
         {
+            if (isCutsceneStarted) return;
+            isCutsceneStarted = true;
+
             isWaitingForBossTrigger = false;
 
-            // [핵심] 그냥 SpawnBoss()를 부르는 게 아니라 연출 코루틴을 시작
-            StartCoroutine(CoBossSequence());
+            // ★ [추가] 도착하자마자 화살표 끄기
+            arrow.Deactivate();
+
+            StartCoroutine(CoAngryBossEntry());
         }
     }
 
-    // [신규] 보스 등장 시네마틱 코루틴
-    IEnumerator CoBossSequence()
+    // ★★★ [최종 연출 시퀀스] ★★★
+    IEnumerator CoAngryBossEntry()
     {
-        // 1. 안전 확보 및 초기화
-        Debug.Log("연출 시작: 플레이어 조작 금지 & 무적");
-        // player.inputEnabled = false; // (플레이어 이동 스크립트에 조작 멈추는 기능이 있다면 호출)
-        // player.isInvincible = true;  // (플레이어 무적 기능이 있다면 호출)
-        arrow.Deactivate(); // 화살표 제거
+        Debug.Log("연출 시작: 보스 난입");
+        arrow.Deactivate();
 
-        // ★ [줌아웃 해결 1] Lens는 구조체(Struct)라 이렇게 값을 받아와야 합니다.
-        var currentLens = virtualCam.Lens;
-        originCamSize = currentLens.OrthographicSize;
-
-        // 2. 쾅! 임팩트 (화면 흔들림 + 잡몹 증발)
-        StartCoroutine(ShakeCinemachine(2.0f, 5.0f)); // 지속시간 2초 강도 5.0f
-        yield return new WaitForSeconds(0.5f);
-        ClearFieldMonsters(); // 흔들리는 순간 몬스터들이 펑! 하고 사라짐
-
-        yield return new WaitForSeconds(1f); // 흔들리는 시간동안 대기
-
-        // 5. 이제 흔들림이 멈추고 줌아웃 시작 (1.5초간)
-        float time = 0f;
-        float duration = 1.5f;
-
-        // 시작값은 저장해둔 원래 사이즈
-        float startSize = originCamSize;
-
-        while (time < duration)
+        // 0. 조작 제한
+        if (player != null)
         {
-            time += Time.deltaTime;
-            float t = time / duration;
+            player.LockState(true);    // 이동 멈춤 + Stand 자세
+            player.isInvincible = true; // ★ 무적 켜기 (몹들이 때려도 안 아픔)
+        }
 
-            // 부드러운 보간
-            float newSize = Mathf.Lerp(startSize, bossZoomSize, t);
+        // ★ [카메라] 1. Damping을 높여서(2.0) 아주 부드럽게 이동하게 변경
+        SetCameraDamping(2.0f);
 
-            // ★ [줌아웃 해결 핵심 코드]
-            // 1. 구조체를 꺼낸다
-            var tempLens = virtualCam.Lens;
-            // 2. 값을 바꾼다
-            tempLens.OrthographicSize = newSize;
-            // 3. 다시 집어넣는다 (이래야 적용됨!)
-            virtualCam.Lens = tempLens;
+        // ★ [카메라] 1. 원래 보고 있던 대상(플레이어) 저장 & 보스 위치 바라보기
+        Transform originalTarget = null;
+        if (virtualCam != null)
+        {
+            originalTarget = virtualCam.Follow; // 원래 타겟(플레이어) 기억
+            virtualCam.Follow = bossSpawnPoint; // 카메라는 이제 보스 소환 위치를 비춤
+        }
+
+        // 스킬 오브젝트, 스크립트 off
+        foreach (var obj in skillObjects) { if (obj != null) obj.SetActive(false); }
+        foreach (var script in skillScripts) { if (script != null) script.enabled = false; }
+
+        // 1. UI 사라짐 & 배경색 변경 시작
+        StartCoroutine(ChangeBackgroundColor(2.0f)); // 배경색 서서히 변경 (2초)
+        yield return StartCoroutine(SlideUI(false)); // UI 사라짐 (1초)
+
+        // ★ [핵심 추가] 카메라가 부드럽게 도착할 때까지 0.5초 정도 '여백의 미'를 줌
+        // Damping을 높였으니 이동하는 데 시간이 걸리기 때문
+        yield return new WaitForSeconds(0.5f);
+
+        // 2. [마법진] 등장
+        SpriteRenderer magicSprite = null;
+        Color magicOriginalColor = Color.white;
+
+        if (magicCircle != null)
+        {
+            magicCircle.position = bossSpawnPoint.position;
+            magicCircle.localScale = Vector3.zero;
+            magicCircle.gameObject.SetActive(true);
+
+            // 알파값 초기화
+            magicSprite = magicCircle.GetComponent<SpriteRenderer>();
+            if (magicSprite != null)
+            {
+                Color c = magicSprite.color;
+                c.a = 1f;
+                magicSprite.color = c;
+            }
+
+            float magicDuration = 1.5f; // 1.5초 동안 생성
+            float timer = 0f;
+
+            while (timer < magicDuration)
+            {
+                timer += Time.deltaTime;
+                float t = timer / magicDuration;
+
+                // 크기: 0 -> 1.5배
+                magicCircle.localScale = Vector3.one * Mathf.Lerp(0f, 1.5f, t);
+                magicCircle.Rotate(0, 0, 180 * Time.deltaTime);// 회전
+
+                yield return null;
+            }
+
+            // ★★★ B. [추가됨] 밝아지는 단계 (0.5초) ★★★
+            // 에너지가 모이면서 하얗게 빛나고 회전 속도 빨라짐
+            float brightenDuration = 0.5f;
+            timer = 0f;
+
+            // 목표: 완전 하얀색 (빛나는 느낌)
+            Color brightColor = new Color(1f, 1f, 1f, 1f);
+
+            while (timer < brightenDuration)
+            {
+                timer += Time.deltaTime;
+                float t = timer / brightenDuration;
+
+                // 원래색 -> 하얀색으로 변경 (점점 밝아짐)
+                if (magicSprite != null)
+                    magicSprite.color = Color.Lerp(magicOriginalColor, brightColor, t);
+
+                // 회전 속도 3배 증가 (우웅~ 하는 느낌)
+                magicCircle.Rotate(0, 0, 500 * Time.deltaTime);
+                yield return null;
+            }
+        }
+
+        // 3. [충격파] 잡몹 정리
+        if (shockwaveEffect != null)
+        {
+            shockwaveEffect.position = bossSpawnPoint.position;
+            shockwaveEffect.localScale = Vector3.zero;
+            shockwaveEffect.gameObject.SetActive(true);
+
+            // 잡몹 정리 실행
+            ClearFieldMonsters();
+
+            float duration = 0.5f; // 0.5초만에 팍! 커짐
+            float timer = 0f;
+            while (timer < duration)
+            {
+                timer += Time.deltaTime;
+                float t = timer / duration;
+                shockwaveEffect.localScale = Vector3.one * Mathf.Lerp(0f, 60f, t); // 60배 확대
+                // ★ 충격파 커지는 동안에도 마법진 계속 회전
+                if (magicCircle != null) magicCircle.Rotate(0, 0, 180 * Time.deltaTime);
+
+                yield return null;
+            }
+            shockwaveEffect.gameObject.SetActive(false);
+        }
+        else
+        {
+            ClearFieldMonsters();
+        }
+
+        // 4. [보스 등장 - 실루엣 효과]
+        if (boss != null)
+        {
+            boss.transform.position = bossSpawnPoint.position;
+            boss.SetActive(true);
+
+            BossMonster bm = boss.GetComponent<BossMonster>();
+            if (bm != null) bm.BossInit(); // 초기화
+
+            // 보스 스프라이트 가져오기
+            SpriteRenderer bossSprite = boss.GetComponent<SpriteRenderer>();
+            if (bossSprite != null)
+            {
+                // ★ 시작: 완전 검정색 (실루엣)
+                bossSprite.color = Color.black;
+
+                // 등장 이펙트 (폭발)
+                if (bossSpawnEffect != null)
+                    Instantiate(bossSpawnEffect, bossSpawnPoint.position, Quaternion.identity);
+
+                StartCoroutine(ShakeCinemachine(0.5f, 3.0f)); // 쾅!
+
+                // 검정색 -> 원래 색으로 1.5초 동안 서서히 돌아옴
+                float colorDuration = 1.5f;
+                float colorTimer = 0f;
+                while (colorTimer < colorDuration)
+                {
+                    colorTimer += Time.deltaTime;
+                    float t = colorTimer / colorDuration;
+
+                    // Color.black에서 Color.white(기본)로 Lerp
+                    bossSprite.color = Color.Lerp(Color.black, Color.white, t);
+                    // 마법진: 계속 회전
+                    if (magicCircle != null) magicCircle.Rotate(0, 0, 360 * Time.deltaTime);
+                    yield return null;
+                }
+                // 확실하게 흰색으로 마무리
+                bossSprite.color = Color.white;
+            }
+        }
+
+        // 결계 생성
+        if (bossBarrier != null) bossBarrier.SetActive(true);
+
+        // ★ [변경점 3] 보스 폼 잡는 시간 (1초) 동안에도 마법진 회전 유지
+        float waitDuration = 1.0f;
+        float waitTimer = 0f;
+        while (waitTimer < waitDuration)
+        {
+            waitTimer += Time.deltaTime;
+            if (magicCircle != null) magicCircle.Rotate(0, 0, 180 * Time.deltaTime);
+            yield return null;
+        }
+
+        // ★★★ [변경점 4] 드디어 여기서 마법진 사라짐! (전투 시작 직전) ★★★
+        if (magicCircle != null)
+        {
+            // 1초 동안 부드럽게 사라짐 (전투 시작과 겹쳐서 자연스러움)
+            StartCoroutine(FadeOutMagicCircle(magicCircle, 1.0f));
+        }
+
+        // 5. 전투 시작 & UI 복구
+        isBossPhase = true;
+        StartCoroutine(SlideUI(true));
+
+
+        // ★ [카메라] 2. 다시 플레이어를 비추도록 복구
+        if (virtualCam != null && originalTarget != null)
+        {
+            virtualCam.Follow = originalTarget;
+            SetCameraDamping(0f); // 다시 빠릿빠릿하게
+        }
+
+        // ★ [조작 해제] 플레이어 다시 움직이게 하기 & 스킬 복구
+        if (player != null)
+        {
+            player.LockState(false);
+            player.isInvincible = false; // 이제 맞으면 아픔
+        }
+        // 오브젝트 및 스크립트 활성화
+        foreach (var obj in skillObjects) { if (obj != null) obj.SetActive(true); }
+        foreach (var script in skillScripts) { if (script != null) script.enabled = true; }
+
+    }
+
+    // ★★★ 마법진 페이드 아웃 함수 ★★★
+    IEnumerator FadeOutMagicCircle(Transform target, float duration)
+    {
+        SpriteRenderer sr = target.GetComponent<SpriteRenderer>();
+        if (sr == null)
+        {
+            target.gameObject.SetActive(false);
+            yield break;
+        }
+
+        Color startColor = sr.color;
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            float t = timer / duration;
+
+            // 투명도: 1 -> 0
+            float newAlpha = Mathf.Lerp(1f, 0f, t);
+            sr.color = new Color(startColor.r, startColor.g, startColor.b, newAlpha);
+
+            // 사라지는 동안에도 회전 (자연스러움)
+            target.Rotate(0, 0, 180 * Time.deltaTime);
 
             yield return null;
         }
 
-        // 혹시 모르니 최종값 한번 더 강제 적용
-        var finalLens = virtualCam.Lens;
-        finalLens.OrthographicSize = bossZoomSize;
-        virtualCam.Lens = finalLens;
+        // 다 사라지면 끄기
+        target.gameObject.SetActive(false);
 
-        // 4. 보스 소환
-        SpawnBoss(); // 보스 활성화
+        // ★ 다음번 실행을 위해 알파값 복구 (중요)
+        sr.color = new Color(startColor.r, startColor.g, startColor.b, 1f);
+    }
 
-        // 5. 보스전 시작 (게임 재개)
-        isBossPhase = true;
+    // 배경색 변경 코루틴
+    IEnumerator ChangeBackgroundColor(float duration)
+    {
+        if (backgroundTilemap == null) yield break;
 
-        // player.inputEnabled = true; // 플레이어 조작 재개
-        // player.isInvincible = false; // 무적 해제 (필요시)
+        Color startColor = Color.white;
+        Color endColor = bossPhaseBgColor; // 칙칙한 보라색
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            float t = timer / duration;
+            backgroundTilemap.color = Color.Lerp(startColor, endColor, t);
+            yield return null;
+        }
+        backgroundTilemap.color = endColor;
+    }
+
+
+    // UI를 부드럽게 밀어내는 함수
+    IEnumerator SlideUI(bool show)
+    {
+        float timer = 0f;
+        Vector2 startTop = topUIPanel.anchoredPosition;
+        Vector2 startBottom = bottomUIPanel.anchoredPosition;
+
+        // 목표 위치 설정 (show가 true면 원위치(0), false면 화면 밖으로)
+        // 화면 높이(1080 가정)보다 좀 더 밀어버림 (+300)
+        Vector2 targetTop = show ? new Vector2(0, 0) : new Vector2(0, 300);
+        Vector2 targetBottom = show ? new Vector2(0, 0) : new Vector2(0, -300);
+
+        // 만약 현재 위치가 이미 목표라면 패스 (안전장치)
+        if (!show && startTop.y > 100) { yield break; }
+
+        while (timer < uiSlideDuration)
+        {
+            timer += Time.deltaTime;
+            float t = timer / uiSlideDuration;
+
+            // SmoothStep: 부드럽게 출발해서 부드럽게 도착
+            t = t * t * (3f - 2f * t);
+
+            if (topUIPanel != null)
+                topUIPanel.anchoredPosition = Vector2.Lerp(startTop, targetTop, t);
+
+            if (bottomUIPanel != null)
+                bottomUIPanel.anchoredPosition = Vector2.Lerp(startBottom, targetBottom, t);
+
+            yield return null;
+        }
     }
 
     // 카메라 흔들기
@@ -298,31 +571,40 @@ public class GameManager : MonoBehaviour
     {
         if (virtualCam == null) yield break;
 
-        // ★ [변경 4] GetCinemachineComponent 대신 그냥 GetComponent 사용
         var perlin = virtualCam.GetComponent<CinemachineBasicMultiChannelPerlin>();
 
         if (perlin != null)
         {
-            perlin.AmplitudeGain = intensity; // m_AmplitudeGain -> AmplitudeGain (m_ 빠짐)
-
+            perlin.AmplitudeGain = intensity;
             yield return new WaitForSeconds(duration);
-
             perlin.AmplitudeGain = 0f;
         }
     }
 
-    // [신규] 필드에 있는 잡몹들 제거 (보스 등장 시 방해 안 되게)
+    // 필드에 있는 잡몹들 제거 (보스 등장 시 방해 안 되게)
     void ClearFieldMonsters()
     {
         // "Enemy" 태그를 가진 모든 오브젝트를 찾아서 제거 (태그 설정 필요)
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
         foreach (GameObject enemyObj in enemies)
         {
+            // ★ [핵심 1] 보스는 절대 건드리면 안 됨! (안전장치)
+            if (enemyObj == boss) continue;
+
             MonsterBase monster = enemyObj.GetComponent<MonsterBase>();
-            if (monster != null && monster.isLive)
-                monster.Die(false);
+            
+            if (monster != null)
+            {
+                if (monster.isLive)
+                {
+                    monster.Die(false);
+                }
+            }
             else
+            {
                 Destroy(enemyObj);
+            }
         }
         Debug.Log("필드 몬스터 정리 완료");
     }
@@ -433,22 +715,28 @@ public class GameManager : MonoBehaviour
         Instantiate(chestPrefab, tower.transform.position + Vector3.right * 2f, Quaternion.identity);
     }
 
-    void SpawnBoss()
+    // ★ [신규] 카메라 부드러움(Damping) 조절 함수
+    void SetCameraDamping(float dampingValue)
     {
-        Debug.Log("플레이어 도착! 보스 소환 시작!");
-        arrow.Deactivate();
-        arrowActivatedThisPhase = false;
+        if (virtualCam == null) return;
 
-        if (boss == null) return;
+        var composer = virtualCam.GetComponent<CinemachinePositionComposer>();
 
-        // 여기서 카메라 줌아웃이나 컷씬 코루틴을 실행하면 좋습니다.
-        // 지금은 즉시 활성화
-        boss.transform.position = bossSpawnPoint.position; // 보스 위치를 소환 지점으로 강제 이동
-        boss.SetActive(true);  // 보스 밍부기 활성화
-
-        BossMonster bm = boss.GetComponent<BossMonster>();
-        if (bm != null)
-            bm.BossInit();     // HP, 데미지, 속도 등 초기화
+        if (composer != null)
+        {
+            // 신버전에서는 Damping이 Vector3로 통합되었습니다.
+            composer.Damping = new Vector3(dampingValue, dampingValue, 0);
+        }
+        else
+        {
+            // 혹시 "Follow" 모드를 쓰고 있다면 이걸로 잡아야 합니다.
+            // (Position Control이 "Follow"일 경우)
+            var follow = virtualCam.GetComponent<CinemachineFollow>();
+            if (follow != null)
+            {
+                follow.TrackerSettings.PositionDamping = new Vector3(dampingValue, dampingValue, 0);
+            }
+        }
     }
 
 }
