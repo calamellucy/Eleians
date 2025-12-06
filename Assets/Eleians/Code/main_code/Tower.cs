@@ -93,6 +93,8 @@ public class Tower : MonoBehaviour
 
             towerSprite.sprite = destroyedSprite;
             Debug.Log("거점 파괴됨");
+
+            GameManager.instance.GameOver("원소의 균형이 무너졌습니다. 지구는 혼돈에 잠식되었습니다...");
         }
     }
 

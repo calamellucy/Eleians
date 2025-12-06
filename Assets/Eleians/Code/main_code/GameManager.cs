@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -73,6 +76,10 @@ public class GameManager : MonoBehaviour
     // ★ 여기에 스킬 관련 오브젝트(무기, 스캐너, 마법봉 등)를 다 넣으세요
     public GameObject[] skillObjects;
     public MonoBehaviour[] skillScripts;
+
+    [Header("# Game Over UI")]
+    public GameObject gameOverPanel;
+    public Text gameOverReasonText;
 
     void Awake()
     {
@@ -739,6 +746,46 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // ★ [수정] 실패 원인을 텍스트로 받음
+    public void GameOver(string reason)
+    {
+        isLive = false;
+        StartCoroutine(GameOverRoutine(reason));
+    }
+
+    IEnumerator GameOverRoutine(string reason)
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(true);
+
+            // ★ [추가] 텍스트 변경
+            if (gameOverReasonText != null)
+            {
+                gameOverReasonText.text = reason;
+            }
+        }
+
+        Time.timeScale = 0f;
+    }
+
+    // ★ [추가] 재시작 함수 (버튼에 연결할 것)
+    public void Retry()
+    {
+        // 시간 다시 흐르게 하기 (중요! 안 하면 재시작해도 멈춰있음)
+        Time.timeScale = 1f;
+
+        // 현재 씬 다시 로드 (초기화)
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void GoMain()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainScreen_jw");
+    }
 }
 
 public enum TowerType

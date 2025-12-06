@@ -210,6 +210,7 @@ public class Player : MonoBehaviour
         anim.SetTrigger("Dead");
         rigid.simulated = false;
         isLocked = true;
+        GameManager.instance.GameOver("당신이 쓰러지자, 지구의 마지막 희망도 꺼져버렸습니다...");
     }
 
     // ★★★ [핵심] 사망 -> 부활 연출 코루틴 ★★★
