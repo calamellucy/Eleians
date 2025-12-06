@@ -613,7 +613,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4624955930171651716, guid: a10537efdf51067488ba6e739e5259a4, type: 3}
       propertyPath: m_Name
-      value: small_shadow
+      value: Shadow
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

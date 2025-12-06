@@ -146,6 +146,8 @@ public class Player : MonoBehaviour
 
         GameManager.instance.health -= dmg;
 
+        StartCoroutine(HitFlashRoutine());
+
         // [추가] 맞았을 때 발동하는 아티팩트가 있다면 여기서 호출 (예: 반사 데미지)
         // ArtifactManager.instance.OnPlayerHit();
 
@@ -154,7 +156,14 @@ public class Player : MonoBehaviour
             Die();
         }
 
-        // hit �ִ�, �����ð�, ���� �߰� ����
+    }
+
+    // 피격 깜빡임 코루틴
+    IEnumerator HitFlashRoutine()
+    {
+        spriter.color = Color.red;
+        yield return new WaitForSeconds(0.2f);
+        spriter.color = Color.white;
     }
 
     public void Heal(float amount)

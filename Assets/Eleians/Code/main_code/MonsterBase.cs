@@ -80,6 +80,12 @@ public class MonsterBase : MonoBehaviour
         slowMultiplier = 1f;
         spriter.color = Color.white;
 
+        Transform shadow = transform.Find("Shadow");
+        if (shadow != null)
+        {
+            shadow.gameObject.SetActive(true);
+        }
+
         // ★ 부활 시 이펙트 초기화 (다 끄기)
         if (effectFire != null) effectFire.SetActive(false);
         if (effectIce != null) effectIce.SetActive(false);
@@ -159,7 +165,8 @@ public class MonsterBase : MonoBehaviour
 
         if (!IsSuperArmor)
         {
-            anim.SetTrigger("hit");
+            // anim.SetTrigger("hit");
+            StartCoroutine(HitFlashRoutine());
         }
 
         // 속성별 효과
@@ -185,6 +192,31 @@ public class MonsterBase : MonoBehaviour
     public void ApplyDamageWithoutKonckback(float dmg)
     {
         ApplyDamage(dmg, ElementType.None);
+    }
+
+    // ★★★ [추가] 피격 시 빨간색 깜빡임 효과 ★★★
+    IEnumerator HitFlashRoutine()
+    {
+        // 1. 빨간색으로 변경
+        spriter.color = Color.red;
+
+        // 2. 0.1초 대기 (깜빡!)
+        yield return new WaitForSeconds(0.2f);
+
+        // 3. 원래 색으로 복구
+        // (단, 이미 죽었거나 다른 효과가 적용 중일 수 있으므로 살아있을 때만)
+        if (isLive)
+        {
+            // 혹시 얼음(슬로우) 상태라면 파란색으로, 아니면 흰색으로 복구
+            // (슬로우 상태 유지를 위해 체크 로직 추가함)
+            /*
+            if (slowMultiplier < 1f)
+                spriter.color = new Color(0.6f, 0.6f, 1f); // 파란색 (얼음)
+            else
+                spriter.color = Color.white; // 기본색
+            */
+            spriter.color = Color.white;
+        }
     }
 
     // --- [불] 도트 데미지 ---
@@ -275,6 +307,12 @@ public class MonsterBase : MonoBehaviour
         if (effectFire != null) effectFire.SetActive(false);
         if (effectIce != null) effectIce.SetActive(false);
         if (effectLightning != null) effectLightning.SetActive(false);
+
+        Transform shadow = transform.Find("Shadow");
+        if (shadow != null)
+        {
+            shadow.gameObject.SetActive(false);
+        }
 
         spriter.color = Color.white;
         rigid.simulated = false;

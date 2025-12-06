@@ -9,6 +9,7 @@ public class GroundActiveCool : MonoBehaviour
 
     public Skill4 sk4;
     public EarthBumpSkill earthbump;
+    public KeyCode triggerKey = KeyCode.Alpha4;
 
     [Header("Cooldown")]
     public float Cool = 10f;
@@ -63,7 +64,7 @@ public class GroundActiveCool : MonoBehaviour
 
         // --- 입력 로직 ---
         // 쿨타임이 아니고(테두리가 꽉 참), Q를 눌렀을 때
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(triggerKey))
         {
             earthbump.ActiveEarthBump(); // 스킬 발동
             StartCooldown();             // 쿨타임 시작
