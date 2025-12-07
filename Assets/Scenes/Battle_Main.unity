@@ -1645,6 +1645,7 @@ MonoBehaviour:
   gameOverReasonText: {fileID: 1259871578}
   expBarObject: {fileID: 1606321021}
   bossHpSlider: {fileID: 38948305}
+  bossHpText: {fileID: 1941768348}
 --- !u!4 &108530916
 Transform:
   m_ObjectHideFlags: 0
@@ -3630,7 +3631,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DarkVisionController
   overlay: {fileID: 214859943}
-  autoDisableOnDuration: 1
+  fadeInTime: 1
+  fadeOutTime: 1.5
 --- !u!225 &214859943
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -93570,10 +93572,10 @@ MonoBehaviour:
   shadowRainSpawnRate: 3
   darkVision: {fileID: 214859942}
   darkVisionDuration: 6
-  ghostPrefab: {fileID: 0}
-  ghostSpawnCount: 10
+  ghostPrefab: {fileID: 641570731576117388, guid: 345b584b0936ffb418bae0ce2bc7b004, type: 3}
+  ghostSpawnCount: 15
   ghostSpawnInterval: 0.2
-  ghostSpawnRadius: 2
+  ghostSpawnRadius: 2.5
 --- !u!50 &1688122724
 Rigidbody2D:
   serializedVersion: 5

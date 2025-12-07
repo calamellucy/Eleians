@@ -52,20 +52,13 @@ public class BossMonster : NormalMonster
             return;
         }
 
-        // 만약 부모 클래스(NormalMonster)에 이동 로직이 있다면 
-        // 여기서 base.FixedUpdate()를 호출해야 할 수도 있지만,
-        // 보통 보스는 패턴으로 움직이므로 여기선 그냥 둡니다.
         base.FixedUpdate();
     }
 
     // NormalMonster의 LateUpdate를 덮어씌웁니다.
-    // (만약 부모 함수에 virtual이 없다면 'new' 키워드를 써도 되고, 그냥 써도 작동은 합니다)
     protected new void LateUpdate()
     {
         if (!isLive) return;
-
-        // 부모 코드: target.position.x > rigid.position.x (플레이어가 오른쪽이면 true)
-        // 보스 수정: target.position.x < rigid.position.x (부등호 방향 반대!)
 
         // 원본 그림이 반대라서, 로직도 반대로 뒤집어 줌
         spriter.flipX = target.position.x < rigid.position.x;
@@ -98,10 +91,11 @@ public class BossMonster : NormalMonster
 
     public void BossInit()
     {
-        speed = 1;
+        speed = 1f; // 
+        originalSpeed = speed;
         maxHealth = 10000;
-        damage = 50;
         health = maxHealth;
+        damage = 50;
     }
 
     public void BossSpawn()

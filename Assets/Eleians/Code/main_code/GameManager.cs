@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -84,6 +83,7 @@ public class GameManager : MonoBehaviour
     [Header("# UI Control")]
     public GameObject expBarObject;    // ★ 기존 경험치바 오브젝트 (Slider나 부모 오브젝트)
     public Slider bossHpSlider;        // ★ 새로 만든 보스 체력바 Slider
+    public Text bossHpText;
 
     void Awake()
     {
@@ -916,6 +916,13 @@ public class GameManager : MonoBehaviour
     {
         if (bossHpSlider == null) return;
         bossHpSlider.value = currentHp / maxHp;
+
+        // [추가] 텍스트 갱신 (예: 5000 / 10000)
+        if (bossHpText != null)
+        {
+            // F0은 소수점을 없애는 포맷입니다 (깔끔하게 정수만 표시)
+            bossHpText.text = $"{currentHp:F0} / {maxHp:F0}";
+        }
     }
 
     // ★ [추가] 재시작 함수 (버튼에 연결할 것)
