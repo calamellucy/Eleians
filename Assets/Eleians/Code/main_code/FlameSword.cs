@@ -54,7 +54,7 @@ public class FlameSword : MonoBehaviour
         interval = 1.5f / (StatsManager.instance.AttackSpeed + StatsManager.instance.EarthCnt * 0.05f);
 
         // 불 - 공격계수 +7%
-        damage = StatsManager.instance.Attack * 1.5f * (1 + 0.07f * StatsManager.instance.IceCnt);
+        damage = StatsManager.instance.Attack * 1.5f * (1 + 0.04f * StatsManager.instance.IceCnt);
 
         // 흙 - 검의 크기 +7%
         scale = 3f + (StatsManager.instance.FireCnt * 0.07f);
