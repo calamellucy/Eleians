@@ -60,7 +60,7 @@ public class IceShield : MonoBehaviour
         activeShield.transform.localPosition = Vector3.zero;
 
         // 반사 데미지 설정
-        float reflect = (gm.maxHealth + StatsManager.instance.Attack) * 5f;
+        float reflect = (StatsManager.instance.MaxHP + StatsManager.instance.Attack) * 5f;
         activeShield.GetComponent<ShieldReflect>().reflectDamage = reflect;
 
         // ===== 지속시간 동안 유지 =====
