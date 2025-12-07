@@ -17,7 +17,7 @@ public class Skill4 : MonoBehaviour
 
     [Header("Burst")]
     public float burstInterval = 3.33f;
-    public int shotsPerBurst = 30;
+    public int shotsPerBurst = 15;
     public float burstDuration = 1.3f;
     public int per = 0;
     public Vector3 baseBulletScale = Vector3.one;
@@ -88,11 +88,13 @@ public class Skill4 : MonoBehaviour
 
     public void GiveLevelSystemToSkill4()
     {
+
         baseBulletScale = Vector3.one * (1f + StatsManager.instance.FireCnt * 0.04f) * 1.4f;
         damage = StatsManager.instance.Attack * (1f + 0.04f * StatsManager.instance.IceCnt) * 0.5f; burstInterval = 1f / (StatsManager.instance.AttackSpeed * 0.3f);
         float baseInterval = 1f / (StatsManager.instance.AttackSpeed * 0.3f);
         burstInterval = baseInterval * Mathf.Max(0.1f, (1f - StatsManager.instance.ElectricCnt * 0.05f));
-        shotsPerBurst = 30 + StatsManager.instance.EarthCnt;
+
+        shotsPerBurst = 15 + StatsManager.instance.EarthCnt;
         if (StatsManager.instance.EarthCnt >= 5) { shotsPerBurst += 10; per = 4; }
         if (StatsManager.instance.EarthCnt >= 10) StoneDust = true;
         if (StatsManager.instance.EarthCnt >= 15) StoneActive = true;
@@ -128,7 +130,13 @@ public class Skill4 : MonoBehaviour
             fireDir = player.IsFacingRight ? Vector2.right : Vector2.left;
 
         // 기본 공격은 각성 아님 (false)
-        CreateBullet(fireDir, false); 
+        CreateBullet(fireDir, false);
+
+        if (StatsManager.instance.EarthCnt >= 5)
+        {
+            Vector2 reverseDir = -fireDir;
+            CreateBullet(reverseDir, false);
+        }
     }
 
     // 20레벨 대지의 송곳

@@ -205,6 +205,9 @@ public class GameManager : MonoBehaviour
                 if (!bm.isLive)
                 {
                     // 게임 승리로 끝
+
+                    // ★ [추가] 보스 처치 관련 업적(스피드러너, 노히트 등) 체크
+                    AchievementManager.instance.OnBossKilled();
                 }
             }
 
@@ -409,6 +412,8 @@ public class GameManager : MonoBehaviour
         {
             boss.transform.position = bossSpawnPoint.position;
             boss.SetActive(true);
+            // ★ [추가] 보스 등장 시간 기록 (스피드러너 업적용)
+            AchievementManager.instance.OnBossSpawn();
 
             BossMonster bm = boss.GetComponent<BossMonster>();
             if (bm != null) bm.BossInit(); // 초기화
@@ -680,6 +685,8 @@ public class GameManager : MonoBehaviour
                 break;
         }
         arrow.Deactivate();
+        // ★ [추가] 업적 매니저에게 타워 방어 성공 알림
+        AchievementManager.instance.OnTowerDefended();
     }
 
     Transform GetTowerTransform(TowerType type)

@@ -139,8 +139,8 @@ public class Player : MonoBehaviour
             return;
         }
 
-        // 기존 데미지 감소 로직
-        // dmg = DamageReduction.instance.ProcessDamage(dmg); 
+        // ★ [추가] 6. 완벽주의자 업적 체크
+        AchievementManager.instance.OnPlayerTakeDamage();
 
         // ★★★ [디버깅용 로그 추가] 이 줄을 넣어보세요! ★★★
         float multiplier = StatsManager.instance.DamageTakenMultiplier;

@@ -32,6 +32,8 @@ public class FireExplosionSkill : MonoBehaviour
         Player player = GameManager.instance.player;
         if (player == null) return;
 
+        AchievementManager.instance.OnSkillUsed("Hwapoksul");
+
         // 기억해둔 마지막 방향으로 발사
         StartCoroutine(RunExplosionRunner(player.transform.position, lastMoveDir));
     }
