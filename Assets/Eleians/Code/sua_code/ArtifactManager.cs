@@ -1,48 +1,54 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using static AudioManager;
 
 /// <summary>
-/// 아티팩트 전체 관리 시스템
-/// - 아티팩트 정보 저장
-/// - 선택 UI에서 선택한 아티팩트 적용
-/// - 중복 체크
-/// - 스탯 변화 반영까지 책임
+/// 아티팩트 전체 관리 시스템 (최종 확정 버전)
 /// </summary>
 public class ArtifactManager : MonoBehaviour
 {
     public static ArtifactManager instance;
     private void Awake() { instance = this; }
 
-    // --- 아티팩트 보유 여부 플래그 (체크용) ---
-    public bool hasCaffeine = false;        // 카페인 수혈
-    public bool hasHotfix = false;          // 긴급 핫픽스
-    public bool hasCompileError = false;    // 컴파일 에러
-    public bool hasGitConflict = false;     // 깃허브 충돌
-    public bool hasStackOverflow = false;   // 스택 오버플로우
-    public bool hasBackupServer = false;    // 백업 서버
-    public bool hasFinalSpec = false;       // 개발명세서
-    public bool hasEscapeNo1 = false;       // 위기탈출 넘버원
-    public bool hasHanwhaFan = false;       // 극성 한화팬
-    public bool hasFirewall = false;        // 방화벽
-    public bool hasRestrainingOrder = false;// 접근금지령
-    public bool hasCriticalChain = false;   // 크리티컬 체인
-    public bool hasDopamine = false;        // 도파민 중독
+    [Header("Artifact Flags")]
+    public bool hasElixir = false;          // 생명의 묘약 (Elixir of Life)
+    public bool hasGuardiansVow = false;    // 수호자의 결의 (Guardian's Vow)
+    public bool hasShadowClone = false;     // 그림자 분신 (Illusion Totem)
+    public bool hasOverload = false;        // 과부하 (Overload Crystal)
+    public bool hasThunderSoul = false;     // 뇌신의 영혼석 (Thunder Soul)
+    public bool hasFrostArmor = false;      // 서리 갑옷 (Frost Armor)
+    public bool hasMirror = false;          // 복수의 거울 (Mirror of Vengeance)
+    public bool hasSolarCloak = false;      // 태양의 망토 (Solar Cloak)
+    public bool hasMagmaCore = false;       // 마그마 코어 (Magma Core)
+    public bool hasEarthResonance = false;  // 대지의 공명 (Earth Resonance)
+    public bool hasObsidianEdge = false;    // 흑요석 칼날 (Obsidian Edge)
 
     // --- 내부 변수들 ---
-    private int stackOverflowStacks = 0;
-    private int criticalChainStacks = 0;
-    private Coroutine critChainResetCoroutine;
-    private float escapeNo1Cooldown = 0f;
+    [Header("Runtime Variables")]
+    public int overloadStacks = 0;          // 과부하 스택 (UI 표시용 public)
+    public int earthResonanceStacks = 0;    // 대지의 공명 스택 (UI 표시용 public)
 
-    // 방화벽 관련
-    private float firewallTimer = 0f;
+    private Coroutine earthResonanceResetCoroutine;
+    private float frostArmorCooldown = 0f;
+    private float solarCloakTimer = 0f;
+
+    [Header("Visual Effects & Prefabs (Inspector 연결 필수!)")]
+    public GameObject shadowClonePrefab;    // [그림자 분신] 소환할 프리팹
+    public GameObject reviveEffectPrefab;   // [뇌신의 영혼석] 부활 이펙트
+    public GameObject overloadExplosionPrefab; // [과부하] 폭발 이펙트
+    public GameObject frostArmorEffectPrefab;  // [서리 갑옷] 무적 이펙트
+    public GameObject solarCloakEffectPrefab; // 태양의 망토 이펙트 프리팹
+    public Vector2 solarCloakOffset = new Vector2(0f, 0.5f);
+
+    // 아티팩트 데이터 목록 & 획득 리스트
+    public List<ArtifactData> allArtifacts;
+    private List<ArtifactData> ownedArtifacts = new List<ArtifactData>();
 
     [Header("DEBUG")]
-    public int debugArtifactIndex = 0; // 인스펙터에서 원하는 번호를 입력
+    public int debugArtifactIndex = 0; // 인스펙터에서 원하는 번호 입력
 
-    [ContextMenu("테스트: 아티팩트 획득하기")] // 우클릭 메뉴에 뜸
+    [ContextMenu("테스트: 아티팩트 획득하기")] // 컴포넌트 우클릭 메뉴
     public void DebugAcquire()
     {
         if (allArtifacts != null && allArtifacts.Count > debugArtifactIndex)
@@ -52,129 +58,93 @@ public class ArtifactManager : MonoBehaviour
         }
     }
 
-
-    // 아티팩트 데이터 목록
-    public List<ArtifactData> allArtifacts;
-
-    // 플레이어가 이미 획득한 아티팩트
-    private List<ArtifactData> ownedArtifacts = new List<ArtifactData>();
-
-    /// <summary> 랜덤 3개 아티팩트 뽑기 </summary>
+    // ... (GetRandomArtifacts, AcquireArtifact 등 기존 함수 동일 유지) ...
     public List<ArtifactData> GetRandomArtifacts(int count = 3)
     {
         List<ArtifactData> result = new List<ArtifactData>();
         List<ArtifactData> pool = new List<ArtifactData>(allArtifacts);
-
-        // 이미 가진 건 제외하고 싶다면 여기에 필터
         pool.RemoveAll(a => ownedArtifacts.Contains(a));
-
         for (int i = 0; i < count && pool.Count > 0; i++)
         {
             int index = Random.Range(0, pool.Count);
             result.Add(pool[index]);
             pool.RemoveAt(index);
         }
-
         return result;
     }
 
-    /// <summary> 아티팩트 획득 처리 </summary>
     public void AcquireArtifact(ArtifactData data)
     {
-        if (ownedArtifacts.Contains(data))
-        {
-            Debug.Log($"{data.artifactName} 이미 보유 중");
-            return;
-        }
-
+        if (ownedArtifacts.Contains(data)) return;
         ownedArtifacts.Add(data);
-
-        // 슬롯 아이콘 추가
-        ArtifactSlotUI.instance.AddArtifactIcon(data.icon);
-
+        ArtifactSlotUI.instance.AddArtifact(data); // UI 있으면 주석 해제
         ApplyArtifact(data);
     }
 
-    /// <summary> 아티팩트 효과 적용 (실제 구현은 각 아티팩트 클래스가 담당) </summary>
+    // ========================================================================
+    //  아티팩트 적용 로직
+    // ========================================================================
     private void ApplyArtifact(ArtifactData data)
     {
         switch (data.id)
         {
-            case ArtifactID.Caffeine: // [카페인 수혈]
-                hasCaffeine = true;
-                StatsManager.instance.artifactSpeedMult += 0.1f; // 이속 10%
-                StartCoroutine(CaffeineHealRoutine()); // 자동 회복 시작
+            case ArtifactID.ElixirOfLife: // [생명의 묘약]
+                hasElixir = true;
+                StatsManager.instance.artifactSpeedMult += 0.5f; // 이속 10%
+                StartCoroutine(ElixirHealRoutine()); // 자동 회복 시작
                 break;
 
-            case ArtifactID.Hotfix: // [긴급 핫픽스]
-                hasHotfix = true;
+            case ArtifactID.GuardiansVow: // [수호자의 결의]
+                hasGuardiansVow = true;
                 break;
 
-            case ArtifactID.CompileError: // [컴파일 에러]
-                hasCompileError = true;
+            case ArtifactID.IllusionTotem: // [그림자 분신]
+                hasShadowClone = true;
                 break;
 
-            case ArtifactID.GitConflict: // [깃허브 충돌]
-                hasGitConflict = true;
+            case ArtifactID.OverloadCrystal: // [과부하]
+                hasOverload = true;
+                StartCoroutine(OverloadExplosionRoutine());
                 break;
 
-            case ArtifactID.StackOverflow: // [스택 오버플로우]
-                hasStackOverflow = true;
-                StartCoroutine(StackOverflowRoutine());
+            case ArtifactID.ThunderSoul: // [뇌신의 영혼석]
+                hasThunderSoul = true;
                 break;
 
-            case ArtifactID.Overthink: // [고민중독]
-                // TODO: UIManager나 ArtifactUI에 리롤 횟수 추가 함수 호출
-                // UIManager.instance.AddRerollChance(1);
-                Debug.Log("리롤 횟수 1회 증가");
+            case ArtifactID.FrostArmor: // [서리 갑옷]
+                hasFrostArmor = true;
                 break;
 
-            case ArtifactID.BackupServer: // [백업 서버]
-                hasBackupServer = true;
-                break;
-
-            case ArtifactID.FinalSpecPDF: // [개발명세서]
-                hasFinalSpec = true;
-                float bonus = StatsManager.instance.AttackSpeed * 0.5f;
-                StatsManager.instance.artifactAtkMult += bonus;
-                StatsManager.instance.artifactAtkSpdMult -= 0.08f;
-                break;
-
-            case ArtifactID.EscapeNumberOne: // [위기탈출 넘버원]
-                hasEscapeNo1 = true;
-                break;
-
-            case ArtifactID.HanwhaFan: // [극성 한화팬]
-                hasHanwhaFan = true;
+            case ArtifactID.MirrorOfVengeance: // [복수의 거울]
+                hasMirror = true;
                 StatsManager.instance.artifactAtkSpdMult -= 0.4f;
                 StatsManager.instance.artifactCritChanceAdd -= 0.4f;
-                StatsManager.instance.artifactDmgTakenMult -= 0.4f;
-                StatsManager.instance.ReflectDamage += 1.5f;
-                hasBackupServer = true; // 부활권이 여기에도 포함 (로직 공유)
+                StatsManager.instance.artifactDmgTakenMult -= 0.4f; // 받는 피해 40% 감소
+                StatsManager.instance.ReflectDamage += 1.5f;        // 반사 150%
                 break;
 
-            case ArtifactID.Firewall: // [방화벽]
-                hasFirewall = true;
+            case ArtifactID.SolarCloak: // [태양의 망토]
+                hasSolarCloak = true;
                 break;
 
-            case ArtifactID.RestrainingOrder: // [접근금지령]
-                hasRestrainingOrder = true;
+            case ArtifactID.MagmaCore: // [마그마 코어]
+                hasMagmaCore = true;
                 break;
 
-            case ArtifactID.CriticalChain: // [크리티컬 체인]
-                hasCriticalChain = true;
+            case ArtifactID.EarthResonance: // [대지의 공명]
+                hasEarthResonance = true;
                 break;
 
-            case ArtifactID.DopamineAddict: // [도파민 중독]
-                hasDopamine = true;
+            case ArtifactID.ObsidianEdge: // [흑요석 칼날]
+                hasObsidianEdge = true;
                 StatsManager.instance.artifactCritDmgAdd += 0.6f;
                 StatsManager.instance.artifactCritChanceAdd += 0.1f;
                 break;
         }
 
-        // 스탯 변경 적용을 위해 갱신
         StatsManager.instance.RecalculateStats();
     }
+
     // ========================================================================
     //  주기적 효과 (Update / Coroutine)
     // ========================================================================
@@ -183,65 +153,148 @@ public class ArtifactManager : MonoBehaviour
     {
         if (!GameManager.instance.isLive) return;
 
-        // [방화벽] 매초 주변 적 데미지
-        if (hasFirewall)
+        // [태양의 망토] 매초 주변 적 데미지
+        if (hasSolarCloak)
         {
-            firewallTimer += Time.deltaTime;
-            if (firewallTimer >= 1f)
+            solarCloakTimer += Time.deltaTime;
+            if (solarCloakTimer >= 1f)
             {
-                firewallTimer = 0f;
-                FirewallDamage();
+                solarCloakTimer = 0f;
+                SolarCloakDamage();
             }
         }
     }
 
-    // [카페인 수혈] 5초마다 체력 회복
-    IEnumerator CaffeineHealRoutine()
+    // [생명의 묘약] 5초마다 체력 회복 + 초록색 글씨
+    IEnumerator ElixirHealRoutine()
     {
         while (true)
         {
             yield return new WaitForSeconds(5f);
             if (GameManager.instance.isLive)
             {
-                float healAmount = StatsManager.instance.MaxHP * 0.02f; // 최대 체력 2%
-                GameManager.instance.player.Heal(healAmount);
+                if (GameManager.instance.health < GameManager.instance.maxHealth)
+                {
+                    float healAmount = StatsManager.instance.MaxHP * 0.02f; // 최대 체력 2%
+                    GameManager.instance.player.Heal(healAmount);
+                }
             }
         }
     }
 
-    // [스택 오버플로우] 5초마다 폭발
-    IEnumerator StackOverflowRoutine()
+    // [과부하] 5초마다 폭발 (공격속도 비례)
+    IEnumerator OverloadExplosionRoutine()
     {
         while (true)
         {
             yield return new WaitForSeconds(5f);
-            if (stackOverflowStacks > 0)
+            if (overloadStacks > 0)
             {
-                float dmg = stackOverflowStacks * 10f; // 스택당 10데미지
-                // 화면 내 모든 적 타격 (간략화)
-                NormalMonster[] monsters = FindObjectsByType<NormalMonster>(FindObjectsSortMode.None);
-                foreach (var m in monsters) m.ApplyDamage(dmg);
+                // 1. [로직] 스택에 비례해서 범위(Radius)와 데미지 결정
+                // 기본 3m + (스택당 0.2m 증가) -> 스택 50이면 13m (화면 전체급)
+                float currentRadius = 3.0f + (overloadStacks * 0.2f);
+                // 데미지 조정 (스택당 10 데미지)
+                float dmg = overloadStacks * 5f;
 
-                // 스택 초기화 및 공속 버프 해제
-                StatsManager.instance.artifactAtkMult -= (stackOverflowStacks * 0.01f);
-                stackOverflowStacks = 0;
+                // 2. [로직] 계산된 범위 내의 적 타격
+                // (이제 이펙트 범위와 이 판정 범위가 일치하게 됩니다)
+                Collider2D[] hits = Physics2D.OverlapCircleAll(GameManager.instance.player.transform.position, currentRadius);
+                foreach (var hit in hits)
+                {
+                    if (hit.CompareTag("Enemy"))
+                    {
+                        MonsterBase m = hit.GetComponent<MonsterBase>();
+                        if (m) m.ApplyDamage(dmg, ElementType.Lightning);
+                    }
+                }
+
+                // 3. [시각] 균일한 패턴으로 폭발 생성
+                if (overloadExplosionPrefab != null)
+                {
+                    // 스택이 많을수록 이펙트 개수도 늘려서 꽉 차게 보이게 함
+                    // (최소 5개 ~ 최대 40개 제한으로 렉 방지)
+                    int effectCount = Mathf.Clamp(5 + overloadStacks, 5, 40);
+
+                    StartCoroutine(SpawnUniformExplosion(effectCount, currentRadius));
+                }
+
+                // 4. 초기화
+                StatsManager.instance.artifactAtkSpdMult -= (overloadStacks * 0.01f);
+                overloadStacks = 0;
                 StatsManager.instance.RecalculateStats();
+                ArtifactSlotUI.instance.UpdateArtifactStack(ArtifactID.OverloadCrystal, 0);
             }
         }
     }
 
-    // [방화벽] 주변 데미지 로직
-    void FirewallDamage()
+    // ★ [추가] 수학적으로 균일하게(나선형) 퍼지는 폭발 연출
+    IEnumerator SpawnUniformExplosion(int count, float radius)
     {
-        // 거점 페이즈면 거점 주변, 아니면 플레이어 주변
-        Vector2 centerPos = GameManager.instance.player.transform.position;
+        Vector3 center = GameManager.instance.player.transform.position;
+
+        // 정중앙에 하나 쾅!
+        GameObject centerVfx = Instantiate(overloadExplosionPrefab, center, Quaternion.identity);
+        Destroy(centerVfx, 1.0f);
+
+        // 페르마의 나선 (Fermat's Spiral) 공식 사용 -> 원을 가장 균일하게 채우는 방식
+        // 해바라기 씨앗 배치와 같습니다. 빈 공간 없이 예쁘게 터집니다.
+        float goldenAngle = 137.508f; // 황금각
+
+        for (int i = 0; i < count; i++)
+        {
+            // 순번(i)이 뒤로 갈수록 중심에서 멀어짐
+            // 비율(0~1) 계산: 뒤로 갈수록 1에 가까워짐
+            float ratio = (float)i / count;
+
+            // 거리 계산: 제곱근을 써야 원 안쪽에 뭉치지 않고 골고루 퍼짐
+            float distance = radius * Mathf.Sqrt(ratio);
+
+            // 각도 계산
+            float angle = i * goldenAngle;
+
+            // 좌표 변환 (극좌표 -> 직교좌표)
+            float x = Mathf.Cos(angle * Mathf.Deg2Rad) * distance;
+            float y = Mathf.Sin(angle * Mathf.Deg2Rad) * distance;
+
+            Vector3 spawnPos = center + new Vector3(x, y, 0);
+
+            // 이펙트 생성
+            GameObject vfx = Instantiate(overloadExplosionPrefab, spawnPos, Quaternion.identity);
+
+            // 외곽으로 갈수록 조금 더 크게, 혹은 랜덤 크기
+            vfx.transform.localScale = Vector3.one * Random.Range(0.8f, 1.2f);
+
+            Destroy(vfx, 1.0f);
+
+            // 한 번에 다 터지면 렉 걸리니까 아주 빠르게 순차적으로 터짐 (두두두둥!)
+            yield return new WaitForSeconds(0.02f);
+        }
+    }
+
+    // [태양의 망토] 주변 데미지
+    void SolarCloakDamage()
+    {
+        //Vector2 centerPos = GameManager.instance.player.transform.position;
+        Vector2 centerPos;
         if (GameManager.instance.isTowerPhase && GameManager.instance.tower != null)
         {
             centerPos = GameManager.instance.tower.transform.position;
         }
+        else return;
 
-        // 반경 5m 내 적 감지
-        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(centerPos, 5f);
+        // ★ [추가] 화염 장판 이펙트 생성
+        if (solarCloakEffectPrefab != null)
+        {
+            // centerPos에 오프셋을 더해서 위치를 살짝 옮김
+            Vector2 spawnPos = centerPos + solarCloakOffset;
+
+            GameObject vfx = Instantiate(solarCloakEffectPrefab, spawnPos, Quaternion.identity);
+
+            Destroy(vfx, 0.6f);
+        }
+
+        // 반경 4m 내 적
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(centerPos, 4f);
         float dmg = StatsManager.instance.Attack * 0.5f;
 
         foreach (var hitCollider in hitColliders)
@@ -249,7 +302,6 @@ public class ArtifactManager : MonoBehaviour
             if (hitCollider.CompareTag("Enemy"))
             {
                 MonsterBase monster = hitCollider.GetComponent<MonsterBase>();
-                // 화염 데미지
                 if (monster != null) monster.ApplyDamage(dmg, ElementType.Fire);
             }
         }
@@ -259,77 +311,63 @@ public class ArtifactManager : MonoBehaviour
     //  이벤트 훅 (외부 호출)
     // ========================================================================
 
-    // 1. 공격 시 (ArtifactManager.OnPlayerAttack)
+    // 1. 플레이어 공격 시
     public void OnPlayerAttack(MonsterBase target, ref float damage, bool isCrit)
     {
-        // [긴급 핫픽스]
-        if (hasHotfix)
+        // [수호자의 결의]
+        if (hasGuardiansVow)
         {
-            // [수정] 이제 myType(Enum)으로 정확하게 확인 가능!
-            if (target.myType == MonsterType.Tower)
-            {
-                damage *= 1.5f; // 거점 몬스터에게 50% 추뎀
-            }
+            if (target.myType == MonsterType.Tower) damage *= 1.5f; // 거점 몹 추뎀
 
-            // 거점 체력 30% 이하면 공격력 2배
+            // 거점 위기 시 2배
             GameObject towerObj = GameManager.instance.tower;
-
             if (towerObj != null)
             {
-                // GameObject에 붙어있는 Tower 스크립트를 가져옵니다.
                 Tower towerScript = towerObj.GetComponent<Tower>();
-
                 if (towerScript != null && !towerScript.isDestroyed)
                 {
-                    float hpRatio = towerScript.currentHealth / towerScript.maxHealth;
-
-                    // 체력이 30% 이하면 데미지 2배
-                    if (hpRatio <= 0.3f)
-                    {
+                    if ((towerScript.currentHealth / towerScript.maxHealth) <= 0.3f)
                         damage *= 2.0f;
-                        Debug.Log("긴급 핫픽스 발동! 공격력 2배");
-                    }
                 }
             }
         }
 
-        // [컴파일 에러]
-        if (hasCompileError && Random.value < 0.5f)
-        {
-            damage *= (Random.value < 0.5f) ? 0.5f : 2.0f;
-        }
-
-        // [접근 금지령]
-        if (hasRestrainingOrder)
+        // [마그마 코어]
+        if (hasMagmaCore)
         {
             float dist = Vector2.Distance(GameManager.instance.player.transform.position, target.transform.position);
             if (dist < 3f) damage *= 1.6f;
             else damage *= 0.7f;
         }
 
-        // [도파민 중독]
-        if (hasDopamine && !isCrit)
+        // [흑요석 칼날]
+        if (hasObsidianEdge && !isCrit)
         {
             damage *= 0.7f;
         }
     }
 
-    // 2. 적 처치 시 (ArtifactManager.OnEnemyKilled)
+    // 2. 적 처치 시
     public void OnEnemyKilled(MonsterBase monster)
     {
-        // [깃허브 충돌] 코드 덩어리(미끼) 생성
-        if (hasGitConflict && Random.value < 0.1f)
+        // [그림자 분신]
+        if (hasShadowClone && Random.value < 0.1f)
         {
-            // DummyPrefab 생성 (어그로 끌리는 오브젝트)
-            // Instantiate(codeBlockPrefab, monster.transform.position, Quaternion.identity);
-            Debug.Log("코드 덩어리 생성!");
+            if (shadowClonePrefab != null)
+            {
+                // 그림자 생성 (해당 프리팹에는 'Untagged' 혹은 'Player' 태그와 어그로 끌리는 로직 필요)
+                Instantiate(shadowClonePrefab, monster.transform.position, Quaternion.identity);
+                Debug.Log("그림자 분신 생성!");
+            }
         }
 
-        // [스택 오버플로우]
-        if (hasStackOverflow)
+        // [과부하] (공속 증가)
+        if (hasOverload)
         {
-            stackOverflowStacks++;
-            StatsManager.instance.artifactAtkMult += 0.01f;
+            overloadStacks++;
+            // ★ [추가] UI 갱신 호출
+            ArtifactSlotUI.instance.UpdateArtifactStack(ArtifactID.OverloadCrystal, overloadStacks);
+            StatsManager.instance.artifactAtkSpdMult += 0.01f; // 공속 1% 증가
             StatsManager.instance.RecalculateStats();
         }
     }
@@ -337,115 +375,133 @@ public class ArtifactManager : MonoBehaviour
     // 3. 치명타 발생 시
     public void OnCritProc()
     {
-        // [크리티컬 체인]
-        if (hasCriticalChain)
+        // [대지의 공명]
+        if (hasEarthResonance)
         {
-            if (criticalChainStacks < 25)
+            if (earthResonanceStacks < 25)
             {
-                criticalChainStacks++;
+                earthResonanceStacks++;
+                // ★ [추가] UI 갱신 호출
+                ArtifactSlotUI.instance.UpdateArtifactStack(ArtifactID.EarthResonance, earthResonanceStacks);
                 StatsManager.instance.artifactAtkSpdMult -= 0.01f;
                 StatsManager.instance.artifactCritDmgAdd += 0.01f;
                 StatsManager.instance.RecalculateStats();
             }
 
-            if (critChainResetCoroutine != null) StopCoroutine(critChainResetCoroutine);
-            critChainResetCoroutine = StartCoroutine(ResetCritChain());
+            if (earthResonanceResetCoroutine != null) StopCoroutine(earthResonanceResetCoroutine);
+            earthResonanceResetCoroutine = StartCoroutine(ResetEarthResonance());
         }
     }
 
-    IEnumerator ResetCritChain()
+    IEnumerator ResetEarthResonance()
     {
         yield return new WaitForSeconds(2f);
-        StatsManager.instance.artifactAtkSpdMult += (criticalChainStacks * 0.01f);
-        StatsManager.instance.artifactCritDmgAdd -= (criticalChainStacks * 0.01f);
-        criticalChainStacks = 0;
+        StatsManager.instance.artifactAtkSpdMult += (earthResonanceStacks * 0.01f);
+        StatsManager.instance.artifactCritDmgAdd -= (earthResonanceStacks * 0.01f);
+        earthResonanceStacks = 0;
+        // ★ [추가] 초기화 알림
+        ArtifactSlotUI.instance.UpdateArtifactStack(ArtifactID.EarthResonance, 0);
         StatsManager.instance.RecalculateStats();
     }
 
-    // 4. 플레이어 사망 시 (Player.Die에서 호출)
-    // 리턴값: true면 부활 성공, false면 진짜 사망
+    // 4. 플레이어 사망 시 (부활)
     public bool TryRevive()
     {
-        if (hasBackupServer || hasHanwhaFan) // 백업서버 or 한화팬
+        if (hasThunderSoul || hasMirror)
         {
-            if (hasBackupServer) hasBackupServer = false; // 소모성 (한 번만)
-            else if (hasHanwhaFan) hasHanwhaFan = false;
+            if (hasThunderSoul) hasThunderSoul = false;
+            else if (hasMirror) hasMirror = false; // 복수의 거울 부활권 소모
 
+            /*
             // 화면 전체 전기 데미지 & 스턴
             NormalMonster[] monsters = FindObjectsByType<NormalMonster>(FindObjectsSortMode.None);
             foreach (var m in monsters)
             {
                 m.ApplyDamage(StatsManager.instance.Attack * 5f, ElementType.Lightning);
             }
+            */
+
+            // ★ 부활 이펙트
+            // if (reviveEffectPrefab != null) Instantiate(reviveEffectPrefab, GameManager.instance.player.transform.position, Quaternion.identity);
 
             // 체력 절반 회복
-            GameManager.instance.health = StatsManager.instance.MaxHP * 0.5f;
-            Debug.Log("백업 서버 가동! 부활했습니다.");
+            // GameManager.instance.health = StatsManager.instance.MaxHP * 0.5f;
+            Debug.Log("부활!");
             return true;
         }
         return false;
     }
 
-    // 5. 플레이어가 데미지를 입으려 할 때 (Player.ApplyDamage에서 호출)
-    // 리턴값: true면 "이번 데미지 무효화(무적 발동)", false면 "그냥 맞음"
-    public bool OnPlayerTakeDamage()
+    // 4-2. 실제 전기 폭발 & 이펙트 실행 (Player가 일어날 때 호출)
+    public void ActivateReviveBurst()
     {
-        // [위기 탈출 넘버원]
-        // 1. 갖고 있고, 2. 쿨타임이 지났다면
-        if (hasEscapeNo1 && Time.time > escapeNo1Cooldown)
+        // 화면 전체 전기 데미지 & 스턴
+        NormalMonster[] monsters = FindObjectsByType<NormalMonster>(FindObjectsSortMode.None);
+        foreach (var m in monsters)
         {
-            // 쿨타임 30초 갱신
-            escapeNo1Cooldown = Time.time + 30f;
-
-            // 버프 및 무적 코루틴 시작
-            StartCoroutine(EscapeNo1Routine());
-
-            Debug.Log("위기 탈출 넘버원 발동! (3초 무적 + 버프)");
-            return true; // 이번 데미지는 무효화!
+            m.ApplyDamage(StatsManager.instance.Attack, ElementType.Lightning);
         }
 
-        return false; // 아티팩트 발동 안 함 -> 그냥 데미지 입음
+        // 부활 이펙트 생성
+        if (reviveEffectPrefab != null)
+            Instantiate(reviveEffectPrefab, GameManager.instance.player.transform.position, Quaternion.identity);
+
+        Debug.Log("전기 폭발 발동!");
     }
 
-    IEnumerator EscapeNo1Routine()
+    // 5. 피격 시 (무적)
+    public bool OnPlayerTakeDamage()
     {
-        // 1. 버프 적용
+        // [서리 갑옷]
+        if (hasFrostArmor && Time.time > frostArmorCooldown)
+        {
+            frostArmorCooldown = Time.time + 30f;
+            StartCoroutine(FrostArmorRoutine());
+            return true;
+        }
+        return false;
+    }
+
+    IEnumerator FrostArmorRoutine()
+    {
         StatsManager.instance.artifactAtkMult += 0.5f;
         StatsManager.instance.artifactSpeedMult += 0.5f;
         StatsManager.instance.RecalculateStats();
 
-        // 2. [추가] 플레이어에게 3초 무적 부여!
         GameManager.instance.player.SetInvincible(3f);
 
-        // 3초 대기 (버프 지속시간)
+        // ★ 무적 이펙트 생성 (플레이어 자식으로 붙이기)
+        GameObject vfx = null;
+        if (frostArmorEffectPrefab != null)
+        {
+            vfx = Instantiate(frostArmorEffectPrefab, GameManager.instance.player.transform);
+        }
+
         yield return new WaitForSeconds(3f);
 
-        // 3. 버프 해제
+        if (vfx != null) Destroy(vfx); // 이펙트 삭제
+
         StatsManager.instance.artifactAtkMult -= 0.5f;
         StatsManager.instance.artifactSpeedMult -= 0.5f;
         StatsManager.instance.RecalculateStats();
     }
 }
 
-
+/// <summary>
+/// 아티팩트 ID (최종 확정)
+/// </summary>
 public enum ArtifactID
 {
-    Caffeine,            // 카페인 수혈
-    Hotfix,              // 긴급 핫픽스
-    Enlistment,          // 입영통지서
-    DoubleCurse,         // 2의 저주
-    CompileError,        // 컴파일 에러
-    GitConflict,         // 깃허브 충돌
-    StackOverflow,       // 스택 오버플로우
-    Overthink,           // 고민중독
-    BackupServer,        // 백업 서버
-    TetrisMaster,        // 테트리스 과제 만점자
-    FinalSpecPDF,        // 개발명세서 최종본
-    EscapeNumberOne,     // 위기 탈출 넘버원
-    HanwhaFan,           // 극성 한화팬
-    SmokingBooth,        // 흡연부스
-    Firewall,            // 방화벽
-    RestrainingOrder,    // 접근금지령
-    CriticalChain,       // 크리티컬 체인
-    DopamineAddict       // 도파민 중독
+    ElixirOfLife,       // 생명의 묘약
+    GuardiansVow,       // 수호자의 결의
+    IllusionTotem,      // 그림자 분신
+    OverloadCrystal,    // 과부하
+    ThunderSoul,        // 뇌신의 영혼석
+    // ThunderHammer,   // 삭제됨
+    FrostArmor,         // 서리 갑옷
+    MirrorOfVengeance,  // 복수의 거울
+    SolarCloak,         // 태양의 망토
+    MagmaCore,          // 마그마 코어
+    EarthResonance,     // 대지의 공명
+    ObsidianEdge        // 흑요석 칼날
 }

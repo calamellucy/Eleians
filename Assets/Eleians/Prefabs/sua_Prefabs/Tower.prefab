@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6547262138910496747}
   - component: {fileID: 465607253973961983}
-  - component: {fileID: 8953656367831212120}
   - component: {fileID: -6876010720138951788}
+  - component: {fileID: 1209295580840408182}
   m_Layer: 8
   m_Name: Tower
   m_TagString: Tower
@@ -65,8 +65,32 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 7
---- !u!61 &8953656367831212120
-BoxCollider2D:
+--- !u!114 &-6876010720138951788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 486534827732295373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fae9f8e9165893f4ea0b17b60e399eab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Tower
+  maxHealth: 100
+  currentHealth: 0
+  isDestroyed: 0
+  towerSprite: {fileID: 8461753297895271954}
+  anim: {fileID: 6883379573963872133}
+  shakeGroup: {fileID: 4214427508320680533}
+  towerJam: {fileID: 7707656407525374608}
+  jamAnimator: {fileID: 0}
+  dustLeft: {fileID: 3342405771585011355}
+  dustRight: {fileID: 3880388052606886294}
+  healthSlider: {fileID: 8336491046447791974}
+  healthBarUI: {fileID: 5909346033040585123}
+--- !u!60 &1209295580840408182
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -99,49 +123,25 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.8252706}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 3}
-    newSize: {x: 1, y: 3}
-    adaptiveTilingThreshold: 0.5
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1.3411642}
-  m_EdgeRadius: 0
---- !u!114 &-6876010720138951788
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 486534827732295373}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fae9f8e9165893f4ea0b17b60e399eab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Tower
-  maxHealth: 100
-  currentHealth: 0
-  isDestroyed: 0
-  phaseSprites:
-  - {fileID: 5266925709320105287, guid: b0aeb5d0c5322464d816ed80f6f2b1ec, type: 3}
-  - {fileID: -8448270864195279846, guid: c6009d14e49928241ba805b83dad6690, type: 3}
-  - {fileID: -1562517457, guid: c6009d14e49928241ba805b83dad6690, type: 3}
-  - {fileID: 1909640683, guid: c6009d14e49928241ba805b83dad6690, type: 3}
-  - {fileID: -782161270, guid: c6009d14e49928241ba805b83dad6690, type: 3}
-  destroyedSprite: {fileID: -1801479109, guid: c6009d14e49928241ba805b83dad6690, type: 3}
-  activeSprite: {fileID: -4984380791814788580, guid: a9c94814ea7c6494b8a8391118fe4d22, type: 3}
-  towerSprite: {fileID: 8461753297895271954}
-  anim: {fileID: 6883379573963872133}
-  shakeGroup: {fileID: 4214427508320680533}
-  dustLeft: {fileID: 3342405771585011355}
-  dustRight: {fileID: 3880388052606886294}
-  towerJam: {fileID: 7707656407525374608}
-  healthSlider: {fileID: 8336491046447791974}
-  healthBarUI: {fileID: 5909346033040585123}
+  m_Points:
+    m_Paths:
+    - - {x: 0.23438692, y: -0.22058266}
+      - {x: -0.21693796, y: -0.22609359}
+      - {x: -0.40646678, y: -0.95053387}
+      - {x: -0.3735559, y: -1.3441323}
+      - {x: 0.35901642, y: -1.3222107}
+      - {x: 0.40204465, y: -0.92842174}
+  m_UseDelaunayMesh: 0
 --- !u!1 &539691128379241232
 GameObject:
   m_ObjectHideFlags: 0
@@ -168,7 +168,7 @@ Transform:
   m_GameObject: {fileID: 539691128379241232}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.35, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -276,7 +276,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
-  m_Sprite: {fileID: 5266925709320105287, guid: b0aeb5d0c5322464d816ed80f6f2b1ec, type: 3}
+  m_Sprite: {fileID: 7084944380439337423, guid: 038e09e929c9e7d45b278676a639fdcc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -321,8 +321,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 5, y: 0}
-  m_SizeDelta: {x: 20, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3518561451351764942
 CanvasRenderer:
@@ -345,7 +345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8604973, g: 0.5235849, b: 1, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -621,8 +621,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: -5, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4391975738542980976
 GameObject:
@@ -693,7 +693,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: -1.7}
+  m_AnchoredPosition: {x: 0, y: 1.3}
   m_SizeDelta: {x: 2, y: 0.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &7243205155313602540
@@ -717,7 +717,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 12
   m_TargetDisplay: 0
 --- !u!114 &7122000501455066059
 MonoBehaviour:
@@ -950,7 +950,7 @@ Transform:
   m_GameObject: {fileID: 7707656407525374608}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.003000021, y: 0.311, z: 0}
+  m_LocalPosition: {x: 0, y: 0.65, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1003,7 +1003,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 11
-  m_Sprite: {fileID: -3856397512918424715, guid: 5d13769eda4685348958c491330d68ed, type: 3}
+  m_Sprite: {fileID: 4780800866556367707, guid: 63962c986fcefe74b8a6330e59fe6807, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

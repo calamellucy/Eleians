@@ -22,6 +22,9 @@ public class Player : MonoBehaviour
     SpriteRenderer spriter;
     Animator anim;
 
+    [Header("Effects")]
+    public GameObject healEffectPrefab; // ★ 인스펙터에서 힐 이펙트 프리팹 연결!
+
     void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -41,14 +44,19 @@ public class Player : MonoBehaviour
 
             // 2. 애니메이션 멈춤 (Run -> Idle)
             // 본인 애니메이터 파라미터 이름에 맞춰주세요! (예: Speed, IsRun 등)
+            /*
             if (anim != null)
             {
                 anim.Play("Stand");
                 anim.Play("Stand");
             }
+            */
 
             // 3. 물리 속도 0으로 고정 (미끄러짐 방지)
-            rigid.linearVelocity = Vector2.zero;
+            if (rigid.bodyType != RigidbodyType2D.Static)
+            {
+                rigid.linearVelocity = Vector2.zero;
+            }
 
             return; // 아래쪽 이동 코드 실행 금지
         }
@@ -89,7 +97,10 @@ public class Player : MonoBehaviour
         if (isLocked)
         {
             // 물리 연산 중에도 속도를 0으로 꽉 잡고 있어야 함
-            rigid.linearVelocity = Vector2.zero;
+            if (rigid.bodyType != RigidbodyType2D.Static)
+            {
+                rigid.linearVelocity = Vector2.zero;
+            }
             return;
         }
 
@@ -141,6 +152,8 @@ public class Player : MonoBehaviour
 
         GameManager.instance.health -= dmg;
 
+        StartCoroutine(HitFlashRoutine());
+
         // [추가] 맞았을 때 발동하는 아티팩트가 있다면 여기서 호출 (예: 반사 데미지)
         // ArtifactManager.instance.OnPlayerHit();
 
@@ -148,6 +161,15 @@ public class Player : MonoBehaviour
         {
             Die();
         }
+
+    }
+
+    // 피격 깜빡임 코루틴
+    IEnumerator HitFlashRoutine()
+    {
+        spriter.color = Color.red;
+        yield return new WaitForSeconds(0.2f);
+        spriter.color = Color.white;
     }
 
     public void Heal(float amount)
@@ -166,6 +188,18 @@ public class Player : MonoBehaviour
         Debug.Log("HEAL!!");
 
         // 힐 이펙트, 힐 텍스트 같은 것 원하면 여기에 추가하면 된다
+        // ★★★ 이펙트 생성 ★★★
+        if (healEffectPrefab != null)
+        {
+            // 플레이어 위치에 생성 (플레이어의 자식으로 넣어서 따라다니게 함)
+            GameObject vfx = Instantiate(healEffectPrefab, transform.position, Quaternion.identity, transform);
+
+            // 이펙트가 너무 크면 가리니까 위치를 발 밑이나 머리 위로 조정 가능
+            // vfx.transform.localPosition += Vector3.up * 0.5f; 
+
+            // 2초 뒤에 삭제 (파티클 지속시간에 맞춰 조절)
+            Destroy(vfx, 2.0f);
+        }
     }
 
 
@@ -174,12 +208,76 @@ public class Player : MonoBehaviour
         // 아티팩트로 부활 가능한지 체크
         if (ArtifactManager.instance.TryRevive())
         {
+            StartCoroutine(CoReviveSequence());
             return;
         }
 
         GameManager.instance.isLive = false;
-        // anim.SetTrigger("Dead");
-        // rigid.simulated = false;
+        anim.SetTrigger("Dead");
+        rigid.linearVelocity = Vector2.zero;      // 속도 0으로 정지
+        rigid.bodyType = RigidbodyType2D.Static;
+        isLocked = true;
+        GameManager.instance.GameOver("당신이 쓰러지자, 지구의 마지막 희망도 꺼져버렸습니다...", false);
+    }
+
+    // ★★★ [핵심] 사망 -> 부활 연출 코루틴 ★★★
+    IEnumerator CoReviveSequence()
+    {
+        // 조작 잠금
+        isLocked = true;
+        rigid.linearVelocity = Vector2.zero;      // 속도 0으로 정지
+        rigid.bodyType = RigidbodyType2D.Static;
+        isInvincible = true;
+
+        // ★★★ [추가] 사망 시 스킬 끄기 ★★★
+        if (GameManager.instance.skillObjects != null)
+        {
+            foreach (var obj in GameManager.instance.skillObjects)
+            {
+                if (obj != null) obj.SetActive(false);
+            }
+        }
+        if (GameManager.instance.skillScripts != null)
+        {
+            foreach (var script in GameManager.instance.skillScripts)
+            {
+                if (script != null) script.enabled = false;
+            }
+        }
+
+        anim.SetTrigger("Dead");
+        yield return new WaitForSeconds(2.0f);
+        anim.SetTrigger("Revive");
+
+        // 부활 모션 길이만큼 대기
+        float reviveHP = StatsManager.instance.MaxHP * 0.5f;
+        GameManager.instance.health = reviveHP;
+        yield return new WaitForSeconds(2.1f);
+
+        isLocked = false;
+        rigid.bodyType = RigidbodyType2D.Dynamic;
+
+        // ★★★ [추가] 부활 시 스킬 다시 켜기 ★★★
+        if (GameManager.instance.skillObjects != null)
+        {
+            foreach (var obj in GameManager.instance.skillObjects)
+            {
+                if (obj != null) obj.SetActive(true);
+            }
+        }
+        if (GameManager.instance.skillScripts != null)
+        {
+            foreach (var script in GameManager.instance.skillScripts)
+            {
+                if (script != null) script.enabled = true;
+            }
+        }
+
+        ArtifactManager.instance.ActivateReviveBurst();
+
+        // 부활 직후 3초간 추가 무적 (안전하게 도망갈 시간)
+        SetInvincible(3.0f);
+        Debug.Log("플레이어 부활 완료!");
     }
 
     // GameManager에서 호출할 함수

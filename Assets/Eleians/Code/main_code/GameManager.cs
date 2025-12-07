@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -73,6 +76,14 @@ public class GameManager : MonoBehaviour
     // ★ 여기에 스킬 관련 오브젝트(무기, 스캐너, 마법봉 등)를 다 넣으세요
     public GameObject[] skillObjects;
     public MonoBehaviour[] skillScripts;
+
+    [Header("# Game Over UI")]
+    public GameObject gameOverPanel;
+    public Text gameOverReasonText;
+
+    [Header("# UI Control")]
+    public GameObject expBarObject;    // ★ 기존 경험치바 오브젝트 (Slider나 부모 오브젝트)
+    public Slider bossHpSlider;        // ★ 새로 만든 보스 체력바 Slider
 
     void Awake()
     {
@@ -463,6 +474,12 @@ public class GameManager : MonoBehaviour
         isBossPhase = true;
         StartCoroutine(SlideUI(true));
 
+        // UI가 슬라이드되어 내려온 뒤에 내용을 바꿉니다.
+        // ★★★ [여기 추가] UI 모드 변경 (경험치바 -> 보스바) ★★★
+        SwitchToBossUI(true);
+
+        StartCoroutine(SlideUI(true));
+
 
         // ★ [카메라] 2. 다시 플레이어를 비추도록 복구
         if (virtualCam != null && originalTarget != null)
@@ -481,6 +498,14 @@ public class GameManager : MonoBehaviour
         foreach (var obj in skillObjects) { if (obj != null) obj.SetActive(true); }
         foreach (var script in skillScripts) { if (script != null) script.enabled = true; }
 
+        if (boss != null)
+        {
+            BossMonster bm = boss.GetComponent<BossMonster>();
+            if (bm != null)
+            {
+                bm.StartBattle(); // 이 함수가 실행되어야 isBattleReady = true가 됨
+            }
+        }
     }
 
     // ★★★ 마법진 페이드 아웃 함수 ★★★
@@ -678,6 +703,8 @@ public class GameManager : MonoBehaviour
 
     public void GetExp(int amount)
     {
+        if (!isLive) return;
+
         Debug.Log($"[경험치 획득] 들어온 양: {amount} | 현재 EXP: {exp} | 목표 EXP: {nextExp[level]}");
 
         if (level >= maxLevel) return; // 만렙이면 경험치 안 먹음
@@ -746,6 +773,166 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // ★ [수정] 실패 원인을 텍스트로 받음
+    public void GameOver(string reason, bool isTowerDeath = false)
+    {
+        isLive = false;
+        if (isTowerDeath)
+        {
+            // 타워가 터졌을 때 (줌인, 시간 정지 연출)
+            StartCoroutine(CoTowerDeathRoutine(reason));
+        }
+        else
+        {
+            // 플레이어가 죽었을 때 (카메라 고정, 조작/스킬 잠금)
+            StartCoroutine(CoPlayerDeathRoutine(reason));
+        }
+    }
+    // [경로 1] 플레이어 사망 연출 (담백하게)
+    IEnumerator CoPlayerDeathRoutine(string reason)
+    {
+        // 1. 플레이어 조작/이동 잠금 & 무적
+        if (player != null)
+        {
+            player.LockState(true);      // 이동/공격 불가
+            player.isInvincible = true;  // 추가 피격 방지
+
+            // 미끄러짐 방지 (완전 정지)
+            Rigidbody2D playerRb = player.GetComponent<Rigidbody2D>();
+            if (playerRb != null) playerRb.linearVelocity = Vector2.zero;
+        }
+
+        // 2. 스킬 끄기 (공격 중단)
+        DisableAllSkills();
+
+        // 3. 사망 모션을 봐야 하므로 시간은 바로 멈추지 않고 2초 정도 대기
+        // (Time.timeScale은 1 상태 유지)
+        yield return new WaitForSeconds(2.0f);
+
+        // 4. 이제 UI 띄우고 시간 정지
+        ShowGameOverUI(reason);
+    }
+
+    // [경로 2] 타워 파괴 연출 (화려하게)
+    IEnumerator CoTowerDeathRoutine(string reason)
+    {
+        // 1. 시간 정지
+        Time.timeScale = 0f;
+
+        // ★ [수정 1] 'UnscaledTime' 대신 'ManualUpdate'로 설정
+        // "이제부터 카메라는 내가 수동으로 업데이트한다!" 라고 선언
+        CinemachineBrain brain = Camera.main.GetComponent<CinemachineBrain>();
+        if (brain != null)
+        {
+            brain.UpdateMethod = CinemachineBrain.UpdateMethods.ManualUpdate;
+        }
+
+        if (virtualCam != null && tower != null)
+        {
+            Transform originalTarget = virtualCam.Follow;
+            virtualCam.Follow = tower.transform;
+
+            var lensSettings = virtualCam.Lens;
+
+            float startSize = lensSettings.OrthographicSize;
+            float targetSize = 2.5f;
+            float duration = 1.0f;
+            float timer = 0f;
+
+            while (timer < duration)
+            {
+                timer += Time.unscaledDeltaTime;
+                float t = timer / duration;
+                t = t * (2f - t);
+
+                lensSettings.OrthographicSize = Mathf.Lerp(startSize, targetSize, t);
+                virtualCam.Lens = lensSettings;
+
+                // ★ [수정 2] 여기서 강제로 카메라를 갱신시킴
+                // 시간이 0이어도 수동으로 "카메라야 일해라!" 하고 명령하는 코드
+                if (brain != null) brain.ManualUpdate();
+
+                yield return null;
+            }
+            lensSettings.OrthographicSize = targetSize;
+            virtualCam.Lens = lensSettings;
+
+            // 마지막으로 한 번 더 갱신해서 확실하게 맞춤
+            if (brain != null) brain.ManualUpdate();
+        }
+
+        if (tower != null)
+        {
+            // 타워 스크립트에 있는 파괴 함수 호출
+            tower.GetComponent<Tower>().PlayDestructionEffect();
+        }
+
+        // 3. 감상 타임
+        yield return new WaitForSecondsRealtime(2.3f);
+
+        // 4. UI 띄우기
+        ShowGameOverUI(reason);
+    }
+
+    // [공통] 스킬 끄기 함수 분리
+    void DisableAllSkills()
+    {
+        foreach (var obj in skillObjects) { if (obj != null) obj.SetActive(false); }
+        foreach (var script in skillScripts) { if (script != null) script.enabled = false; }
+    }
+
+    // [공통] 게임오버 UI 표시 함수 분리
+    void ShowGameOverUI(string reason)
+    {
+        Time.timeScale = 0f; // 확실하게 정지
+
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(true);
+            if (gameOverReasonText != null)
+            {
+                gameOverReasonText.text = reason;
+            }
+        }
+    }
+
+    // ★ 보스전 UI 모드로 전환하는 함수
+    public void SwitchToBossUI(bool isBossMode)
+    {
+        // 보스전이면 -> 경험치바 끄고, 보스바 켜기
+        if (expBarObject != null)
+            expBarObject.SetActive(!isBossMode);
+
+        if (bossHpSlider != null)
+        {
+            bossHpSlider.gameObject.SetActive(isBossMode);
+            // 켜질 때 체력 꽉 찬 상태로 초기화
+            if (isBossMode) bossHpSlider.value = 1f;
+        }
+    }
+
+    // ★ 보스 체력 업데이트 함수 (보스가 맞을 때마다 호출)
+    public void UpdateBossHealthUI(float currentHp, float maxHp)
+    {
+        if (bossHpSlider == null) return;
+        bossHpSlider.value = currentHp / maxHp;
+    }
+
+    // ★ [추가] 재시작 함수 (버튼에 연결할 것)
+    public void Retry()
+    {
+        // 시간 다시 흐르게 하기 (중요! 안 하면 재시작해도 멈춰있음)
+        Time.timeScale = 1f;
+
+        // 현재 씬 다시 로드 (초기화)
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void GoMain()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainScreen_jw");
+    }
 }
 
 public enum TowerType

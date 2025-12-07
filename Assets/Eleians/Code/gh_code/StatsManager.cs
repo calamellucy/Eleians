@@ -66,7 +66,7 @@ public class StatsManager : MonoBehaviour
         // 레벨업 등으로 원소 카운트가 바뀌면 재계산이 필요하므로
         // GameManager에서 레벨업 할 때 RecalculateStats()를 호출하는 게 정석이지만
         // 편의상 여기서 계속 갱신해도 됩니다. (단, 아래 로직으로)
-        RecalculateStats();
+        // RecalculateStats();
     }
 
     public void RecalculateStats()
@@ -112,6 +112,8 @@ public class StatsManager : MonoBehaviour
         {
             GameManager.instance.maxHealth = MaxHP;
         }
+
+        GameManager.instance.player.speed = MovementSpeed;
     }
 
     /*

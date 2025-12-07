@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72cf24f9046563949a8aea03ca25aab8, type: 3}
+  m_Name: Artifact_Overload
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactData
+  id: 3
+  artifactName: "\uACFC\uBD80\uD558"
+  description: "\uC801 \uCC98\uCE58 \uC2DC \uACF5\uACA9 \uC18D\uB3C4\uB97C\n1% \uC0C1\uC2B9\uC2DC\uD0A4\uB294
+    \uC2A4\uD0DD\uC744 \uC5BB\uB294\uB2E4.\n5\uCD08\uB9C8\uB2E4 \uBAA8\uB4E0 \uC2A4\uD0DD\uC744\n\uC18C\uC9C4\uD558\uC5EC
+    \uC2A4\uD0DD\uC5D0 \uBE44\uB840\uD55C\n\uD3ED\uBC1C\uC744 \uC77C\uC73C\uD0A8\uB2E4. "
+  icon: {fileID: 664925559078463509, guid: 38ed493c7b452d742a6c6aea8a940852, type: 3}

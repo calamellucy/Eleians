@@ -1,0 +1,1300 @@
+fileFormatVersion: 2
+guid: f5ca1eb3c45008f4b8099bab570cf04a
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8049403593517860744
+    second: revival_effect_0
+  - first:
+      213: -6937057219899820926
+    second: revival_effect_1
+  - first:
+      213: -5065708400454531770
+    second: revival_effect_2
+  - first:
+      213: 3631501638127777868
+    second: revival_effect_3
+  - first:
+      213: 4409733087344434100
+    second: revival_effect_4
+  - first:
+      213: 6269125679722717934
+    second: revival_effect_5
+  - first:
+      213: 8196409923016530104
+    second: revival_effect_6
+  - first:
+      213: 1037687536652547343
+    second: revival_effect_7
+  - first:
+      213: 2667863049697623862
+    second: revival_effect_8
+  - first:
+      213: 5296630153759438739
+    second: revival_effect_9
+  - first:
+      213: 9033229934985648417
+    second: revival_effect_10
+  - first:
+      213: 4723443570498233292
+    second: revival_effect_11
+  - first:
+      213: -6351690851348912411
+    second: revival_effect_12
+  - first:
+      213: 4555549104086236091
+    second: revival_effect_13
+  - first:
+      213: 1997348762335966950
+    second: revival_effect_14
+  - first:
+      213: 2477740004579045181
+    second: revival_effect_15
+  - first:
+      213: 3874341138532021317
+    second: revival_effect_16
+  - first:
+      213: 3740177177184731825
+    second: revival_effect_17
+  - first:
+      213: 5358896944141609216
+    second: revival_effect_18
+  - first:
+      213: -2230862685218034335
+    second: revival_effect_19
+  - first:
+      213: 4006352290108964638
+    second: revival_effect_20
+  - first:
+      213: -745697978263715579
+    second: revival_effect_21
+  - first:
+      213: -1344897848245773857
+    second: revival_effect_22
+  - first:
+      213: -4685941898875403578
+    second: revival_effect_23
+  - first:
+      213: -2647963215422606060
+    second: revival_effect_24
+  - first:
+      213: 5433417909362467353
+    second: revival_effect_25
+  - first:
+      213: -4630769228184705863
+    second: revival_effect_26
+  - first:
+      213: -3774967299675771743
+    second: revival_effect_27
+  - first:
+      213: -3771116421444659050
+    second: revival_effect_28
+  - first:
+      213: 5117124376952071605
+    second: revival_effect_29
+  - first:
+      213: 3904560707100969686
+    second: revival_effect_30
+  - first:
+      213: -7691899923825836965
+    second: revival_effect_31
+  - first:
+      213: 4117766705864342195
+    second: revival_effect_32
+  - first:
+      213: 214833869700824064
+    second: revival_effect_33
+  - first:
+      213: -489898458767161939
+    second: revival_effect_34
+  - first:
+      213: 6345530541804106382
+    second: revival_effect_35
+  - first:
+      213: -5907636164363193793
+    second: revival_effect_36
+  - first:
+      213: 1235058852929489465
+    second: revival_effect_37
+  - first:
+      213: -608312190036111711
+    second: revival_effect_38
+  - first:
+      213: 4367585667912252008
+    second: revival_effect_39
+  - first:
+      213: -3385082232663784952
+    second: revival_effect_40
+  - first:
+      213: -5349814312640180458
+    second: revival_effect_41
+  - first:
+      213: -1257385981469539192
+    second: revival_effect_42
+  - first:
+      213: -7551260391380781708
+    second: revival_effect_43
+  - first:
+      213: -7133360517899783624
+    second: revival_effect_44
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: revival_effect_0
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 194
+        width: 54
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8787d9a4416ca4090800000000000000
+      internalID: -8049403593517860744
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_1
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 194
+        width: 54
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 284ff4d663f9abf90800000000000000
+      internalID: -6937057219899820926
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_2
+      rect:
+        serializedVersion: 2
+        x: 220
+        y: 238
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 645023f8c0df2b9b0800000000000000
+      internalID: -5065708400454531770
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_3
+      rect:
+        serializedVersion: 2
+        x: 284
+        y: 235
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c48fad5df7fa56230800000000000000
+      internalID: 3631501638127777868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_4
+      rect:
+        serializedVersion: 2
+        x: 348
+        y: 232
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4bb937111e4823d30800000000000000
+      internalID: 4409733087344434100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_5
+      rect:
+        serializedVersion: 2
+        x: 412
+        y: 229
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee2e6282798600750800000000000000
+      internalID: 6269125679722717934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_6
+      rect:
+        serializedVersion: 2
+        x: 476
+        y: 227
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b813e6066f7fb170800000000000000
+      internalID: 8196409923016530104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_7
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 194
+        width: 54
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f057602115b966e00800000000000000
+      internalID: 1037687536652547343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_8
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 194
+        width: 54
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63ffd9a0f47260520800000000000000
+      internalID: 2667863049697623862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_9
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 194
+        width: 54
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3973475ef09618940800000000000000
+      internalID: 5296630153759438739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_10
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 194
+        width: 54
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1299e3904ca7c5d70800000000000000
+      internalID: 9033229934985648417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_11
+      rect:
+        serializedVersion: 2
+        x: 391
+        y: 194
+        width: 54
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc36628c6ea0d8140800000000000000
+      internalID: 4723443570498233292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_12
+      rect:
+        serializedVersion: 2
+        x: 455
+        y: 194
+        width: 54
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e6ef3ac2d24ad7a0800000000000000
+      internalID: -6351690851348912411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_13
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 130
+        width: 54
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bbbb8e916cf883f30800000000000000
+      internalID: 4555549104086236091
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_14
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 160
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e6f99fed1208bb10800000000000000
+      internalID: 1997348762335966950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_15
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 130
+        width: 54
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3f65b21863b26220800000000000000
+      internalID: 2477740004579045181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_16
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 130
+        width: 54
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54432e40dbc64c530800000000000000
+      internalID: 3874341138532021317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_17
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 130
+        width: 54
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b28e1b8357c7e330800000000000000
+      internalID: 3740177177184731825
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_18
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 130
+        width: 54
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 009ac77c060ae5a40800000000000000
+      internalID: 5358896944141609216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_19
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 130
+        width: 54
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16da7e815326a01e0800000000000000
+      internalID: -2230862685218034335
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_20
+      rect:
+        serializedVersion: 2
+        x: 391
+        y: 130
+        width: 54
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e1f74096e2c699730800000000000000
+      internalID: 4006352290108964638
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_21
+      rect:
+        serializedVersion: 2
+        x: 455
+        y: 130
+        width: 54
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5014ddfb3afb6a5f0800000000000000
+      internalID: -745697978263715579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_22
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 66
+        width: 54
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd99f185886f55de0800000000000000
+      internalID: -1344897848245773857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_23
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 69
+        width: 54
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c2896f8ba038feb0800000000000000
+      internalID: -4685941898875403578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_24
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 72
+        width: 54
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4153f6e2c7b804bd0800000000000000
+      internalID: -2647963215422606060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_25
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 76
+        width: 54
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 912abc31dc0676b40800000000000000
+      internalID: 5433417909362467353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_26
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 76
+        width: 54
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b4ad3dfbe33cbfb0800000000000000
+      internalID: -4630769228184705863
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_27
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 76
+        width: 54
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ac2c18dd3f9c9bc0800000000000000
+      internalID: -3774967299675771743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_28
+      rect:
+        serializedVersion: 2
+        x: 388
+        y: 70
+        width: 35
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 698162d489d4aabc0800000000000000
+      internalID: -3771116421444659050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_29
+      rect:
+        serializedVersion: 2
+        x: 423
+        y: 85
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b568b7528da30740800000000000000
+      internalID: 5117124376952071605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_30
+      rect:
+        serializedVersion: 2
+        x: 447
+        y: 86
+        width: 18
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6da83be9649cf2630800000000000000
+      internalID: 3904560707100969686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_31
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 66
+        width: 19
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5cb180d5c1e04590800000000000000
+      internalID: -7691899923825836965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_32
+      rect:
+        serializedVersion: 2
+        x: 491
+        y: 85
+        width: 21
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ba79fa800f352930800000000000000
+      internalID: 4117766705864342195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_33
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 27
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00c7d39244e3bf200800000000000000
+      internalID: 214833869700824064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_34
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 2
+        width: 35
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da50c2582f78339f0800000000000000
+      internalID: -489898458767161939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_35
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 23
+        width: 10
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8230af586adf0850800000000000000
+      internalID: 6345530541804106382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_36
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 27
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3271e0653cd30ea0800000000000000
+      internalID: -5907636164363193793
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_37
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 11
+        width: 15
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 93a409dab7fc32110800000000000000
+      internalID: 1235058852929489465
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_38
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 7
+        width: 30
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ae8b504947de87f0800000000000000
+      internalID: -608312190036111711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_39
+      rect:
+        serializedVersion: 2
+        x: 110
+        y: 20
+        width: 11
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86a3ff54608cc9c30800000000000000
+      internalID: 4367585667912252008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_40
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 25
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 802c692f4a5c501d0800000000000000
+      internalID: -3385082232663784952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_41
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 28
+        width: 8
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61f08c82a34a1c5b0800000000000000
+      internalID: -5349814312640180458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_42
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 7
+        width: 30
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 884c3fc9c1edc8ee0800000000000000
+      internalID: -1257385981469539192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_43
+      rect:
+        serializedVersion: 2
+        x: 183
+        y: 33
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 475754daea8843790800000000000000
+      internalID: -7551260391380781708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: revival_effect_44
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 7
+        width: 30
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83279c33766310d90800000000000000
+      internalID: -7133360517899783624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      revival_effect_0: -8049403593517860744
+      revival_effect_1: -6937057219899820926
+      revival_effect_10: 9033229934985648417
+      revival_effect_11: 4723443570498233292
+      revival_effect_12: -6351690851348912411
+      revival_effect_13: 4555549104086236091
+      revival_effect_14: 1997348762335966950
+      revival_effect_15: 2477740004579045181
+      revival_effect_16: 3874341138532021317
+      revival_effect_17: 3740177177184731825
+      revival_effect_18: 5358896944141609216
+      revival_effect_19: -2230862685218034335
+      revival_effect_2: -5065708400454531770
+      revival_effect_20: 4006352290108964638
+      revival_effect_21: -745697978263715579
+      revival_effect_22: -1344897848245773857
+      revival_effect_23: -4685941898875403578
+      revival_effect_24: -2647963215422606060
+      revival_effect_25: 5433417909362467353
+      revival_effect_26: -4630769228184705863
+      revival_effect_27: -3774967299675771743
+      revival_effect_28: -3771116421444659050
+      revival_effect_29: 5117124376952071605
+      revival_effect_3: 3631501638127777868
+      revival_effect_30: 3904560707100969686
+      revival_effect_31: -7691899923825836965
+      revival_effect_32: 4117766705864342195
+      revival_effect_33: 214833869700824064
+      revival_effect_34: -489898458767161939
+      revival_effect_35: 6345530541804106382
+      revival_effect_36: -5907636164363193793
+      revival_effect_37: 1235058852929489465
+      revival_effect_38: -608312190036111711
+      revival_effect_39: 4367585667912252008
+      revival_effect_4: 4409733087344434100
+      revival_effect_40: -3385082232663784952
+      revival_effect_41: -5349814312640180458
+      revival_effect_42: -1257385981469539192
+      revival_effect_43: -7551260391380781708
+      revival_effect_44: -7133360517899783624
+      revival_effect_5: 6269125679722717934
+      revival_effect_6: 8196409923016530104
+      revival_effect_7: 1037687536652547343
+      revival_effect_8: 2667863049697623862
+      revival_effect_9: 5296630153759438739
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
