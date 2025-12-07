@@ -173,9 +173,11 @@ public class ArtifactManager : MonoBehaviour
             yield return new WaitForSeconds(5f);
             if (GameManager.instance.isLive)
             {
-                float healAmount = StatsManager.instance.MaxHP * 0.02f; // 최대 체력 2%
-                GameManager.instance.player.Heal(healAmount);
-
+                if (GameManager.instance.health < GameManager.instance.maxHealth)
+                {
+                    float healAmount = StatsManager.instance.MaxHP * 0.02f; // 최대 체력 2%
+                    GameManager.instance.player.Heal(healAmount);
+                }
             }
         }
     }
@@ -410,23 +412,41 @@ public class ArtifactManager : MonoBehaviour
             if (hasThunderSoul) hasThunderSoul = false;
             else if (hasMirror) hasMirror = false; // 복수의 거울 부활권 소모
 
+            /*
             // 화면 전체 전기 데미지 & 스턴
             NormalMonster[] monsters = FindObjectsByType<NormalMonster>(FindObjectsSortMode.None);
             foreach (var m in monsters)
             {
                 m.ApplyDamage(StatsManager.instance.Attack * 5f, ElementType.Lightning);
             }
+            */
 
             // ★ 부활 이펙트
-            if (reviveEffectPrefab != null)
-                Instantiate(reviveEffectPrefab, GameManager.instance.player.transform.position, Quaternion.identity);
+            // if (reviveEffectPrefab != null) Instantiate(reviveEffectPrefab, GameManager.instance.player.transform.position, Quaternion.identity);
 
             // 체력 절반 회복
-            GameManager.instance.health = StatsManager.instance.MaxHP * 0.5f;
+            // GameManager.instance.health = StatsManager.instance.MaxHP * 0.5f;
             Debug.Log("부활!");
             return true;
         }
         return false;
+    }
+
+    // 4-2. 실제 전기 폭발 & 이펙트 실행 (Player가 일어날 때 호출)
+    public void ActivateReviveBurst()
+    {
+        // 화면 전체 전기 데미지 & 스턴
+        NormalMonster[] monsters = FindObjectsByType<NormalMonster>(FindObjectsSortMode.None);
+        foreach (var m in monsters)
+        {
+            m.ApplyDamage(StatsManager.instance.Attack, ElementType.Lightning);
+        }
+
+        // 부활 이펙트 생성
+        if (reviveEffectPrefab != null)
+            Instantiate(reviveEffectPrefab, GameManager.instance.player.transform.position, Quaternion.identity);
+
+        Debug.Log("전기 폭발 발동!");
     }
 
     // 5. 피격 시 (무적)

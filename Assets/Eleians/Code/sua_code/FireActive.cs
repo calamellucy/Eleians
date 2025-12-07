@@ -5,6 +5,7 @@ public class FireActive : ActiveSkillBase
 {
     // 연결할 실제 스킬 스크립트
     public FireExplosionSkill fireSkill;
+    public KeyCode triggerKey = KeyCode.Alpha2;
 
     // [참고] 쿨타임 변수(coolTime)와 테두리 이미지(borderImage)는 
     // 부모 클래스(ActiveSkillBase)에 이미 있으므로 여기서 선언 안 해도 됩니다!
@@ -23,7 +24,7 @@ public class FireActive : ActiveSkillBase
     // 2. 입력 키 설정 (E키)
     protected override bool CheckInput()
     {
-        return Input.GetKeyDown(KeyCode.E);
+        return Input.GetKeyDown(triggerKey);
     }
 
     // 3. 실제 스킬 발동

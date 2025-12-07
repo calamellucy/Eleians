@@ -58,6 +58,14 @@ public class TowerMonster : NormalMonster
     {
         if (!isLive || target == null) return;
 
+        // [추가] 타워 페이즈가 끝났다면?
+        if (!GameManager.instance.isTowerPhase)
+        {
+            // 원거리 몬스터도 근거리처럼 자폭시킴
+            Die(false);
+            return;
+        }
+
         // 원거리 몬스터일 때만 실행
         if (projectilePrefab != null)
         {
