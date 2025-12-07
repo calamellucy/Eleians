@@ -262,7 +262,7 @@ public class BossMonster : NormalMonster
         if (ghostScript != null)
         {
             // 체력 100, 공격력 10, 속도 2.5 (원하는 대로 조절)
-            ghostScript.InitGhost(100f, 10f, 2.5f);
+            ghostScript.InitGhost(100f, 10f, 2f);
         }
     }
 }
