@@ -3,7 +3,6 @@ using UnityEngine.UI;
 
 public class SkillUIManager : MonoBehaviour
 {
-    // 어디서든 접근할 수 있게 싱글톤 처리
     public static SkillUIManager instance;
 
     [Header("1. Tooltip Objects (툴팁 이미지 오브젝트 연결)")]
@@ -18,75 +17,58 @@ public class SkillUIManager : MonoBehaviour
     public Text electricText;
     public Text earthText;
 
-    [Header("3. Detail Popup (상세 설명창 연결)")]
-    public GameObject detailPopupPanel;
+    [Header("3. Detail Manager (설명창 매니저 연결)")]
+    // ★ [변경] 단순 GameObject 대신 기능을 가진 매니저를 연결합니다.
+    public SkillExplanationManager explanationManager;
 
     private void Awake()
     {
-        // 싱글톤 초기화
-        if (instance == null)
-            instance = this;
-        else
-            Destroy(gameObject);
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
 
-        // 게임 시작 시 모든 툴팁과 팝업 숨기기
         HideTooltip();
-        if (detailPopupPanel != null) detailPopupPanel.SetActive(false);
+
+        // 시작할 때 설명창 매니저가 있다면 꺼둡니다.
+        if (explanationManager != null)
+            explanationManager.gameObject.SetActive(false);
     }
 
     // ====================================================
-    // 툴팁 관련 로직
+    // 툴팁 관련 로직 (기존과 동일)
     // ====================================================
-
-    // 마우스 올렸을 때 호출 (스킬 타입에 따라 다른 툴팁 표시)
     public void ShowTooltip(string skillType)
     {
-        // 겹침 방지를 위해 일단 모두 끔
-        HideTooltip();
+        HideTooltip(); // 겹침 방지
+        if (StatsManager.instance == null) return;
 
         int currentCount = 0;
         string msg = "";
 
-        // StatsManager가 없으면 에러가 날 수 있으니 체크
-        if (StatsManager.instance == null)
-        {
-            Debug.LogWarning("StatsManager가 씬에 없습니다!");
-            return;
-        }
-
         switch (skillType)
         {
             case "Fire":
-                fireTooltip.SetActive(true);               // 툴팁 켜기
-                currentCount = StatsManager.instance.FireCnt; // 현재 불 개수 가져오기
-                msg = GetMessageByCount(currentCount);     // 개수에 맞는 멘트 가져오기
-                if (fireText != null) fireText.text = msg; // 텍스트 적용
+                fireTooltip.SetActive(true);
+                currentCount = StatsManager.instance.FireCnt;
+                if (fireText != null) fireText.text = GetMessageByCount(currentCount);
                 break;
-
             case "Ice":
                 iceTooltip.SetActive(true);
                 currentCount = StatsManager.instance.IceCnt;
-                msg = GetMessageByCount(currentCount);
-                if (iceText != null) iceText.text = msg;
+                if (iceText != null) iceText.text = GetMessageByCount(currentCount);
                 break;
-
             case "Electric":
                 electricTooltip.SetActive(true);
                 currentCount = StatsManager.instance.ElectricCnt;
-                msg = GetMessageByCount(currentCount);
-                if (electricText != null) electricText.text = msg;
+                if (electricText != null) electricText.text = GetMessageByCount(currentCount);
                 break;
-
             case "Earth":
                 earthTooltip.SetActive(true);
                 currentCount = StatsManager.instance.EarthCnt;
-                msg = GetMessageByCount(currentCount);
-                if (earthText != null) earthText.text = msg;
+                if (earthText != null) earthText.text = GetMessageByCount(currentCount);
                 break;
         }
     }
 
-    // 마우스 나갔을 때 호출 (모두 숨기기)
     public void HideTooltip()
     {
         if (fireTooltip) fireTooltip.SetActive(false);
@@ -95,56 +77,28 @@ public class SkillUIManager : MonoBehaviour
         if (earthTooltip) earthTooltip.SetActive(false);
     }
 
-    // 개수에 따른 텍스트 반환 로직 (요청한 조건)
     private string GetMessageByCount(int count)
     {
-        if (count >= 0 && count <= 4)
-        {
-            return "5 : 스킬 강화!";
-        }
-        else if (count >= 5 && count <= 9)
-        {
-            return "10 : 1차 각성!";
-        }
-        else if (count >= 10 && count <= 14)
-        {
-            return "15 : 액티브 해방!";
-        }
-        else if (count >= 15 && count <= 19)
-        {
-            return "20 : 2차 각성!";
-        }
-        else
-        {
-            return "SKILL MAX!";
-        }
+        if (count >= 0 && count <= 4) return "5 : 스킬 강화!";
+        else if (count >= 5 && count <= 9) return "10 : 1차 각성!";
+        else if (count >= 10 && count <= 14) return "15 : 액티브 해방!";
+        else if (count >= 15 && count <= 19) return "20 : 2차 각성!";
+        else return "SKILL MAX!";
     }
 
     // ====================================================
-    // 상세창(일시정지) 관련 로직
+    // ★ [수정] 상세창(일시정지) 관련 로직
     // ====================================================
 
-    // 클릭 시 호출
-    public void OpenDetailPopup(string skillName)
+    // 버튼 클릭 시 이 함수를 호출할 거야.
+    // index -> 0:전기, 1:불, 2:얼음, 3:흙 (매니저 배열 순서와 맞춰야 해!)
+    public void OpenDetailPopup(int skillIndex)
     {
-        if (detailPopupPanel != null)
+        HideTooltip();
+        if (explanationManager != null)
         {
-            detailPopupPanel.SetActive(true);
-
-            // 나중에 여기에 상세창 내용(이미지/설명)을 skillName에 따라 바꾸는 코드를 추가하면 돼.
-            // 예: detailTitleText.text = skillName; 
-
-            Time.timeScale = 0f; // 게임 일시정지
-        }
-    }
-
-    // 닫기 버튼(X버튼)에 연결할 함수
-    public void CloseDetailPopup()
-    {
-        if (detailPopupPanel != null)
-        {
-            detailPopupPanel.SetActive(false);
-            Time.timeScale = 1f; // 게임 재개 (1배속)
+            // ★ [변경] 게임에서 열었다고 명시하는 함수 호출
+            explanationManager.OpenFromGame(skillIndex);
         }
     }
 }

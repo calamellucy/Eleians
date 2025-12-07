@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 4774518574119999162}
   - component: {fileID: 663878922881300132}
   - component: {fileID: 2038259646656962900}
+  - component: {fileID: 6882595881236326683}
   m_Layer: 0
   m_Name: fire slash
-  m_TagString: Untagged
+  m_TagString: FireSlash
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -144,7 +145,7 @@ PolygonCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -177,3 +178,17 @@ PolygonCollider2D:
       - {x: 0.3515625, y: 0.1953125}
       - {x: 0.2421875, y: 0.375}
   m_UseDelaunayMesh: 0
+--- !u!114 &6882595881236326683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2470306138378775369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2197f2ef2292bb74aae0486d00754b35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FlameSword
+  projectileId: 8
+  damage: 150
