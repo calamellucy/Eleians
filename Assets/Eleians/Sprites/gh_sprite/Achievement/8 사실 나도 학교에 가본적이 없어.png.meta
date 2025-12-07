@@ -1,10 +1,11 @@
 fileFormatVersion: 2
-guid: ee56e374251f374478108806a008fd33
+guid: 806574688702d954e9220f324025e90f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1878827037667483219
-    second: hp_fill_0
+      213: 5182090890043764137
+    second: "8 \uC0AC\uC2E4 \uB098\uB3C4 \uD559\uAD50\uC5D0 \uAC00\uBCF8\uC801\uC774
+      \uC5C6\uC5B4_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +38,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -51,7 +52,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 64
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -75,7 +76,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -100,23 +101,24 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: hp_fill_0
+      name: "8 \uC0AC\uC2E4 \uB098\uB3C4 \uD559\uAD50\uC5D0 \uAC00\uBCF8\uC801\uC774
+        \uC5C6\uC5B4_0"
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 32
-        height: 32
+        width: 2048
+        height: 2048
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 3, y: 3, z: 3, w: 3}
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: da12e6183c01de5e0800000000000000
-      internalID: -1878827037667483219
+      spriteID: 9ada8d6653c7ae740800000000000000
+      internalID: 5182090890043764137
       vertices: []
       indices: 
       edges: []
@@ -125,7 +127,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 8ff88b7b2bd3eb74e8d5b71b9b838cae
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +137,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      hp_fill_0: -1878827037667483219
+      "8 \uC0AC\uC2E4 \uB098\uB3C4 \uD559\uAD50\uC5D0 \uAC00\uBCF8\uC801\uC774 \uC5C6\uC5B4_0": 5182090890043764137
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

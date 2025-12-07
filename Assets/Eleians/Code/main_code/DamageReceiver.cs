@@ -63,7 +63,12 @@ public class DamageReceiver : MonoBehaviour
         if (collision.CompareTag("dhwyy"))
         {
             BlizzardArea dhw = collision.GetComponent<BlizzardArea>();
-            if (dhw != null) monster.ApplyDamage(dhw.baseDamage, ElementType.Ice);
+            if (dhw != null)
+            {
+                monster.ApplyDamage(dhw.baseDamage, ElementType.Ice);
+                // ★ [추가] 업적 매니저에게 "나 한 놈 쳤어!"라고 알림
+                AchievementManager.instance.OnIceChargeHit();
+            }
             return;
         }
 
