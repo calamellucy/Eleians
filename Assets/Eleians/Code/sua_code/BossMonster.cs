@@ -13,16 +13,15 @@ public class BossMonster : NormalMonster
     public float shadowRainDuration = 7f; // 패턴 지속 시간
     public float shadowRainSpawnRate = 3f; // 초당 몇 개 (3개)
 
-    [Header("Binding Field")]
-    public GameObject bindingFieldPrefab; // 속박 장판 (보스 주변 원)
-    public float bindingFieldDuration = 8f;
-
-    [Header("Dark Sigil")]
-    public DarkSigilController sigilController; // 어둠의 인장 제어용(마법진 8조각)
-
     [Header("Dark Vision")]
     public DarkVisionController darkVision; // 화면 어둡게 만드는 UI 컨트롤러
     public float darkVisionDuration = 6f;
+
+    [Header("Ghost Swarm")]
+    public GameObject ghostPrefab;      // ★ 유령 프리팹 (GhostMonster 스크립트 붙은 거)
+    public int ghostSpawnCount = 10;    // 한 번에 몇 마리?
+    public float ghostSpawnInterval = 0.2f; // 다다다다 간격
+    public float ghostSpawnRadius = 2.0f;   // 보스 주변 몇 미터?
 
     Coroutine patternRoutine;
 
@@ -114,6 +113,10 @@ public class BossMonster : NormalMonster
     public override void ApplyDamage(float dmg, ElementType element = ElementType.None)
     {
         base.ApplyDamage(dmg, ElementType.None);
+
+        // 2. ★ 체력바 UI 갱신 (GameManager에게 현재 체력 전달)
+        // (죽었어도 0으로 갱신하기 위해 isLive 체크 뒤보다는 여기가 나음)
+        GameManager.instance.UpdateBossHealthUI(health, maxHealth);
     }
     
 
@@ -133,9 +136,10 @@ public class BossMonster : NormalMonster
             yield return ShadowRainPattern();
             yield return new WaitForSeconds(patternInterval);
 
-            // 3. 어둠의 인장
-            yield return DarkSigilPattern();
+            // ★ 3. [신규] 유령 군단 소환
+            yield return GhostSwarmPattern();
             yield return new WaitForSeconds(patternInterval);
+
 
             // 나중에 Phase 나누고 싶으면 여기서 HP 비율에 따라 패턴 변경 가능
         }
@@ -194,6 +198,34 @@ public class BossMonster : NormalMonster
         }
     }
 
+    // ----------------------------------------------------
+    // ★★★ [신규] 유령 소환 패턴 (다다다다!) ★★★
+    // ----------------------------------------------------
+    IEnumerator GhostSwarmPattern()
+    {
+        if (!isLive) yield break;
+
+        Debug.Log("패턴: 유령 군단 소환");
+
+        // 1. 소환 모션 (있다면)
+        if (anim != null)
+            anim.SetTrigger("castSummon"); // 소환 애니메이션 트리거 이름
+
+        // 모션 선딜레이 (잠깐 폼 잡는 시간)
+        yield return new WaitForSeconds(0.5f);
+
+        // 2. 다다다다 소환 시작
+        for (int i = 0; i < ghostSpawnCount; i++)
+        {
+            if (!isLive) yield break;
+
+            SpawnGhost();
+
+            // 다음 유령 나올 때까지 잠깐 대기 (다다다다 효과)
+            yield return new WaitForSeconds(ghostSpawnInterval);
+        }
+    }
+
     void SpawnShadowSpear()
     {
         if (shadowSpearPrefab == null || player == null) return;
@@ -214,28 +246,23 @@ public class BossMonster : NormalMonster
         // 이 로직은 spear 스크립트에 넣으시면 됩니다.
     }
 
-
-    IEnumerator DarkSigilPattern()
+    void SpawnGhost()
     {
-        if (!isLive) yield break;
-        if (sigilController == null)
+        if (ghostPrefab == null) return;
+
+        // 보스 주변 랜덤 위치 계산 (원형)
+        Vector2 randPos = Random.insideUnitCircle.normalized * ghostSpawnRadius;
+        Vector3 spawnPos = transform.position + new Vector3(randPos.x, randPos.y, 0);
+
+        // 생성
+        GameObject ghostObj = Instantiate(ghostPrefab, spawnPos, Quaternion.identity);
+
+        // 스탯 설정
+        GhostMonster ghostScript = ghostObj.GetComponent<GhostMonster>();
+        if (ghostScript != null)
         {
-            // 아직 마법진 구현 안 했으면 그냥 대기만
-            yield return new WaitForSeconds(7f);
-            yield break;
+            // 체력 100, 공격력 10, 속도 2.5 (원하는 대로 조절)
+            ghostScript.InitGhost(100f, 10f, 2.5f);
         }
-
-        // 어둠의 인장 시작 (sigilController가 1,2차 폭발까지 내부에서 처리)
-        sigilController.StartSigilPattern();
-
-        float duration = 7f; // 전체 패턴 시간 대략
-        float t = 0f;
-        while (t < duration && isLive)
-        {
-            t += Time.deltaTime;
-            yield return null;
-        }
-
-        sigilController.StopSigilPattern();
     }
 }

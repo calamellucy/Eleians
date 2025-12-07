@@ -8,20 +8,18 @@ public class Tower : MonoBehaviour
     public float currentHealth;
     public bool isDestroyed = false;
 
-    [Header("Sprite Phases (20%씩)")]
-    public Sprite[] phaseSprites;     // 0~4단계 스프라이트 넣기
-    public Sprite destroyedSprite;
-    public Sprite activeSprite;
-
     [Header("Components")]
     public SpriteRenderer towerSprite;
     public Animator anim;             // 흔들림 애니메이션 재생
     public Transform shakeGroup;      // 흔들리는 그룹
 
+    [Header("Tower Jam Settings")]
+    public GameObject towerJam;       // ★ 항상 켜져있을 잼 오브젝트
+    public Animator jamAnimator;      // ★ 잼의 애니메이터 (파괴 모션용)
+
     [Header("Effects")]
     public GameObject dustLeft;
     public GameObject dustRight;
-    public GameObject towerJam;
 
     [Header("UI")]
     public Slider healthSlider;
@@ -31,11 +29,10 @@ public class Tower : MonoBehaviour
     {
         currentHealth = maxHealth;
         healthBarUI.SetActive(false);
-        towerJam.SetActive(false);
+        if (towerJam != null) towerJam.SetActive(true);
         dustLeft.SetActive(false);
         dustRight.SetActive(false);
         UpdateHealthUI();
-        UpdateTowerSprite();
     }
 
     // TowerPhase 시작
@@ -46,9 +43,11 @@ public class Tower : MonoBehaviour
 
         healthBarUI.SetActive(true);
         UpdateHealthUI();
-        UpdateTowerSprite();
 
         anim.SetBool("isActive", true);
+
+        // 혹시 파괴 애니메이션 후 다시 시작할 때를 대비해 초기화 (필요시 사용)
+        if (jamAnimator != null) jamAnimator.Rebind();
     }
 
     // TowerPhase 종료
@@ -60,8 +59,6 @@ public class Tower : MonoBehaviour
         if (!isDestroyed)
         {
             Debug.Log("거점 수호 성공");
-            towerSprite.sprite = activeSprite;
-            towerJam.SetActive(true);
             GameManager.instance.OnTowerDefenseSuccess();
         }
         else
@@ -75,13 +72,13 @@ public class Tower : MonoBehaviour
     // ───────────────────────────────────────────
     public void TakeDamage(float damage)
     {
-        if (isDestroyed) return;
+        // [수정] 이미 파괴되었거나, 타워 페이즈가 끝났다면 데미지 무시
+        if (isDestroyed || !GameManager.instance.isTowerPhase) return;
 
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
         UpdateHealthUI();
-        UpdateTowerSprite();
 
         // 흔들림 애니메이션 재생
         anim.SetTrigger("hit");
@@ -89,32 +86,30 @@ public class Tower : MonoBehaviour
         if (currentHealth <= 0)
         {
             isDestroyed = true;
-            anim.SetBool("destroyed", true);
 
-            towerSprite.sprite = destroyedSprite;
             Debug.Log("거점 파괴됨");
 
-            GameManager.instance.GameOver("원소의 균형이 무너졌습니다. 지구는 혼돈에 잠식되었습니다...");
+            GameManager.instance.GameOver("원소의 균형이 무너졌습니다. 지구는 혼돈에 잠식되었습니다...", true);
+        }
+    }
+
+    // ★ [신규 추가] 매니저가 부를 함수 (이게 진짜 파괴 버튼)
+    public void PlayDestructionEffect()
+    {
+        if (jamAnimator != null)
+        {
+            // 파괴 애니메이션 실행!
+            jamAnimator.SetBool("Destroyed", true);
         }
     }
 
     // ───────────────────────────────────────────
-    //            ★ HP 바 & 스프라이트 변경 ★
+    //            ★ HP 바 변경 ★
     // ───────────────────────────────────────────
     void UpdateHealthUI()
     {
         if (healthSlider != null)
             healthSlider.value = currentHealth / maxHealth;
-    }
-
-    void UpdateTowerSprite()
-    {
-        if (isDestroyed) return;
-
-        float ratio = currentHealth / maxHealth;
-        int phase = Mathf.Clamp(4 - Mathf.FloorToInt(ratio * 5), 0, 4);
-
-        towerSprite.sprite = phaseSprites[phase];
     }
 
     // ───────────────────────────────────────────

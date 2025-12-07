@@ -123,6 +123,14 @@ public class MonsterBase : MonoBehaviour
     {
         if (!isLive) return;
 
+        // ★★★ [디버깅용 로그] 범인 색출 ★★★
+        if (element == ElementType.Ice || myResistance.element == ElementType.Ice)
+        {
+            Debug.Log($"[얼음 분석] {gameObject.name} 피격! " +
+                      $"공격속성: {element} vs 내성속성: {myResistance.element} | " +
+                      $"CC무시: {myResistance.ignoreCC}");
+        }
+
         float finalDamage = dmg;
 
         // ★★★ [핵심 로직] 내성 계산 ★★★

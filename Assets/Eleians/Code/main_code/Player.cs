@@ -53,7 +53,10 @@ public class Player : MonoBehaviour
             */
 
             // 3. 물리 속도 0으로 고정 (미끄러짐 방지)
-            rigid.linearVelocity = Vector2.zero;
+            if (rigid.bodyType != RigidbodyType2D.Static)
+            {
+                rigid.linearVelocity = Vector2.zero;
+            }
 
             return; // 아래쪽 이동 코드 실행 금지
         }
@@ -94,7 +97,10 @@ public class Player : MonoBehaviour
         if (isLocked)
         {
             // 물리 연산 중에도 속도를 0으로 꽉 잡고 있어야 함
-            rigid.linearVelocity = Vector2.zero;
+            if (rigid.bodyType != RigidbodyType2D.Static)
+            {
+                rigid.linearVelocity = Vector2.zero;
+            }
             return;
         }
 
@@ -208,9 +214,10 @@ public class Player : MonoBehaviour
 
         GameManager.instance.isLive = false;
         anim.SetTrigger("Dead");
-        rigid.simulated = false;
+        rigid.linearVelocity = Vector2.zero;      // 속도 0으로 정지
+        rigid.bodyType = RigidbodyType2D.Static;
         isLocked = true;
-        GameManager.instance.GameOver("당신이 쓰러지자, 지구의 마지막 희망도 꺼져버렸습니다...");
+        GameManager.instance.GameOver("당신이 쓰러지자, 지구의 마지막 희망도 꺼져버렸습니다...", false);
     }
 
     // ★★★ [핵심] 사망 -> 부활 연출 코루틴 ★★★
@@ -218,8 +225,8 @@ public class Player : MonoBehaviour
     {
         // 조작 잠금
         isLocked = true;
-        rigid.simulated = false;
-        rigid.linearVelocity = Vector2.zero;
+        rigid.linearVelocity = Vector2.zero;      // 속도 0으로 정지
+        rigid.bodyType = RigidbodyType2D.Static;
         isInvincible = true;
 
         // ★★★ [추가] 사망 시 스킬 끄기 ★★★
@@ -248,7 +255,7 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(2.1f);
 
         isLocked = false;
-        rigid.simulated = true;
+        rigid.bodyType = RigidbodyType2D.Dynamic;
 
         // ★★★ [추가] 부활 시 스킬 다시 켜기 ★★★
         if (GameManager.instance.skillObjects != null)
