@@ -9,7 +9,7 @@ public class ArrowController : MonoBehaviour
 
     // 알림 메시지 내용 설정 (인스펙터에서 수정 가능)
     [TextArea]
-    public string phaseStartMessage = "거점 페이즈가 곧 시작합니다!";
+    public string phaseStartMessage = "원소 정령들이 당신을 인도합니다";
 
     bool active = false;
     bool hideWhenOnScreen = true;

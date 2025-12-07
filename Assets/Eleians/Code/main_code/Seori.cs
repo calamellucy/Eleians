@@ -125,6 +125,7 @@ public class Seori : MonoBehaviour
         {
             speed *= 1.35f;
             slowRate += 0.15f;
+            count += 2;
         }
 
         // 얼음 20 진화

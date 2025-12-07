@@ -7,6 +7,7 @@ public class EventClear : MonoBehaviour
     [Header("메시지 설정")]
     public string artifactMessage = "거점 수호 성공! 아티팩트를 획득하세요!";
     public string bossWarningMessage = "중앙에서 어둠의 기운이 진동합니다";
+    public string defendMessage = "원소 거점을 수호하세요!";
 
     void Update()
     {
@@ -30,6 +31,10 @@ public class EventClear : MonoBehaviour
         if (time == 180 || time == 360 || time == 540 || time == 720)
         {
             ShowMessage(artifactMessage);
+        }
+        else if(time == 150 || time == 330 || time == 510 || time == 690)
+        {
+            ShowMessage(defendMessage);
         }
         // 2. 보스 등장 예고 메시지 (722초)
         else if (time == 722)
