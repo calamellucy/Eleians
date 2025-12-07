@@ -9,7 +9,7 @@ public class Seori : MonoBehaviour
     public int count = 1;
     public float speed;
     public float range;
-    public float slowRate = 0.3f;
+    public float slowRate = 0.4f;
 
     // 원소 수
     public int electricCount = 0;
@@ -116,16 +116,16 @@ public class Seori : MonoBehaviour
 
         // 진화 옵션 계산
         speed = 270f;
-        damage = (atk * 1.5f) * Mathf.Pow(1.04f, earthCount);
+        damage = (atk * 0.6f) * Mathf.Pow(1.04f, earthCount);
         count = 1 + (int)(iceCount * 0.25f);
         range = 1 + fireCount * 0.05f;
         slowRate = 0.3f + (electricCount * 0.04f);
 
         if (iceCount >= 5)
         {
-            speed *= 1.35f;
-            slowRate += 0.15f;
+            speed *= 1.25f;
             count += 2;
+            range += 0.7f;
         }
 
         // 얼음 20 진화

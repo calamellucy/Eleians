@@ -42,8 +42,8 @@ public class IceShieldSkill : MonoBehaviour
         originalMaxHP = gm.maxHealth;
 
         // ===== 버프 적용 =====
-        gm.maxHealth += 200;
-        gm.health += 200;
+        gm.maxHealth += 100;
+        gm.health += 100;
         player.speed = originalSpeed * 3f;
 
         if (DamageReduction.instance != null)
