@@ -9,8 +9,6 @@ public class button : MonoBehaviour, IPointerEnterHandler
     // 마우스가 버튼 위에 올라갈 때 실행 (호버 사운드)
     public void OnPointerEnter(PointerEventData eventData)
     {
-        // 아까 만든 AudioManager를 한 줄로 호출!
-        // Enum 이름(mouse_on_button)이 정확한지 확인해줘
         AudioManager.instance.PlaySfx(AudioManager.Sfx.mouse_on_button);
     }
 

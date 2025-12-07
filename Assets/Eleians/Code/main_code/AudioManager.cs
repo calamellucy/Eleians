@@ -31,7 +31,7 @@ public class AudioManager : MonoBehaviour
         mobDead = 14, // ★ 몬스터 사망 (피치 낮춰서 사용)
         Ice, Ice_10, Ice_20, Ice_15,
         pop = 19,     // ★ 5개 랜덤 (피치는 정상)
-        swoosh = 24   // ★ 4개 랜덤 (피치 정상)
+        Achieve = 24
     };
 
     void Awake()
@@ -62,13 +62,24 @@ public class AudioManager : MonoBehaviour
             sfxPlayers[index].spatialBlend = 0f;
         }
 
-        sfxLimitTimes = new float[System.Enum.GetValues(typeof(Sfx)).Length];
+        // ★★★ [수정됨] 인스펙터에 등록된 sfxClips 개수만큼 쿨타임 배열 생성
+        // 이제 인스펙터에서 Size를 25로 늘려놨으니, 자동으로 크기 25짜리 배열이 됨!
+        // Achieve(24번)도 안전하게 들어감.
+        if (sfxClips != null)
+        {
+            sfxLimitTimes = new float[sfxClips.Length];
+        }
+        else
+        {
+            // 만약 실수로 클립을 하나도 등록 안 했을 때를 대비한 안전장치
+            sfxLimitTimes = new float[0];
+        }
     }
 
     public void PlaySfx(Sfx sfx)
     {
         // 1. 쿨타임 체크
-        if (Time.time - sfxLimitTimes[(int)sfx] < sfxCooldown)
+        if (sfx != Sfx.mouse_on_button && Time.time - sfxLimitTimes[(int)sfx] < sfxCooldown)
             return;
 
         sfxLimitTimes[(int)sfx] = Time.time;
@@ -90,10 +101,7 @@ public class AudioManager : MonoBehaviour
             {
                 clipIndex += Random.Range(0, 5);
             }
-            else if (sfx == Sfx.swoosh)
-            {
-                clipIndex += Random.Range(0, 4);
-            }
+            
 
             // ★★★ [극약 처방] ★★★
             // 리스트 크기가 모자라면(가짜 매니저라면) 에러 내지 말고 그냥 함수 종료
@@ -139,7 +147,6 @@ public class AudioManager : MonoBehaviour
             case Sfx.mobDead:
             case Sfx.Ice:
             case Sfx.pop:
-            case Sfx.swoosh:
                 return true;
 
             default:
