@@ -13302,7 +13302,7 @@ MonoBehaviour:
   count: 1
   speed: 0
   range: 0
-  slowRate: 0.3
+  slowRate: 0.4
   electricCount: 0
   fireCount: 0
   iceCount: 0
