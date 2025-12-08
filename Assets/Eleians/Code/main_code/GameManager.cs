@@ -934,6 +934,7 @@ public class GameManager : MonoBehaviour
     public void UpdateBossHealthUI(float currentHp, float maxHp)
     {
         if (bossHpSlider == null) return;
+        if (currentHp < 0) currentHp = 0;
         bossHpSlider.value = currentHp / maxHp;
 
         // [추가] 텍스트 갱신 (예: 5000 / 10000)

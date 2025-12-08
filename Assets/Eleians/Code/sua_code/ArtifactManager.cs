@@ -194,7 +194,7 @@ public class ArtifactManager : MonoBehaviour
                 // 기본 3m + (스택당 0.2m 증가) -> 스택 50이면 13m (화면 전체급)
                 float currentRadius = 3.0f + (overloadStacks * 0.2f);
                 // 데미지 조정 (스택당 10 데미지)
-                float dmg = overloadStacks * 5f;
+                float dmg = overloadStacks * 2f;
 
                 // 2. [로직] 계산된 범위 내의 적 타격
                 // (이제 이펙트 범위와 이 판정 범위가 일치하게 됩니다)
@@ -351,7 +351,7 @@ public class ArtifactManager : MonoBehaviour
     public void OnEnemyKilled(MonsterBase monster)
     {
         // [그림자 분신]
-        if (hasShadowClone && Random.value < 0.1f)
+        if (hasShadowClone && Random.value < 0.03f)
         {
             if (shadowClonePrefab != null)
             {
@@ -378,18 +378,21 @@ public class ArtifactManager : MonoBehaviour
         // [대지의 공명]
         if (hasEarthResonance)
         {
-            if (earthResonanceStacks < 25)
-            {
-                earthResonanceStacks++;
-                // ★ [추가] UI 갱신 호출
-                ArtifactSlotUI.instance.UpdateArtifactStack(ArtifactID.EarthResonance, earthResonanceStacks);
-                StatsManager.instance.artifactAtkSpdMult -= 0.01f;
-                StatsManager.instance.artifactCritDmgAdd += 0.01f;
-                StatsManager.instance.RecalculateStats();
-            }
+            if (earthResonanceStacks >= 25) return;
 
-            if (earthResonanceResetCoroutine != null) StopCoroutine(earthResonanceResetCoroutine);
-            earthResonanceResetCoroutine = StartCoroutine(ResetEarthResonance());
+            earthResonanceStacks++;
+            // ★ [추가] UI 갱신 호출
+            ArtifactSlotUI.instance.UpdateArtifactStack(ArtifactID.EarthResonance, earthResonanceStacks);
+            StatsManager.instance.artifactAtkSpdMult -= 0.01f;
+            StatsManager.instance.artifactCritDmgAdd += 0.01f;
+            StatsManager.instance.RecalculateStats();
+
+            if (earthResonanceStacks >= 25)
+            {
+                if (earthResonanceResetCoroutine != null) StopCoroutine(earthResonanceResetCoroutine);
+                earthResonanceResetCoroutine = StartCoroutine(ResetEarthResonance());
+            }
+            
         }
     }
 
