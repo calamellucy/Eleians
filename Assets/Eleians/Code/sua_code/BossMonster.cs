@@ -112,7 +112,7 @@ public class BossMonster : NormalMonster
     {
         speed = 1f; // 
         originalSpeed = speed;
-        maxHealth = 10000;
+        maxHealth = 150000;
         health = maxHealth;
         damage = 50;
     }
