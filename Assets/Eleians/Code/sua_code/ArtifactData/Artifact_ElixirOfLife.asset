@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ArtifactData
   id: 0
   artifactName: "\uC0DD\uBA85\uC758 \uBB18\uC57D"
-  description: "\uC774\uB3D9\uC18D\uB3C4 10% \uC99D\uAC00\n5\uCD08\uB9C8\uB2E4 \uCD5C\uB300
+  description: "\uC774\uB3D9\uC18D\uB3C4 50% \uC99D\uAC00\n5\uCD08\uB9C8\uB2E4 \uCD5C\uB300
     \uCCB4\uB825\uC758\n2%\uB97C \uD68C\uBCF5\uD55C\uB2E4."
   icon: {fileID: 6123968217618089505, guid: 9e3a75aef733eac41b40c7b03d380684, type: 3}

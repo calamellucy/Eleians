@@ -12,6 +12,7 @@ public class AchievementSlot : MonoBehaviour
 
     void Awake()
     {
+        /*
         // 1. 내 자식 오브젝트 중에서 이름이 "Locked"인 녀석을 찾는다.
         Transform lockedTransform = transform.Find("Locked");
 
@@ -24,12 +25,37 @@ public class AchievementSlot : MonoBehaviour
         {
             Debug.LogWarning($"{gameObject.name} 슬롯 안에 'Locked'라는 이름의 자식 오브젝트가 없습니다!");
         }
+        */
+        FindLockedPanel();
+    }
+
+    // ★ 패널 찾는 함수 분리
+    void FindLockedPanel()
+    {
+        if (lockedPanel != null) return; // 이미 찾았으면 패스
+
+        Transform lockedTransform = transform.Find("Locked");
+        if (lockedTransform != null)
+        {
+            lockedPanel = lockedTransform.gameObject;
+        }
+        else
+        {
+            // 혹시 이름이 달라서 못 찾을 경우를 대비해 첫 번째 자식을 가져오는 꼼수 (선택사항)
+            // if (transform.childCount > 0) lockedPanel = transform.GetChild(0).gameObject;
+        }
     }
 
     public void UpdateSlotState()
     {
         // AchievementManager가 없거나 싱글톤 초기화 전이면 에러 날 수 있으니 체크
         if (AchievementManager.instance == null) return;
+
+        // ★★★ [핵심 수정] 갱신하려는데 패널 변수가 비어있다면? 지금 당장 찾는다! ★★★
+        if (lockedPanel == null)
+        {
+            FindLockedPanel();
+        }
 
         bool isUnlocked = AchievementManager.instance.CheckUnlocked(id);
 
@@ -47,5 +73,11 @@ public class AchievementSlot : MonoBehaviour
                 lockedPanel.SetActive(true);
             }
         }
+    }
+
+    // (선택) 창이 켜질 때 스스로 갱신하도록 보험 들어두기
+    void OnEnable()
+    {
+        UpdateSlotState();
     }
 }

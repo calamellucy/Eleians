@@ -295,7 +295,7 @@ public class ArtifactManager : MonoBehaviour
 
         // 반경 4m 내 적
         Collider2D[] hitColliders = Physics2D.OverlapCircleAll(centerPos, 4f);
-        float dmg = StatsManager.instance.Attack * 0.5f;
+        float dmg = StatsManager.instance.Attack * 0.35f;
 
         foreach (var hitCollider in hitColliders)
         {
