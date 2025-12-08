@@ -14,7 +14,7 @@ public class FlameSword : MonoBehaviour
     private float projScale;
 
     // ★ 안전장치: 애니메이션 길이보다 넉넉한 시간 (예: 1초)
-    private float lifeTimeSafety = 1.0f;
+    private float lifeTimeSafety = 0.5f;
 
     Animator anim;
     Collider2D col;

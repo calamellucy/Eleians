@@ -119,6 +119,11 @@ public class TowerMonster : NormalMonster
             return;
         }
 
+        if (tower.gameObject != GameManager.instance.tower)
+        {
+            return;
+        }
+
         attackTimer -= Time.deltaTime;
 
         if (attackTimer <= 0f)

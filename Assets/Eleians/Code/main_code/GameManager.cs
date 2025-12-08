@@ -766,6 +766,14 @@ public class GameManager : MonoBehaviour
     public void OnTowerDefenseSuccess()
     {
         Instantiate(chestPrefab, tower.transform.position + Vector3.right * 2f, Quaternion.identity);
+        if (tower != null)
+        {
+            Tower towerScript = tower.GetComponent<Tower>();
+            if (towerScript != null)
+            {
+                towerScript.PlaySuccessEffect();
+            }
+        }
     }
 
     // ★ [신규] 카메라 부드러움(Damping) 조절 함수
@@ -900,19 +908,62 @@ public class GameManager : MonoBehaviour
         foreach (var script in skillScripts) { if (script != null) script.enabled = false; }
     }
 
-    // [공통] 게임오버 UI 표시 함수 분리
+    // [공통] 게임오버 UI 표시 함수 (페이드 효과 추가)
     void ShowGameOverUI(string reason)
     {
-        Time.timeScale = 0f; // 확실하게 정지
-
+        // 1. 패널 활성화 (투명한 상태로 켜짐)
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
+
+            // 텍스트 설정
             if (gameOverReasonText != null)
-            {
                 gameOverReasonText.text = reason;
-            }
+
+            // 2. 페이드 인 코루틴 시작
+            StartCoroutine(CoFadeInGameOverUI());
         }
+        else
+        {
+            // 패널 없으면 그냥 시간 멈춤
+            Time.timeScale = 0f;
+        }
+    }
+
+    IEnumerator CoFadeInGameOverUI()
+    {
+        CanvasGroup cg = gameOverPanel.GetComponent<CanvasGroup>();
+        if (cg == null)
+        {
+            // CanvasGroup 없으면 그냥 바로 멈춤
+            Time.timeScale = 0f;
+            yield break;
+        }
+
+        // 초기화
+        cg.alpha = 0f;
+        cg.blocksRaycasts = true; // 이제 버튼 눌려야 함
+
+        float duration = 1.5f; // 1.5초 동안 천천히 나타남
+        float timer = 0f;
+
+        // ★ 중요: UI가 나타나는 동안에도 뒤에 게임 화면은 보여야 하니까 
+        // 시간은 아직 멈추지 않거나, 멈춘 상태에서 페이드만 진행해야 함.
+        // 여기서는 "슬로우 모션"을 걸면서 UI가 뜨게 해보겠습니다.
+        Time.timeScale = 0.1f; // 아주 느리게 흐름 (긴박감 조성)
+
+        while (timer < duration)
+        {
+            // Realtime을 써야 Time.timeScale에 영향 안 받음
+            timer += Time.unscaledDeltaTime;
+            cg.alpha = Mathf.Lerp(0f, 1f, timer / duration);
+            yield return null;
+        }
+
+        cg.alpha = 1f;
+
+        // 3. 완전히 다 뜨면 시간 정지
+        Time.timeScale = 0f;
     }
 
     // ★ 보스전 UI 모드로 전환하는 함수

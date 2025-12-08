@@ -21,14 +21,28 @@ public class HUD : MonoBehaviour
         switch (type)
         {
             case InfoType.Exp:
-                float curExp = GameManager.instance.exp;
-                float maxExp = GameManager.instance.nextExp[GameManager.instance.level];
-                if (maxExp == 0) maxExp = 1;
-                mySlider.value = curExp / maxExp;
+                if (GameManager.instance.level >= GameManager.instance.maxLevel)
+                {
+                    mySlider.value = 1;
+                }
+                else
+                {
+                    float curExp = GameManager.instance.exp;
+                    float maxExp = GameManager.instance.nextExp[GameManager.instance.level];
+                    if (maxExp == 0) maxExp = 1;
+                    mySlider.value = curExp / maxExp;
+                }
                 break;
             case InfoType.Level:
-                myText.text = string.Format("Lv.{0:F0}", GameManager.instance.level);
-                break;
+                if (GameManager.instance.level < GameManager.instance.maxLevel)
+                {
+                    myText.text = string.Format("Lv.{0:F0}", GameManager.instance.level);
+                }
+                else
+                {
+                    myText.text = string.Format("Lv.MAX");
+                }
+                    break;
             case InfoType.Electric:
                 myText.text = string.Format("{0:F0}", StatsManager.instance.ElectricCnt);
                 break;
