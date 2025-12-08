@@ -175,6 +175,21 @@ public class GameManager : MonoBehaviour
 
         if (gameTime > bossPhaseStartTime)
         {
+            // ★★★ [수정] 보스 시간이 되었는데 아직 타워 페이즈 중이라면? 강제 종료! ★★★
+            if (isTowerPhase)
+            {
+                Debug.Log("보스 시간 도달! 마지막 거점 페이즈 강제 종료 및 보상 지급");
+                isTowerPhase = false;
+
+                // 현재 진행 중이던 타워 종료 처리 (보상 상자 소환 등)
+                if (towerIndex < towerPhaseOrder.Count)
+                {
+                    TowerType finished = towerPhaseOrder[towerIndex];
+                    EndTowerPhase(finished);
+                    towerIndex++;
+                }
+            }
+
             if (!isBossPhase)
             {
                 if (!isCutsceneStarted)
