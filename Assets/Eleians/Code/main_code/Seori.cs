@@ -27,7 +27,7 @@ public class Seori : MonoBehaviour
 
     // 얼음 영역 (풀 프리팹 id)
     // public GameObject iceZonePrefab; // 풀 쓰면 사실 필요 없음
-    public int iceZonePrefabId = 13;
+    public int iceZonePrefabId = 14;
 
     // 15진화 즉시 발동 플래그
     float iceZoneCooldown = 20f;
@@ -164,7 +164,7 @@ public class Seori : MonoBehaviour
     }
 
     // ============================
-    // ★ 15진화: 즉시 발동 얼음장판 (풀 사용, 랜덤 위치)
+    // ★ 10진화: 즉시 발동 얼음장판 (풀 사용, 랜덤 위치)
     void ActivateIceZoneRandom()
     {
         if (player == null)

@@ -43,7 +43,7 @@ public class FlameSwordController : MonoBehaviour
         // ==========================================
         // 1. °Ë(Sword) ½ºÆå °è»ê
         // ==========================================
-        float baseDmg = StatsManager.instance.Attack * 3f;
+        float baseDmg = StatsManager.instance.Attack * 1.5f;
         float iceMod = 1f + (StatsManager.instance.IceCnt * 0.04f);
         float swordFinalDamage = baseDmg * iceMod;
 
