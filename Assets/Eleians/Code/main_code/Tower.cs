@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +21,7 @@ public class Tower : MonoBehaviour
     [Header("Effects")]
     public GameObject dustLeft;
     public GameObject dustRight;
+    public GameObject successEffect;
 
     [Header("UI")]
     public Slider healthSlider;
@@ -99,6 +101,7 @@ public class Tower : MonoBehaviour
         if (jamAnimator != null)
         {
             // 파괴 애니메이션 실행!
+
             jamAnimator.SetBool("Destroyed", true);
         }
     }
@@ -127,4 +130,27 @@ public class Tower : MonoBehaviour
         dustRight.SetActive(false);
     }
 
+    public void PlaySuccessEffect()
+    {
+        if (successEffect != null)
+        {
+            // 1. 활성화 (이때 파티클 시스템의 'Play On Awake'가 켜져 있어야 바로 재생됨)
+            successEffect.SetActive(true);
+
+            // 2. 끄기 예약
+            StartCoroutine(DisableEffectRoutine());
+        }
+    }
+
+    IEnumerator DisableEffectRoutine()
+    {
+        // 2초 대기 (이펙트 지속시간에 맞춰 조절)
+        yield return new WaitForSeconds(2.0f);
+
+        // 비활성화
+        if (successEffect != null)
+        {
+            successEffect.SetActive(false);
+        }
+    }
 }

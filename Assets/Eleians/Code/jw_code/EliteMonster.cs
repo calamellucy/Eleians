@@ -103,6 +103,8 @@ public class EliteMonster : NormalMonster
 
         // 1. 경고
         if (warningEffect != null) warningEffect.SetActive(true);
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.elite_rush);
+
         yield return new WaitForSeconds(0.5f);
         if (warningEffect != null) warningEffect.SetActive(false);
 
@@ -190,6 +192,8 @@ public class EliteMonster : NormalMonster
             Vector2 centerDir = (target.position - (Vector2)transform.position).normalized;
             float angle = 15f;
 
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.elite_stone);
+
             Vector2 dirLeft = RotateVector2(centerDir, -angle);
             CreateProjectile(prefab, dirLeft);
 
@@ -228,6 +232,8 @@ public class EliteMonster : NormalMonster
             // [핵심] 쏠 때마다 플레이어 위치를 '새로' 갱신해서 조준
             // 플레이어가 움직였으면 바뀐 위치로 쏩니다.
             Vector2 aimDir = (target.position - (Vector2)transform.position).normalized;
+            
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.elite_spit);
 
             // 발사!
             CreateProjectile(prefab, aimDir);
@@ -273,6 +279,8 @@ public class EliteMonster : NormalMonster
     {
         if (isDefending)
         {
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.elite_def);
+
             // 방어 중이면 데미지 0 혹은 절반
             dmg *= 0.1f;
             // 팅~ 하는 소리나 이펙트 추가 가능
