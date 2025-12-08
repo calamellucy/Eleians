@@ -3,22 +3,38 @@ using UnityEngine;
 public class ArrowController : MonoBehaviour
 {
     public Transform player;
-    public Transform tower;
+    public Transform target;
 
     public float radius = 2.5f;
 
+    // ì•Œë¦¼ ë©”ì‹œì§€ ë‚´ìš© ì„¤ì • (ì¸ìŠ¤íŽ™í„°ì—ì„œ ìˆ˜ì • ê°€ëŠ¥)
+    [TextArea]
+    public string phaseStartMessage = "ì›ì†Œ ì •ë ¹ë“¤ì´ ë‹¹ì‹ ì„ ì¸ë„í•©ë‹ˆë‹¤";
+
     bool active = false;
+    bool hideWhenOnScreen = true;
 
     void Awake()
     {
-        transform.localScale = Vector3.zero;  // ÃÊ±â¿¡ ¼û±è
+        transform.localScale = Vector3.zero;  // ì´ˆê¸°ì— ìˆ¨ê¹€
     }
 
-    public void Activate(Transform towerTransform)
+    public void Activate(Transform targetTransform, bool _hideWhenOnScreen = true)
     {
-        tower = towerTransform;
+        target = targetTransform;
+        hideWhenOnScreen = _hideWhenOnScreen; // ì˜µì…˜ ì €ìž¥
         active = true;
         transform.localScale = Vector3.one;
+
+        // í™”ì‚´í‘œê°€ ì¼œì§ˆ ë•Œ SkillAlertSystemì— ë©”ì‹œì§€ ë„ìš°ë¼ê³  ìš”ì²­
+        if (SkillAlertSystem.instance != null)
+        {
+            SkillAlertSystem.instance.EnqueueMessage(phaseStartMessage);
+        }
+        else
+        {
+            Debug.LogWarning("SkillAlertSystemì´ ì”¬ì— ì—†ìŠµë‹ˆë‹¤!");
+        }
     }
 
     public void Deactivate()
@@ -29,28 +45,9 @@ public class ArrowController : MonoBehaviour
 
     void Update()
     {
-        if (!active || player == null || tower == null) return;
+        if (!active || player == null || target == null) return;
 
-        /*
-        // È­¸é ¾È¿¡ Å¸¿ö ÀÖÀ¸¸é ¼û±è
-        Vector3 towerScreen = Camera.main.WorldToViewportPoint(tower.position);
-        bool isOnScreen =
-            towerScreen.x > 0 && towerScreen.x < 1 &&
-            towerScreen.y > 0 && towerScreen.y < 1 &&
-            towerScreen.z > 0;
-
-        if (isOnScreen)
-        {
-            transform.localScale = Vector3.zero;
-            return;
-        }
-        else
-        {
-            transform.localScale = Vector3.one;
-        }
-        */
-
-        if (IsTowerVisible())
+        if (hideWhenOnScreen && IsTowerVisible())
         {
             transform.localScale = Vector3.zero;
             return;
@@ -60,20 +57,17 @@ public class ArrowController : MonoBehaviour
             transform.localScale = Vector3.one;
         }
 
-        // --- ¿ùµå ÁÂÇ¥ °è»ê ---
-        Vector3 dir = (tower.position - player.position).normalized;
+        // --- ì›”ë“œ ì¢Œí‘œ ê³„ì‚° ---
+        Vector3 dir = (target.position - player.position).normalized;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
-        // À§Ä¡ ¼³Á¤ (¿ùµå ÁÂÇ¥)
         transform.position = player.position + dir * radius;
-
-        // È¸Àü ¼³Á¤
         transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
     }
 
     bool IsTowerVisible()
     {
-        Vector3 screen = Camera.main.WorldToScreenPoint(tower.position);
+        Vector3 screen = Camera.main.WorldToScreenPoint(target.position);
 
         return screen.z > 0 &&
                screen.x >= 0 && screen.x <= Screen.width &&

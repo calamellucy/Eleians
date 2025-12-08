@@ -69,10 +69,12 @@ public class Skill1_Re : MonoBehaviour
     {
         prefabId = 2;
         attackRate = 1f + 0.08f * electricCount;
-        damage = 100f + 0.6f * electricCount + fireCount;             
-        count = 0 + (int)((fireCount * 0.25) / 1);      
-        projectileSize = (1 + earthCount * 0.08f);   
-        projectileCount = 1 + (int)((iceCount * 0.34f)/1);
+
+        damage = StatsManager.instance.Attack + (0.6f * earthCount);
+
+        count = 0 + (int)((iceCount * 0.25) / 1);      
+        projectileSize = (1 );   
+        projectileCount = 1 + (int)((electricCount * 0.25f)/1);
 
         // attakRate: 초당 발사 횟수 + 전기 개수에 비례한 공격 속도 증가
         // damage: 기본 대미지 + 전기 개수에 비례한 대미지 증가 + 불 개수에 비례한 대미지 증가

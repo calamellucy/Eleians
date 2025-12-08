@@ -9,7 +9,7 @@ public class Seori : MonoBehaviour
     public int count = 1;
     public float speed;
     public float range;
-    public float slowRate = 0.3f;
+    public float slowRate = 0.4f;
 
     // 원소 수
     public int electricCount = 0;
@@ -25,17 +25,16 @@ public class Seori : MonoBehaviour
     private GameObject dhwyyInstance;
     public float dhwyyBaseScale = 1.0f;
 
-    // 얼음 영역
-    public GameObject iceZonePrefab;
+    // 얼음 영역 (풀 프리팹 id)
+    // public GameObject iceZonePrefab; // 풀 쓰면 사실 필요 없음
+    public int iceZonePrefabId = 13;
 
     // 15진화 즉시 발동 플래그
-    float iceZoneCooldown = 7f;
+    float iceZoneCooldown = 20f;
     float iceZoneTimer = 0f;
     bool iceZoneFirstTriggered = false;
 
-
     Transform player;
-
 
     void Start()
     {
@@ -79,7 +78,6 @@ public class Seori : MonoBehaviour
         }
     }
 
-
     // 원소 변화 감지
     bool StatsChanged()
     {
@@ -104,7 +102,6 @@ public class Seori : MonoBehaviour
         prevEarth = earthCount;
     }
 
-
     // 스킬 재등록
     public void Init()
     {
@@ -118,16 +115,17 @@ public class Seori : MonoBehaviour
         }
 
         // 진화 옵션 계산
-        speed = 270f;
-        damage = (atk * 1.5f) * Mathf.Pow(1.08f, earthCount);
-        count = 1 + (int)(iceCount * 0.25f);
-        range = 1 + iceCount * 0.025f;
-        slowRate = 0.3f + (electricCount * 0.04f);
+        speed = 240f;
+        damage = (atk * 0.4f) * Mathf.Pow(1.04f, earthCount);
+        count = 1 + (int)(iceCount * 0.2f);
+        range = 1 + fireCount * 0.05f;
+        slowRate = 0.4f + (electricCount * 0.04f);
 
         if (iceCount >= 5)
         {
-            speed *= 1.35f;
-            slowRate += 0.15f;
+            speed *= 1.2f;
+            count += 2;
+            range += 0.75f;
         }
 
         // 얼음 20 진화
@@ -139,7 +137,6 @@ public class Seori : MonoBehaviour
         // 표창 재배치
         Batch();
     }
-
 
     // 표창 생성
     void Batch()
@@ -166,19 +163,24 @@ public class Seori : MonoBehaviour
         }
     }
 
-
     // ============================
-    // ★ 15진화: 즉시 발동 얼음장판
+    // ★ 15진화: 즉시 발동 얼음장판 (풀 사용, 랜덤 위치)
     void ActivateIceZoneRandom()
     {
+        if (player == null)
+            return;
+
         Vector3 basePos = player.position;
-        Vector2 offset = Random.insideUnitCircle * 3f;
+        Vector2 offset = Random.insideUnitCircle * 3f;   // 반지름 3 안에서 랜덤
         Vector3 spawnPos = basePos + (Vector3)offset;
+        spawnPos.z = 0f;
 
-        Instantiate(iceZonePrefab, spawnPos, Quaternion.identity);
+        GameObject zone = GameManager.instance.pool.Get(iceZonePrefabId);
+        zone.transform.position = spawnPos;
+        zone.transform.rotation = Quaternion.identity;
+        zone.SetActive(true);
+        Debug.Log("IceZone 생성!");
     }
-
-
 
     // 20진화: dhwyy 생성 / 유지
     void ActivateDhwyy()
@@ -189,15 +191,7 @@ public class Seori : MonoBehaviour
             dhwyyInstance.transform.localPosition = Vector3.zero;
         }
 
-        /*
-        float size = 1f + (iceCount * 0.025f);
-        dhwyyInstance.transform.localScale = Vector3.one * size;
-        */
-
-        // 공식: (기본 1 + 증가분) * 설정한_기본_크기
         float sizeMultiplier = 1f + (iceCount * 0.025f);
-
-        // ★ Vector3.one 대신, 설정한 BaseScale을 곱해줍니다.
         dhwyyInstance.transform.localScale = Vector3.one * sizeMultiplier * dhwyyBaseScale;
 
         dhwyyInstance.SetActive(true);

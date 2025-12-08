@@ -21,7 +21,14 @@ public class TowerMonster : NormalMonster
         {
             target = GameManager.instance.tower.GetComponent<Rigidbody2D>();
         }
+        else
+        {
+            target = null; // 타워 없으면 멍때림 (플레이어 안 쫓음)
+        }
     }
+
+    // ★★★ [추가] 부모(NormalMonster)가 플레이어 찾는 걸 막아버림 ★★★
+    protected override void FindClosestTarget() { }
 
     // ★★★ [추가] 이동 로직 재정의 (원거리는 쏘기 위해 멈춰야 함) ★★★
     protected new void FixedUpdate()
@@ -50,6 +57,14 @@ public class TowerMonster : NormalMonster
     void Update()
     {
         if (!isLive || target == null) return;
+
+        // [추가] 타워 페이즈가 끝났다면?
+        if (!GameManager.instance.isTowerPhase)
+        {
+            // 원거리 몬스터도 근거리처럼 자폭시킴
+            Die(false);
+            return;
+        }
 
         // 원거리 몬스터일 때만 실행
         if (projectilePrefab != null)

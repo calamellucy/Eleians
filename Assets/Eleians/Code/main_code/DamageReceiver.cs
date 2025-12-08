@@ -53,14 +53,22 @@ public class DamageReceiver : MonoBehaviour
         if (collision.CompareTag("Seori"))
         {
             Seori_Shuri seo = collision.GetComponent<Seori_Shuri>();
-            if (seo != null) monster.ApplyDamage(seo.damage, ElementType.Ice);
+            if (seo != null){
+                AudioManager.instance.PlaySfx(AudioManager.Sfx.Ice);
+                monster.ApplyDamage(seo.damage, ElementType.Ice);
+            }
             return;
         }
 
         if (collision.CompareTag("dhwyy"))
         {
             BlizzardArea dhw = collision.GetComponent<BlizzardArea>();
-            if (dhw != null) monster.ApplyDamage(dhw.baseDamage, ElementType.Ice);
+            if (dhw != null)
+            {
+                monster.ApplyDamage(dhw.baseDamage, ElementType.Ice);
+                // ★ [추가] 업적 매니저에게 "나 한 놈 쳤어!"라고 알림
+                AchievementManager.instance.OnIceChargeHit();
+            }
             return;
         }
 
@@ -97,14 +105,14 @@ public class DamageReceiver : MonoBehaviour
 
         if (collision.CompareTag("dust"))
         {
-            float baseDamage = (StatsManager.instance.Attack + (StatsManager.instance.EarthCnt * 2)) * 0.3f;
+            float baseDamage = (StatsManager.instance.Attack * 0.3f);
             monster.ApplyDamage(baseDamage, ElementType.Earth);
             return;
         }
 
         if (collision.CompareTag("Bump"))
         {
-            float baseDamage = (StatsManager.instance.Attack + (StatsManager.instance.EarthCnt * 8)) * 2f;
+            float baseDamage = (StatsManager.instance.Attack + (StatsManager.instance.EarthCnt * 8)) * 3f;
             monster.ApplyDamage(baseDamage, ElementType.Earth);
             return;
         }

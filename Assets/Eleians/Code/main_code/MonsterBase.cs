@@ -80,6 +80,12 @@ public class MonsterBase : MonoBehaviour
         slowMultiplier = 1f;
         spriter.color = Color.white;
 
+        Transform shadow = transform.Find("Shadow");
+        if (shadow != null)
+        {
+            shadow.gameObject.SetActive(true);
+        }
+
         // ★ 부활 시 이펙트 초기화 (다 끄기)
         if (effectFire != null) effectFire.SetActive(false);
         if (effectIce != null) effectIce.SetActive(false);
@@ -116,6 +122,14 @@ public class MonsterBase : MonoBehaviour
     public virtual void ApplyDamage(float dmg, ElementType element = ElementType.None)
     {
         if (!isLive) return;
+
+        // ★★★ [디버깅용 로그] 범인 색출 ★★★
+        if (element == ElementType.Ice || myResistance.element == ElementType.Ice)
+        {
+            Debug.Log($"[얼음 분석] {gameObject.name} 피격! " +
+                      $"공격속성: {element} vs 내성속성: {myResistance.element} | " +
+                      $"CC무시: {myResistance.ignoreCC}");
+        }
 
         float finalDamage = dmg;
 
@@ -159,7 +173,8 @@ public class MonsterBase : MonoBehaviour
 
         if (!IsSuperArmor)
         {
-            anim.SetTrigger("hit");
+            // anim.SetTrigger("hit");
+            StartCoroutine(HitFlashRoutine());
         }
 
         // 속성별 효과
@@ -187,12 +202,37 @@ public class MonsterBase : MonoBehaviour
         ApplyDamage(dmg, ElementType.None);
     }
 
+    // ★★★ [추가] 피격 시 빨간색 깜빡임 효과 ★★★
+    IEnumerator HitFlashRoutine()
+    {
+        // 1. 빨간색으로 변경
+        spriter.color = Color.red;
+
+        // 2. 0.1초 대기 (깜빡!)
+        yield return new WaitForSeconds(0.2f);
+
+        // 3. 원래 색으로 복구
+        // (단, 이미 죽었거나 다른 효과가 적용 중일 수 있으므로 살아있을 때만)
+        if (isLive)
+        {
+            // 혹시 얼음(슬로우) 상태라면 파란색으로, 아니면 흰색으로 복구
+            // (슬로우 상태 유지를 위해 체크 로직 추가함)
+            /*
+            if (slowMultiplier < 1f)
+                spriter.color = new Color(0.6f, 0.6f, 1f); // 파란색 (얼음)
+            else
+                spriter.color = Color.white; // 기본색
+            */
+            spriter.color = Color.white;
+        }
+    }
+
     // --- [불] 도트 데미지 ---
     IEnumerator BurnRoutine()
     {
         if (effectFire != null) effectFire.SetActive(true);
 
-        float dotDamage = StatsManager.instance.Attack * 0.05f;
+        float dotDamage = StatsManager.instance.Attack * 0.05f * (1f + StatsManager.instance.ElectricCnt * 0.1f);
 
         for (int i = 0; i < 3; i++)
         {
@@ -220,7 +260,7 @@ public class MonsterBase : MonoBehaviour
         if (effectLightning != null) effectLightning.SetActive(true);
         rigid.linearVelocity = Vector2.zero;
 
-        yield return new WaitForSeconds(0.15f);
+        yield return new WaitForSeconds(0.15f * (StatsManager.instance.FireCnt * 0.05f + 1f));
 
         if (effectLightning != null) effectLightning.SetActive(false);
         isStunned = false;
@@ -276,6 +316,12 @@ public class MonsterBase : MonoBehaviour
         if (effectIce != null) effectIce.SetActive(false);
         if (effectLightning != null) effectLightning.SetActive(false);
 
+        Transform shadow = transform.Find("Shadow");
+        if (shadow != null)
+        {
+            shadow.gameObject.SetActive(false);
+        }
+
         spriter.color = Color.white;
         rigid.simulated = false;
         rigid.linearVelocity = Vector2.zero;
@@ -287,7 +333,7 @@ public class MonsterBase : MonoBehaviour
             GameManager.instance.kill++;
             GameManager.instance.GetExp(this.exp);
         }
-
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.mobDead);
         anim.SetBool("dead", true);
     }
 

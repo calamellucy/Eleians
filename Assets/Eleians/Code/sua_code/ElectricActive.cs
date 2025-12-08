@@ -4,6 +4,7 @@ public class ElectricActive : ActiveSkillBase
 {
     // [핵심] 기존 스크립트(Skill1_Re)를 변수로 받습니다.
     public Skill1_Re skillScript;
+    public KeyCode triggerKey = KeyCode.Alpha1;
 
     // 1. 활성화 조건
     protected override bool IsSkillUnlocked()
@@ -23,7 +24,7 @@ public class ElectricActive : ActiveSkillBase
     // 2. 입력 키 (흙 스킬과 키 겹치지 않게 주의!)
     protected override bool CheckInput()
     {
-        return Input.GetKeyDown(KeyCode.T);
+        return Input.GetKeyDown(triggerKey);
     }
 
     // 3. 스킬 발동

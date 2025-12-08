@@ -24,37 +24,38 @@ public class Bullet_Re : MonoBehaviour
         if (per >= 0)
         {
             rigid.linearVelocity = dir * (10f + elecCount * 0.05f);
-            // (10f): 기본속도
-            // (electricCount*0.05f): 전기 개수에 비례한 투사체 속도 증가
         }
+
+        // ★ 총알 발사될 때마다 3초 뒤 비활성화 타이머 실행
+        CancelInvoke(nameof(DisableSelf)); // 기존 타이머 중복 실행 방지
+        Invoke(nameof(DisableSelf), 2f);
+    }
+
+    void DisableSelf()
+    {
+        gameObject.SetActive(false);
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (!collision.CompareTag("Enemy"))
             return;
-        /*
-        NormalMonster monster = collision.GetComponent<NormalMonster>();
-        if (monster != null)
-        {
-            monster.ApplyDamage(damage);
-        }
-        */
 
-        // 관통 횟수 감소
         per--;
 
-        // 관통 횟수가 남아 있으면 그대로 통과
         if (per >= 0)
         {
             GetComponent<BulletEvolution>()?.TriggerEvolution();
             return;
         }
 
-        // 관통이 끝났을 때만 종료
         rigid.linearVelocity = Vector2.zero;
         gameObject.SetActive(false);
     }
 
-
+    // ❌ 화면에서 사라지면 비활성화하는 기능 제거
+    // void OnBecameInvisible()
+    // {
+    //     gameObject.SetActive(false);
+    // }
 }

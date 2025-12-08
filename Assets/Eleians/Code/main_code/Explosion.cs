@@ -13,11 +13,11 @@ public class Explosion : MonoBehaviour
         Skill1_Re skill = GameManager.instance.player.GetComponentInChildren<Skill1_Re>();
         if (skill != null)
         {
-            damage = skill.damage * 0.25f; // 전자파 스킬 대미지의 25%
+            damage = StatsManager.instance.Attack * 0.35f; // 전자파 스킬 대미지의 25%
         }
 
         // 폭발 반경에 따라 시각적 크기 조정
-        //transform.localScale = Vector3.one * (radius * 2f);
+        transform.localScale = Vector3.one * (radius * 100f);
 
         // 일정 시간 뒤 자동 비활성화
         StartCoroutine(DisableAfter(duration));

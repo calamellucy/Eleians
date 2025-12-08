@@ -17,7 +17,7 @@ public class Skill4 : MonoBehaviour
 
     [Header("Burst")]
     public float burstInterval = 3.33f;
-    public int shotsPerBurst = 30;
+    public int shotsPerBurst = 15;
     public float burstDuration = 1.3f;
     public int per = 0;
     public Vector3 baseBulletScale = Vector3.one;
@@ -25,6 +25,9 @@ public class Skill4 : MonoBehaviour
     [Header("Spawn Range")]
     public float minSpawnRadius = 0.3f;
     public float maxSpawnRadius = 1.0f;
+
+    // [추가] 처음에 인스펙터에서 설정한 값을 기억할 변수
+    private float originMaxRadius;
 
     [Header("Aiming")]
     public bool useLastAimingWhenIdle = true;
@@ -42,15 +45,24 @@ public class Skill4 : MonoBehaviour
     {
         if (scans == null) scans = GetComponentInParent<ScanALot>();
         if (stoneDustComp == null) stoneDustComp = GetComponentInParent<StoneDust>();
+
+        // [추가] 게임 시작 시 설정된 기본 최대 반경을 저장해둡니다.
+        originMaxRadius = maxSpawnRadius;
     }
 
-    void Start()
+    void OnEnable()
     {
         if (loopCo != null) StopCoroutine(loopCo);
-        loopCo = StartCoroutine(Loop());
-
         if (spikeCo != null) StopCoroutine(spikeCo);
+
+        loopCo = StartCoroutine(Loop());
         spikeCo = StartCoroutine(SpikeLoop());
+    }
+
+    void OnDisable()
+    {
+        if (loopCo != null) StopCoroutine(loopCo);
+        if (spikeCo != null) StopCoroutine(spikeCo);
     }
 
     void Update()
@@ -66,13 +78,23 @@ public class Skill4 : MonoBehaviour
 
     public void GiveLevelSystemToSkill4()
     {
-        baseBulletScale = Vector3.one * (1f + StatsManager.instance.FireCnt * 0.06f);
-        damage = StatsManager.instance.Attack * (1f + 0.08f * StatsManager.instance.IceCnt) * 0.5f;
-        burstInterval = 1f / (StatsManager.instance.AttackSpeed * 0.3f);
-        burstDuration = 1.5f / StatsManager.instance.AttackSpeed;
+        // 1. 크기(Scale) 계산
+        baseBulletScale = Vector3.one * (1f + StatsManager.instance.FireCnt * 0.04f) * 1.4f;
 
-        shotsPerBurst = 30 + StatsManager.instance.EarthCnt;
-        if (StatsManager.instance.EarthCnt >= 5) { shotsPerBurst += 10; per = 4; }
+        // [추가/수정] 탄알 크기(x축 기준)에 비례해서 최대 스폰 반경을 넓혀줍니다.
+        // 탄알이 커지면 더 멀리서 생성되어 겹침 방지 + 웅장함 연출
+        maxSpawnRadius = originMaxRadius * baseBulletScale.x;
+
+        // 2. 데미지 계산
+        damage = StatsManager.instance.Attack * (1f + 0.04f * StatsManager.instance.IceCnt) * 0.5f;
+
+        // 3. 공속(Interval) 계산
+        float baseInterval = 1f / (StatsManager.instance.AttackSpeed * 0.3f);
+        burstInterval = baseInterval * Mathf.Max(0.1f, (1f - StatsManager.instance.ElectricCnt * 0.05f));
+
+        // 4. 발사 수 및 특수 효과 해금
+        shotsPerBurst = 15 + StatsManager.instance.EarthCnt;
+        if (StatsManager.instance.EarthCnt >= 5) { shotsPerBurst += 6; per = 4; }
         if (StatsManager.instance.EarthCnt >= 10) StoneDust = true;
         if (StatsManager.instance.EarthCnt >= 15) StoneActive = true;
         if (StatsManager.instance.EarthCnt >= 20) VibrationalWave = true;
@@ -98,7 +120,6 @@ public class Skill4 : MonoBehaviour
         }
     }
 
-    // 기본 공격
     void SpawnAndPrepare()
     {
         var player = GameManager.instance.player;
@@ -106,21 +127,23 @@ public class Skill4 : MonoBehaviour
         if (fireDir.sqrMagnitude < 0.0001f)
             fireDir = player.IsFacingRight ? Vector2.right : Vector2.left;
 
-        // 기본 공격은 각성 아님 (false)
-        CreateBullet(fireDir, false); 
+        CreateBullet(fireDir, false);
+
+        if (StatsManager.instance.EarthCnt >= 5)
+        {
+            Vector2 reverseDir = -fireDir;
+            CreateBullet(reverseDir, false);
+        }
     }
 
-    // 20레벨 대지의 송곳
     IEnumerator SpikeLoop()
     {
         while (true)
         {
-            // [밸런스] 0.5초 대기 (서브딜 속도)
             yield return new WaitForSeconds(0.5f);
 
             if (VibrationalWave && scans != null && GameManager.instance.player != null)
             {
-                // [밸런스] 한 번에 5명 타격 (넓게 뿌리기)
                 Transform[] targets = scans.GetNearest(5);
 
                 foreach (Transform target in targets)
@@ -130,7 +153,6 @@ public class Skill4 : MonoBehaviour
                     Vector3 spawnPos = GetRandomSpawnPos(GameManager.instance.player.transform.position);
                     Vector3 targetDir = (target.position - spawnPos).normalized;
 
-                    // true를 넘겨서 작고 갈색인 탄알 발사
                     CreateBullet(targetDir, true);
                 }
             }
@@ -140,6 +162,8 @@ public class Skill4 : MonoBehaviour
     void CreateBullet(Vector2 dir, bool isAwakening = false)
     {
         var player = GameManager.instance.player;
+
+        // 여기서 maxSpawnRadius가 늘어난 상태로 계산됩니다.
         Vector3 spawnPos = GetRandomSpawnPos(player.transform.position);
 
         GameObject go = GameManager.instance.pool.Get(prefabId);
@@ -151,25 +175,17 @@ public class Skill4 : MonoBehaviour
 
         t.position = spawnPos;
 
-        // --- [수정] 서브딜 컨셉 조정 ---
         float currentScale = 1f;
         Color bulletColor = Color.white;
         int finalPer = per;
 
         if (isAwakening)
         {
-            // 크기는 0.7배로 작게 (자잘한 공격 느낌)
             currentScale = 0.7f;
-
-            // 색상은 붉은기 뺀 '진한 갈색' (RGB: 0.55, 0.4, 0.25)
-            // 흙이나 암석 느낌이 나도록 조정했습니다.
             bulletColor = new Color(0.55f, 0.4f, 0.25f, 1f);
-
-            // 작지만 관통력은 +1 유지 (선택사항, 필요 없으면 빼도 됨)
             finalPer += 1;
         }
 
-        // 최종 크기 적용
         t.localScale = baseBulletScale * currentScale;
 
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
@@ -178,9 +194,7 @@ public class Skill4 : MonoBehaviour
         Bullet b = go.GetComponent<Bullet>();
         if (b)
         {
-            // 데미지는 서브딜이니까 기본 데미지 그대로 (배율 삭제)
             float finalDamage = damage;
-
             b.Init(StatsManager.instance.ApplyCrit(finalDamage), finalPer, dir, speed, lifeTime, stoneDustComp);
             b.SetColor(bulletColor);
         }
@@ -189,6 +203,8 @@ public class Skill4 : MonoBehaviour
     Vector3 GetRandomSpawnPos(Vector3 origin)
     {
         Vector2 randDir = Random.insideUnitCircle.normalized;
+
+        // [참고] maxSpawnRadius는 GiveLevelSystemToSkill4에서 이미 크기에 맞춰 늘어나 있음
         float r = Mathf.Sqrt(Random.Range(minSpawnRadius * minSpawnRadius, maxSpawnRadius * maxSpawnRadius));
         return origin + (Vector3)(randDir * r);
     }

@@ -6,22 +6,22 @@ public class BossMonster : NormalMonster
     [Header("Boss Settings")]
     public Transform player;           // 플레이어 위치
     public float patternInterval = 1f; // 패턴 사이 짧은 숨 고르기 시간
+    public bool isBattleReady = false;
 
     [Header("Shadow Rain")]
     public GameObject shadowSpearPrefab;  // 그림자 창 프리팹
     public float shadowRainDuration = 7f; // 패턴 지속 시간
     public float shadowRainSpawnRate = 3f; // 초당 몇 개 (3개)
 
-    [Header("Binding Field")]
-    public GameObject bindingFieldPrefab; // 속박 장판 (보스 주변 원)
-    public float bindingFieldDuration = 8f;
-
-    [Header("Dark Sigil")]
-    public DarkSigilController sigilController; // 어둠의 인장 제어용(마법진 8조각)
-
     [Header("Dark Vision")]
     public DarkVisionController darkVision; // 화면 어둡게 만드는 UI 컨트롤러
     public float darkVisionDuration = 6f;
+
+    [Header("Ghost Swarm")]
+    public GameObject ghostPrefab;      // ★ 유령 프리팹 (GhostMonster 스크립트 붙은 거)
+    public int ghostSpawnCount = 10;    // 한 번에 몇 마리?
+    public float ghostSpawnInterval = 0.2f; // 다다다다 간격
+    public float ghostSpawnRadius = 2.0f;   // 보스 주변 몇 미터?
 
     Coroutine patternRoutine;
 
@@ -29,35 +29,75 @@ public class BossMonster : NormalMonster
     {
         base.OnEnable();
 
+        isBattleReady = false;
+
         if (GameManager.instance != null && GameManager.instance.player != null)
         {
             player = GameManager.instance.player.transform;
             target = GameManager.instance.player.GetComponent<Rigidbody2D>();
         }
 
-        if (patternRoutine != null)
-            StopCoroutine(patternRoutine);
+        // if (patternRoutine != null) StopCoroutine(patternRoutine);
 
-        patternRoutine = StartCoroutine(PatternLoop());
+        // patternRoutine = StartCoroutine(PatternLoop());
+    }
+
+    // ★ [추가] 부모(NormalMonster)의 이동 로직을 멈추기 위해 추가
+    protected override void FixedUpdate()
+    {
+        // 전투 준비가 안 됐으면 움직이지 마라 (물리엔진 정지)
+        if (!isBattleReady)
+        {
+            rigid.linearVelocity = Vector2.zero; // 제자리 고정
+            return;
+        }
+
+        base.FixedUpdate();
     }
 
     // NormalMonster의 LateUpdate를 덮어씌웁니다.
-    // (만약 부모 함수에 virtual이 없다면 'new' 키워드를 써도 되고, 그냥 써도 작동은 합니다)
     protected new void LateUpdate()
     {
         if (!isLive) return;
-
-        // 부모 코드: target.position.x > rigid.position.x (플레이어가 오른쪽이면 true)
-        // 보스 수정: target.position.x < rigid.position.x (부등호 방향 반대!)
 
         // 원본 그림이 반대라서, 로직도 반대로 뒤집어 줌
         spriter.flipX = target.position.x < rigid.position.x;
     }
 
+    // ★★★ [핵심] GameManager가 호출해줄 "전투 시작" 함수 ★★★
+    public void StartBattle()
+    {
+        isBattleReady = true;
+
+        Debug.Log("보스 전투 시작!");
+
+        // 패턴 코루틴 시작
+        if (patternRoutine != null) StopCoroutine(patternRoutine);
+        patternRoutine = StartCoroutine(PatternLoop());
+    }
+
     public override void Die(bool giveReward)
     {
+        // 1. 모든 패턴 코루틴(창 던지기, 암흑 시야 대기 등) 즉시 중단
+        StopAllCoroutines();
+
+        // 2. [암흑 시야] 켜져 있다면 즉시 끄기 (화면 밝아짐)
+        if (darkVision != null)
+            darkVision.DisableImmediately();
+
+        // 3. [유령 군단] 살아있는 유령 모두 찾아서 죽이기
+        GhostMonster[] ghosts = FindObjectsByType<GhostMonster>(FindObjectsSortMode.None);
+        foreach (var ghost in ghosts)
+        {
+            if (ghost.gameObject.activeSelf)
+                ghost.Die(false); // 보상 없이 즉사
+        }
+
         base.Die(giveReward);
 
+        GameManager.instance.GameClear();
+
+        /*
         // 보스 죽으면 패턴 중지
         if (patternRoutine != null)
             StopCoroutine(patternRoutine);
@@ -65,14 +105,16 @@ public class BossMonster : NormalMonster
         // 암흑 시야 켜져 있으면 끄기
         if (darkVision != null)
             darkVision.DisableImmediately();
+        */
     }
 
     public void BossInit()
     {
-        speed = 1;
+        speed = 1f; // 
+        originalSpeed = speed;
         maxHealth = 10000;
-        damage = 50;
         health = maxHealth;
+        damage = 50;
     }
 
     public void BossSpawn()
@@ -84,6 +126,10 @@ public class BossMonster : NormalMonster
     public override void ApplyDamage(float dmg, ElementType element = ElementType.None)
     {
         base.ApplyDamage(dmg, ElementType.None);
+
+        // 2. ★ 체력바 UI 갱신 (GameManager에게 현재 체력 전달)
+        // (죽었어도 0으로 갱신하기 위해 isLive 체크 뒤보다는 여기가 나음)
+        GameManager.instance.UpdateBossHealthUI(health, maxHealth);
     }
     
 
@@ -103,9 +149,10 @@ public class BossMonster : NormalMonster
             yield return ShadowRainPattern();
             yield return new WaitForSeconds(patternInterval);
 
-            // 3. 어둠의 인장
-            yield return DarkSigilPattern();
+            // ★ 3. [신규] 유령 군단 소환
+            yield return GhostSwarmPattern();
             yield return new WaitForSeconds(patternInterval);
+
 
             // 나중에 Phase 나누고 싶으면 여기서 HP 비율에 따라 패턴 변경 가능
         }
@@ -164,6 +211,34 @@ public class BossMonster : NormalMonster
         }
     }
 
+    // ----------------------------------------------------
+    // ★★★ [신규] 유령 소환 패턴 (다다다다!) ★★★
+    // ----------------------------------------------------
+    IEnumerator GhostSwarmPattern()
+    {
+        if (!isLive) yield break;
+
+        Debug.Log("패턴: 유령 군단 소환");
+
+        // 1. 소환 모션 (있다면)
+        if (anim != null)
+            anim.SetTrigger("castSummon"); // 소환 애니메이션 트리거 이름
+
+        // 모션 선딜레이 (잠깐 폼 잡는 시간)
+        yield return new WaitForSeconds(0.5f);
+
+        // 2. 다다다다 소환 시작
+        for (int i = 0; i < ghostSpawnCount; i++)
+        {
+            if (!isLive) yield break;
+
+            SpawnGhost();
+
+            // 다음 유령 나올 때까지 잠깐 대기 (다다다다 효과)
+            yield return new WaitForSeconds(ghostSpawnInterval);
+        }
+    }
+
     void SpawnShadowSpear()
     {
         if (shadowSpearPrefab == null || player == null) return;
@@ -184,28 +259,23 @@ public class BossMonster : NormalMonster
         // 이 로직은 spear 스크립트에 넣으시면 됩니다.
     }
 
-
-    IEnumerator DarkSigilPattern()
+    void SpawnGhost()
     {
-        if (!isLive) yield break;
-        if (sigilController == null)
+        if (ghostPrefab == null) return;
+
+        // 보스 주변 랜덤 위치 계산 (원형)
+        Vector2 randPos = Random.insideUnitCircle.normalized * ghostSpawnRadius;
+        Vector3 spawnPos = transform.position + new Vector3(randPos.x, randPos.y, 0);
+
+        // 생성
+        GameObject ghostObj = Instantiate(ghostPrefab, spawnPos, Quaternion.identity);
+
+        // 스탯 설정
+        GhostMonster ghostScript = ghostObj.GetComponent<GhostMonster>();
+        if (ghostScript != null)
         {
-            // 아직 마법진 구현 안 했으면 그냥 대기만
-            yield return new WaitForSeconds(7f);
-            yield break;
+            // 체력 100, 공격력 10, 속도 2.5 (원하는 대로 조절)
+            ghostScript.InitGhost(100f, 10f, 2f);
         }
-
-        // 어둠의 인장 시작 (sigilController가 1,2차 폭발까지 내부에서 처리)
-        sigilController.StartSigilPattern();
-
-        float duration = 7f; // 전체 패턴 시간 대략
-        float t = 0f;
-        while (t < duration && isLive)
-        {
-            t += Time.deltaTime;
-            yield return null;
-        }
-
-        sigilController.StopSigilPattern();
     }
 }

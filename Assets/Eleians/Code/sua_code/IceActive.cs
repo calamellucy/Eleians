@@ -4,6 +4,7 @@ public class IceActive : ActiveSkillBase
 {
     // 위에서 만든 스킬 로직 스크립트 연결
     public IceShieldSkill iceSkill;
+    public KeyCode triggerKey = KeyCode.Alpha3;
 
     // 1. 활성화 조건 (얼음 속성 15 이상)
     protected override bool IsSkillUnlocked()
@@ -22,14 +23,13 @@ public class IceActive : ActiveSkillBase
     // 2. 입력 키 (E키 - 불 스킬과 겹친다면 키 변경 필요, 예: R)
     protected override bool CheckInput()
     {
-        // 원래 코드에 E키라고 되어 있어서 E로 했습니다.
-        // 만약 불 스킬도 E라면 키를 바꿔야 합니다!
-        return Input.GetKeyDown(KeyCode.R);
+        return Input.GetKeyDown(triggerKey);
     }
 
     // 3. 스킬 발동
     protected override void ActivateSkill()
     {
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Ice_15);
         // 플레이어에 있는 스킬 로직 실행
         iceSkill.ActiveIceShield();
     }

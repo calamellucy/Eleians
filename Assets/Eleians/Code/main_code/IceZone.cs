@@ -4,47 +4,50 @@ using UnityEngine;
 
 public class IceZone : MonoBehaviour
 {
-    public float damagePerSecond = 5f;
-    public float healPerSecond = 10f;
-    float duration = 5f;
+    [Header("Duration")]
+    public float duration = 5f;
 
-    // bool isRunning = false;
-    //bool playerInside = false;
-    //bool monsterInside = false;
+    [Header("Heal Settings")]
+    public float healTickInterval = 1f;
+    public float healBase = 10f;
+    public float healMissingHpRatio = 0.05f;
 
-    // 플레이어는 1명이니 변수 하나로 충분
+    [Header("Damage Settings")]
+    public float damageInterval = 0.2f;
+    public float damageBase = 10f;
+    public float damageMaxHpRatio = 0.04f;
+
+    // 플레이어 캐시
     private Player playerCache;
     private bool playerInside = false;
-    private float healTimer = 1f;
+    private float healTimer = 0f;
 
-    //float healTimer = 1f;
-    // ★ 몬스터는 여러 마리일 수 있으니 리스트로 관리
+    // 몬스터 리스트
     private List<MonsterBase> monsterList = new List<MonsterBase>();
-    float damageTimer = 0f;
-    public float damageInterval = 0.2f;
-
-    // Player playerCache;
-    // MonsterBase monsterCache;
+    private float damageTimer = 0f;
 
     void OnEnable()
     {
-        healTimer = 1f;
-        damageTimer = 0f;
+        // 타이머 초기화
+        healTimer = healTickInterval;
+        damageTimer = damageInterval;
 
+        // 상태 초기화
         playerInside = false;
-        //monsterInside = false;
-        monsterList.Clear(); // 켜질 때 리스트 초기화
+        playerCache = null;
 
-        //if (!isRunning)
+        monsterList.Clear();
+
+        // 수명 코루틴 실행
         StartCoroutine(ZoneLife());
     }
 
     IEnumerator ZoneLife()
     {
         //isRunning = true;
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Ice_10);
         yield return new WaitForSeconds(duration);
-        gameObject.SetActive(false);
-        //isRunning = false;
+        gameObject.SetActive(false); // 풀로 복귀
     }
 
     void Update()
@@ -61,34 +64,20 @@ public class IceZone : MonoBehaviour
                 float curHp = GameManager.instance.health;
 
                 float missingHp = maxHp - curHp;
-                float healAmount = 10f + (missingHp * 0.10f);
+                float healAmount = healBase + (missingHp * healMissingHpRatio);
 
                 playerCache.Heal(healAmount);
-                Debug.Log($"HEAL: {healAmount}");
+                Debug.Log($"ICEZONE HEAL: {healAmount}");
 
-                healTimer = 1f;
+                healTimer = healTickInterval;
             }
         }
 
         // =========================
         // 2) 몬스터 피해 처리
+        // =========================
         if (monsterList.Count > 0)
         {
-            /*
-            damageTimer -= Time.deltaTime;
-            if (damageTimer <= 0f)
-            {
-                float monsterMaxHp = monsterCache.maxHealth;
-                float dmg = 10f + (monsterMaxHp * 0.04f);
-
-                monsterCache.ApplyDamageWithoutKonckback(dmg);
-                Debug.Log($"DAMAGE: {dmg}");
-
-                damageTimer = 1f;
-            }
-            */
-            // 리스트를 돌면서 모든 몬스터에게 데미지
-            // (역순으로 도는 이유: 중간에 죽어서 리스트에서 빠질 경우 오류 방지)
             damageTimer -= Time.deltaTime;
             if (damageTimer <= 0f)
             {
@@ -96,27 +85,25 @@ public class IceZone : MonoBehaviour
                 {
                     MonsterBase monster = monsterList[i];
 
-                    // 몬스터가 죽거나 사라졌으면 리스트에서 제거
+                    // 죽었거나 비활성화된 몬스터 정리
                     if (monster == null || !monster.gameObject.activeSelf || !monster.isLive)
                     {
                         monsterList.RemoveAt(i);
                         continue;
                     }
 
-                    // 데미지 적용
-                    monster.ApplyDamageWithoutKonckback(damagePerSecond);
+                    float monsterMaxHp = monster.maxHealth;
+                    float dmg = damageBase + (monsterMaxHp * damageMaxHpRatio);
+
+                    monster.ApplyDamageWithoutKonckback(dmg);
+                    // 필요하면 여기서도 로그 출력 가능
+                    // Debug.Log($"ICEZONE DAMAGE: {dmg}");
                 }
+
                 damageTimer = damageInterval;
             }
-
-
-            // Debug.Log(monsterList.Count + "마리 몬스터 피격!");
-            
         }
     }
-
-    // Player playerCache;
-    // MonsterBase monsterCache;
 
     void OnTriggerEnter2D(Collider2D collision)
     {
@@ -129,13 +116,10 @@ public class IceZone : MonoBehaviour
         if (collision.CompareTag("Enemy"))
         {
             MonsterBase monster = collision.GetComponent<MonsterBase>();
-            // 리스트에 없을 때만 추가 (중복 방지)
             if (monster != null && !monsterList.Contains(monster))
             {
                 monsterList.Add(monster);
             }
-            //monsterInside = true;
-            //monsterCache = collision.GetComponent<MonsterBase>();
         }
     }
 
@@ -150,13 +134,10 @@ public class IceZone : MonoBehaviour
         if (collision.CompareTag("Enemy"))
         {
             MonsterBase monster = collision.GetComponent<MonsterBase>();
-            // 나간 몬스터만 리스트에서 제거
             if (monster != null && monsterList.Contains(monster))
             {
                 monsterList.Remove(monster);
             }
-            //monsterInside = false;
         }
-
     }
 }
