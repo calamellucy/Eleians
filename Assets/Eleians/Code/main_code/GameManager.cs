@@ -739,6 +739,7 @@ public class GameManager : MonoBehaviour
         }
         */
         // 경험치 통 꽉 찼으면 레벨업 (반복문인 이유는 한번에 2업 할 수도 있어서)
+        /*
         while (exp >= nextExp[level])
         {
             exp -= nextExp[level];
@@ -750,6 +751,16 @@ public class GameManager : MonoBehaviour
                 exp = 0; // 만렙 경험치바 처리
                 break;
             }
+        }
+        */
+        if (exp >= nextExp[level])
+        {
+            exp -= nextExp[level];
+            level++;
+            uiLevelUp.Show();
+
+            // 여기서 더 이상 반복하지 않고 함수를 끝냅니다.
+            // 남은 경험치는 exp 변수에 그대로 남아있습니다.
         }
     }
 
