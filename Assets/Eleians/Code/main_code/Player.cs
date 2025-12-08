@@ -185,7 +185,7 @@ public class Player : MonoBehaviour
         GameManager.instance.health =
             Mathf.Clamp(GameManager.instance.health, 0f, GameManager.instance.maxHealth);
 
-        Debug.Log("HEAL!!");
+        //Debug.Log("HEAL!!");
 
         // 힐 이펙트, 힐 텍스트 같은 것 원하면 여기에 추가하면 된다
         // ★★★ 이펙트 생성 ★★★
