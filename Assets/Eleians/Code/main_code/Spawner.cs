@@ -37,13 +37,14 @@ public class Spawner : MonoBehaviour
 
     [Header("Wave Config")]
     public Wave[] waves;
-    public Wave towerWave;
+    public Wave[] towerWaves;
 
     [Header("Elite Schedule")]
     public List<EliteSpawnEvent> eliteEvents; // [추가] 엘리트 편성표 리스트
 
     [Header("Runtime Check")]
     private Wave currentWave;
+    private Wave currentTowerWave;
     // [중요] 타이머를 2개로 분리!
     private float normalSpawnTimer;
     private float towerSpawnTimer;
@@ -57,12 +58,6 @@ public class Spawner : MonoBehaviour
     [Header("Battle Area")]
     public Vector2 innerMin = new Vector2(-16.0f, -37.0f);
     public Vector2 innerMax = new Vector2(50.0f, 13.0f);
-
-    // private float timer; // [삭제] spawnTimer가 그 역할을 대신함
-    // private int currentWaveIndex = -1; // [삭제] 매 프레임 시간 체크하므로 필요 없음
-
-    // [삭제] Awake도 이제 필요 없습니다. (spawnPoints를 안 쓰니까요)
-    // private void Awake() { }
 
     private void OnEnable()
     {
@@ -86,8 +81,10 @@ public class Spawner : MonoBehaviour
         // 2. 거점 몬스터 웨이브 로직 (거점 페이즈일 때만 추가 실행)
         if (GameManager.instance.isTowerPhase)
         {
-            // 타워 타이머(towerSpawnTimer)를 넘겨줌
-            ProcessWave(towerWave, ref towerSpawnTimer);
+            // ★ [수정] 시간에 맞는 타워 웨이브 찾기
+            UpdateTowerWave();
+            // 찾은 웨이브(currentTowerWave) 실행
+            ProcessWave(currentTowerWave, ref towerSpawnTimer);
         }
 
         // 3. [추가] 엘리트 스케줄 체크
@@ -132,6 +129,31 @@ public class Spawner : MonoBehaviour
 
         // 해당하는 웨이브가 없으면 빈 웨이브 (스폰 안 함)
         if (!found) currentWave = new Wave();
+    }
+
+    // ★★★ [신규] 현재 시간에 맞는 타워 웨이브 찾기 ★★★
+    void UpdateTowerWave()
+    {
+        float currentTime = GameManager.instance.gameTime;
+
+        // 최적화: 현재 타워 웨이브가 아직 유효하다면 패스
+        if (currentTowerWave.endTime > currentTime && currentTowerWave.startTime <= currentTime)
+            return;
+
+        bool found = false;
+        foreach (var wave in towerWaves)
+        {
+            // 현재 시간이 웨이브 범위 안에 있으면 당첨!
+            if (currentTime >= wave.startTime && currentTime < wave.endTime)
+            {
+                currentTowerWave = wave;
+                found = true;
+                break;
+            }
+        }
+
+        // 해당하는 웨이브가 없으면 빈 웨이브 (스폰 안 함)
+        if (!found) currentTowerWave = new Wave();
     }
 
     // 타이머 변수를 ref로 받아서 각각 관리

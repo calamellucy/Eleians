@@ -41,6 +41,8 @@ public class EndingManager : MonoBehaviour
     public float creditDisplayTime = 2.0f; // 한 문구가 떠있는 시간
     public float textFadeDuration = 1.0f;  // 텍스트가 나타나/사라지는 시간
 
+    public GameObject returnPromptObject;
+
     [Header("Phase 3: Result UI")]
     public GameObject resultPanel; // 결과 화면 패널
     public Button toMainButton;    // 메인으로 가는 버튼
@@ -66,6 +68,8 @@ public class EndingManager : MonoBehaviour
         if (fadePanel != null) fadePanel.gameObject.SetActive(true);
         if (creditsObject != null) creditsObject.SetActive(false);
         if (resultPanel != null) resultPanel.SetActive(false);
+
+        if (returnPromptObject != null) returnPromptObject.SetActive(false);
 
         // 버튼 리스너 연결
         if (toMainButton != null)
@@ -98,9 +102,6 @@ public class EndingManager : MonoBehaviour
 
         // 2단계: 엔딩 크레딧 재생
         yield return StartCoroutine(PlayCreditsPhase());
-
-        // 3단계: 결과 화면 표시
-        ShowResultPhase();
     }
 
     // =================================================================
@@ -161,47 +162,63 @@ public class EndingManager : MonoBehaviour
     {
         if (creditsObject == null || creditText == null) yield break;
 
-        // 1. 크레딧 오브젝트 켜기
         creditsObject.SetActive(true);
-        creditText.text = ""; // 처음엔 빈 칸
+        creditText.text = "";
 
-        // 텍스트 투명도 초기화 (안 보이게)
         Color c = creditText.color;
         c.a = 0f;
         creditText.color = c;
 
-        // 2. 화면 페이드 인 (검은 화면 -> 크레딧 배경)
-        yield return StartCoroutine(Fade(1, 0));
+        yield return StartCoroutine(Fade(1, 0)); // 배경 밝아짐
 
-        // 3. 한 줄씩 나타났다 사라지기 반복
-        foreach (string line in creditLines)
+        // ★ for문으로 변경 (마지막 인덱스 체크를 위해)
+        for (int i = 0; i < creditLines.Count; i++)
         {
-            // 텍스트 교체
+            string line = creditLines[i];
             creditText.text = line;
 
-            // (1) 텍스트 페이드 인 (나타나기)
+            // (1) 텍스트 나타나기
             yield return StartCoroutine(FadeText(0, 1));
 
-            // (2) 대기 (스페이스바 누르면 빨리 넘어감)
+            // ★★★ [핵심] 마지막 줄인가? ★★★
+            if (i == creditLines.Count - 1)
+            {
+                // 마지막 줄이면 사라지지 않고 대기
+                Debug.Log("엔딩 크레딧 끝. 입력 대기 중...");
+
+                // 안내 문구 띄우기 ("화면을 터치하면 메인으로 이동합니다")
+                if (returnPromptObject != null)
+                    returnPromptObject.SetActive(true);
+
+                // 클릭(터치) 대기
+                // (스페이스바 스킵 방지를 위해 잠시 0.5초 텀을 둠)
+                yield return new WaitForSeconds(0.5f);
+
+                // 무한 대기: 클릭할 때까지
+                while (!Input.GetMouseButtonDown(0) && !Input.anyKeyDown)
+                {
+                    yield return null;
+                }
+
+                // 클릭하면 메인으로 이동
+                GoToMainMenu();
+                yield break; // 코루틴 종료
+            }
+
+            // (2) 마지막 줄이 아니면 대기 후 사라짐
             float timer = 0f;
-            float wait = isSkippingCredits ? 0.3f : creditDisplayTime; // 스킵 시 짧게 대기
+            float wait = isSkippingCredits ? 0.3f : creditDisplayTime;
 
             while (timer < wait)
             {
                 timer += Time.deltaTime;
-                // 스킵 중이면 대기 시간 실시간 단축
                 if (isSkippingCredits && timer > 0.3f) break;
                 yield return null;
             }
 
-            // (3) 텍스트 페이드 아웃 (사라지기)
+            // (3) 텍스트 사라지기
             yield return StartCoroutine(FadeText(1, 0));
         }
-
-        // 4. 모든 텍스트가 끝났으면 화면 다시 어둡게 (Phase 종료)
-        yield return StartCoroutine(Fade(0, 1));
-
-        creditsObject.SetActive(false);
     }
 
     // =================================================================
