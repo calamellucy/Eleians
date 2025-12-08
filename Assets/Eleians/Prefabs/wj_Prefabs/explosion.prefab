@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4591138641825577116}
   - component: {fileID: 3621881747797385372}
   - component: {fileID: 6054848675828385566}
+  - component: {fileID: 5765442422792320832}
   m_Layer: 0
   m_Name: explosion
   m_TagString: Explosion
@@ -30,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.7, y: 1.7, z: 1}
+  m_LocalScale: {x: 20, y: 20, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -81,8 +82,8 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: -7249626252617885786, guid: 47929d42ae8753143a1bb0aa86fe9b8e, type: 3}
+  m_SortingOrder: 2
+  m_Sprite: {fileID: 1524913160323957621, guid: 50b775cbaeabe554b987c132a9c8deec, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -106,7 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Explosion
   damage: 10
-  radius: 1.5
+  radius: 100
   duration: 0.3
 --- !u!58 &3621881747797385372
 CircleCollider2D:
@@ -142,8 +143,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.6
+  m_Offset: {x: 0, y: -0.0084579885}
+  m_Radius: 0.4533948
 --- !u!50 &6054848675828385566
 Rigidbody2D:
   serializedVersion: 5
@@ -171,3 +172,25 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!95 &5765442422792320832
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6793793243088334630}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: da8b66a851c6d744c81aa6d7aa5b884b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

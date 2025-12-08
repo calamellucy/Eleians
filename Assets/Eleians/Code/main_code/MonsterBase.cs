@@ -1,19 +1,46 @@
 using System.Collections;
 using UnityEngine;
 
+public enum ElementType
+{
+    None,
+    Fire,
+    Ice,
+    Earth,
+    Lightning
+}
+
 public class MonsterBase : MonoBehaviour
 {
-    [Header("Monster Stats")]
+    [Header("Stats")]
+    public int exp; // Spawner에서 Init으로 받아온 값
     public float speed;
     public float health;
     public float maxHealth;
     public float damage;
     public float originalSpeed;
     public float slowMultiplier = 1f;
+    public int monsterType;
+    protected Resistance myResistance;
 
-    protected bool isLive;
+    // [중요] 아티팩트 매니저 오류 방지용 (절대 삭제 X)
+    public MonsterType myType;
+
+    [Header("State")]
+    public bool isLive;
     protected bool isDeadProcessed = false;
     protected bool isKnockback = false;
+    protected virtual bool IsSuperArmor => false;
+
+    // 전기 스턴 확인용
+    public bool isStunned = false;
+
+    [Header("Effects Objects")]
+    public GameObject effectFire;
+    public GameObject effectIce;
+    public GameObject effectLightning;
+
+    [Header("Components")]
     public Rigidbody2D target;
     protected Rigidbody2D rigid;
     protected Collider2D coll;
@@ -36,29 +63,35 @@ public class MonsterBase : MonoBehaviour
         isLive = true;
         isKnockback = false;
         isDeadProcessed = false;
-        attackTimer = 0f; // �߰�
+        isStunned = false;
+        attackTimer = 0f;
 
-        // �� ���� ���� ���� �ʱ�ȭ
         rigid.bodyType = RigidbodyType2D.Dynamic;
         rigid.simulated = true;
         rigid.linearVelocity = Vector2.zero;
         rigid.angularVelocity = 0f;
 
         coll.enabled = true;
-        //rigid.simulated = true;
         health = maxHealth;
 
-        // �� �ִϸ��̼� ���� �ʱ�ȭ
         anim.ResetTrigger("hit");
         anim.SetBool("dead", false);
 
-        originalSpeed = speed;
         slowMultiplier = 1f;
+        spriter.color = Color.white;
+
+        Transform shadow = transform.Find("Shadow");
+        if (shadow != null)
+        {
+            shadow.gameObject.SetActive(true);
+        }
+
+        // ★ 부활 시 이펙트 초기화 (다 끄기)
+        if (effectFire != null) effectFire.SetActive(false);
+        if (effectIce != null) effectIce.SetActive(false);
+        if (effectLightning != null) effectLightning.SetActive(false);
     }
 
-    // ---------------------
-    // �浹 �޽��� ���� ó��
-    // ---------------------
     protected void OnCollisionStay2D(Collision2D collision)
     {
         if (!isLive) return;
@@ -82,107 +115,169 @@ public class MonsterBase : MonoBehaviour
         }
     }
 
-    // ---------------------
-    // �ڽ��� override�ϴ� ���� ó�� �Լ�
-    // ---------------------
     protected virtual void OnHitPlayer(Player player) { }
     protected virtual void OnHitTower(Tower tower) { }
 
-    // ---------------------
-    // �Ѿ� �ǰ� ó��
-    // ---------------------
-    protected void OnTriggerEnter2D(Collider2D collision)
+    // ★★★ 데미지 적용 함수 ★★★
+    public virtual void ApplyDamage(float dmg, ElementType element = ElementType.None)
     {
         if (!isLive) return;
 
-        if (collision.CompareTag("Explosion"))
+        // ★★★ [디버깅용 로그] 범인 색출 ★★★
+        if (element == ElementType.Ice || myResistance.element == ElementType.Ice)
         {
-            var exp = collision.GetComponent<Explosion>();
-            if (exp != null) ApplyDamage(exp.damage);
-            return;
+            Debug.Log($"[얼음 분석] {gameObject.name} 피격! " +
+                      $"공격속성: {element} vs 내성속성: {myResistance.element} | " +
+                      $"CC무시: {myResistance.ignoreCC}");
         }
 
-        if (collision.CompareTag("Bullet"))
+        float finalDamage = dmg;
+
+        // ★★★ [핵심 로직] 내성 계산 ★★★
+        // 공격 속성이 나의 내성 속성과 같다면?
+        if (element != ElementType.None && element == myResistance.element)
         {
-            var b = collision.GetComponent<Bullet>();
-            if (b != null)
+            // 1. 데미지 감소 적용
+            finalDamage *= (1f - myResistance.damageReduction);
+
+            // 2. CC 무시 옵션이 켜져있다면? -> 속성을 None으로 바꿔서 효과 발동 막음
+            if (myResistance.ignoreCC)
             {
-                ApplyDamage(b.damage);
-                b.per--;
-                if (b.per < 0) b.gameObject.SetActive(false);
+                element = ElementType.None;
+                // 이렇게 하면 아래 switch문에서 default로 빠져서 상태이상이 안 걸림!
             }
         }
 
-        if (collision.CompareTag("dust"))
+        bool isCrit = false;
+
+        // 크리티컬 계산
+        if (StatsManager.instance.RollCrit())
         {
-             ApplyDamage(StatsManager.instance.ApplyCrit((StatsManager.instance.Attack + (StatsManager.instance.EarthCnt * 2))) * 0.3f);
+            isCrit = true;
+            finalDamage *= StatsManager.instance.CritDamage;
+            ArtifactManager.instance.OnCritProc();
         }
 
-        if (collision.CompareTag("Bump"))
-        {
-            ApplyDamage(StatsManager.instance.ApplyCrit((StatsManager.instance.Attack + (StatsManager.instance.EarthCnt * 8))) * 2f);
-        }
+        // 아티팩트 데미지 보정
+        ArtifactManager.instance.OnPlayerAttack(this, ref finalDamage, isCrit);
 
-        if (collision.CompareTag("Jeonjapa"))
-        {
-            var br = collision.GetComponent<Bullet_Re>();
-            if (br != null) ApplyDamage(br.damage);
-        }
-
-        if (collision.CompareTag("Seori"))
-        {
-            Seori_Shuri seo = collision.GetComponent<Seori_Shuri>();
-            if (seo == null) return;
-
-            ApplyDamage(seo.damage);
-
-            // ─────── 둔화 적용하는 부분 ─────────
-            ApplySlow(seo.slowRate);
-        }
-
-        if (collision.CompareTag("dhwyy"))
-        {
-            BlizzardArea dhw = collision.GetComponent<BlizzardArea>();
-            if (dhw == null) return;
-
-            ApplyDamage(dhw.baseDamage);
-
-            ApplySlow(dhw.slowRate);
-        }
-    }
-
-    public void ApplyDamage(float dmg)
-    {
-        if (!isLive) return;
-
-        health -= dmg;
-
-        PoolManager.instance.ShowDamage(7, dmg, transform.position + Vector3.up * 0.5f);
-
+        health -= finalDamage;
+        PoolManager.instance.ShowDamage(7, finalDamage, transform.position + Vector3.up * 0.5f, isCrit);
 
         if (health <= 0)
         {
-            Die(true);
+            ArtifactManager.instance.OnEnemyKilled(this);
+            Die(true); // 에러 났던 부분 (이제 정상 작동함)
             return;
         }
 
-        anim.SetTrigger("hit");
-        KnockBack(target.position);
+        if (!IsSuperArmor)
+        {
+            // anim.SetTrigger("hit");
+            StartCoroutine(HitFlashRoutine());
+        }
+
+        // 속성별 효과
+        switch (element)
+        {
+            case ElementType.Fire:
+                StartCoroutine(BurnRoutine());
+                break;
+            case ElementType.Ice:
+                ApplySlow(0.3f);
+                break;
+            case ElementType.Earth:
+                KnockBack(target.position); // 에러 났던 부분 (이제 정상 작동함)
+                break;
+            case ElementType.Lightning:
+                StartCoroutine(StunRoutine());
+                break;
+            case ElementType.None:
+                break;
+        }
     }
-    // 둔화처리함수
+
+    public void ApplyDamageWithoutKonckback(float dmg)
+    {
+        ApplyDamage(dmg, ElementType.None);
+    }
+
+    // ★★★ [추가] 피격 시 빨간색 깜빡임 효과 ★★★
+    IEnumerator HitFlashRoutine()
+    {
+        // 1. 빨간색으로 변경
+        spriter.color = Color.red;
+
+        // 2. 0.1초 대기 (깜빡!)
+        yield return new WaitForSeconds(0.2f);
+
+        // 3. 원래 색으로 복구
+        // (단, 이미 죽었거나 다른 효과가 적용 중일 수 있으므로 살아있을 때만)
+        if (isLive)
+        {
+            // 혹시 얼음(슬로우) 상태라면 파란색으로, 아니면 흰색으로 복구
+            // (슬로우 상태 유지를 위해 체크 로직 추가함)
+            /*
+            if (slowMultiplier < 1f)
+                spriter.color = new Color(0.6f, 0.6f, 1f); // 파란색 (얼음)
+            else
+                spriter.color = Color.white; // 기본색
+            */
+            spriter.color = Color.white;
+        }
+    }
+
+    // --- [불] 도트 데미지 ---
+    IEnumerator BurnRoutine()
+    {
+        if (effectFire != null) effectFire.SetActive(true);
+
+        float dotDamage = StatsManager.instance.Attack * 0.05f * (1f + StatsManager.instance.ElectricCnt * 0.1f);
+
+        for (int i = 0; i < 3; i++)
+        {
+            yield return new WaitForSeconds(1f);
+            if (!isLive) break;
+
+            health -= dotDamage;
+            PoolManager.instance.ShowDamage(7, dotDamage, transform.position + Vector3.up * 0.5f, false);
+
+            if (health <= 0)
+            {
+                Die(true);
+                yield break;
+            }
+        }
+        if (effectFire != null) effectFire.SetActive(false);
+    }
+
+    // --- [전기] 스턴 ---
+    IEnumerator StunRoutine()
+    {
+        if (isStunned) yield break;
+
+        isStunned = true;
+        if (effectLightning != null) effectLightning.SetActive(true);
+        rigid.linearVelocity = Vector2.zero;
+
+        yield return new WaitForSeconds(0.15f * (StatsManager.instance.FireCnt * 0.05f + 1f));
+
+        if (effectLightning != null) effectLightning.SetActive(false);
+        isStunned = false;
+    }
+
+    // --- [얼음] 슬로우 ---
     public void ApplySlow(float slowRate)
     {
-        // slowRate = 둔화 퍼센트 (예: 0.3 = 30% 감소)
         float newMultiplier = 1f - slowRate;
-
-        // 기존 slowMultiplier보다 더 낮으면 적용
         slowMultiplier = Mathf.Min(slowMultiplier, newMultiplier);
-
         slowMultiplier = Mathf.Clamp(slowMultiplier, 0.2f, 1f);
         speed = originalSpeed * slowMultiplier;
+
+        if (effectIce != null) effectIce.SetActive(true);
     }
 
-
+    // --- [흙] 넉백 ---
     protected virtual void KnockBack(Vector3 from)
     {
         StartCoroutine(KnockBackRoutine(from));
@@ -198,56 +293,47 @@ public class MonsterBase : MonoBehaviour
         if (!isLive) yield break;
 
         Vector2 dir = (transform.position - from).normalized;
-        float force = 8f;
+        float force = 4f;
         rigid.AddForce(dir * force, ForceMode2D.Impulse);
 
-        // �˹� ����
         yield return new WaitForSeconds(0.1f);
 
         if (!isLive) yield break;
         isKnockback = false;
     }
 
-    public void Dead()
-    {
-        if (isDeadProcessed) return;
-        isDeadProcessed = true;
-
-        health = 0;
-        //coll.enabled = false;
-        rigid.simulated = false;
-        rigid.linearVelocity = Vector2.zero;
-        rigid.angularVelocity = 0f;
-        coll.enabled = false;
-
-        // ��Ȱ��ȭ ó��
-        gameObject.SetActive(false);
-
-        // ���� �Ŵ������� ����
-        GameManager.instance.kill++;
-        GameManager.instance.GetExp();
-    }
-
-    public void Die(bool giveReward)
+    // --- 사망 처리 ---
+    public virtual void Die(bool giveReward)
     {
         if (isDeadProcessed) return;
         isDeadProcessed = true;
         isLive = false;
 
-        // ����/�浹 ����
+        StopAllCoroutines();
+
+        // 이펙트 끄기
+        if (effectFire != null) effectFire.SetActive(false);
+        if (effectIce != null) effectIce.SetActive(false);
+        if (effectLightning != null) effectLightning.SetActive(false);
+
+        Transform shadow = transform.Find("Shadow");
+        if (shadow != null)
+        {
+            shadow.gameObject.SetActive(false);
+        }
+
+        spriter.color = Color.white;
         rigid.simulated = false;
         rigid.linearVelocity = Vector2.zero;
         rigid.angularVelocity = 0f;
         coll.enabled = false;
 
-        // ���� ó��
         if (giveReward)
         {
             GameManager.instance.kill++;
-            GameManager.instance.GetExp();
+            GameManager.instance.GetExp(this.exp);
         }
-
-        // ��� �ִ� ���
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.mobDead);
         anim.SetBool("dead", true);
     }
 

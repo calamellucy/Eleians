@@ -44,7 +44,7 @@ public class EarthBumpSkill : MonoBehaviour
                 bool isLeft = target.position.x < player.transform.position.x;
                 sr.flipX = isLeft;
             }
-
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.earthBump);
             bumpObj.SetActive(true);
         }
     }

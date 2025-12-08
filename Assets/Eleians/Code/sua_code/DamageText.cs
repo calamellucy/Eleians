@@ -19,12 +19,18 @@ public class DamageText : MonoBehaviour
         originColor = text.color;
     }
 
-    public void SetDamage(float dmg)
+    public void SetDamage(float dmg, bool isCrit)
     {
         text.text = Mathf.RoundToInt(dmg).ToString();
-        text.color = originColor;
+
+        if (isCrit)
+            text.color = Color.red;
+        else
+            text.color = originColor;
+
         StartCoroutine(FadeRoutine());
     }
+
 
     IEnumerator FadeRoutine()
     {

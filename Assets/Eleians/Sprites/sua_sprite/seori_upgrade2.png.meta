@@ -1,0 +1,568 @@
+fileFormatVersion: 2
+guid: 21cb6ca319b77e042aae349f6ac3db49
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3142195445183988916
+    second: seori_upgrade2_0
+  - first:
+      213: 1529403085304977043
+    second: seori_upgrade2_1
+  - first:
+      213: -5838246564229386312
+    second: seori_upgrade2_2
+  - first:
+      213: 1964165756622689025
+    second: seori_upgrade2_3
+  - first:
+      213: 4990269803220498906
+    second: seori_upgrade2_4
+  - first:
+      213: -2847919375196007478
+    second: seori_upgrade2_5
+  - first:
+      213: -7279317312193498401
+    second: seori_upgrade2_6
+  - first:
+      213: -7785962638560388216
+    second: seori_upgrade2_7
+  - first:
+      213: 3426742901974135138
+    second: seori_upgrade2_8
+  - first:
+      213: 4533773894669562690
+    second: seori_upgrade2_9
+  - first:
+      213: 856424659183616925
+    second: seori_upgrade2_10
+  - first:
+      213: -8244986603073126666
+    second: seori_upgrade2_11
+  - first:
+      213: 2313446317861822074
+    second: seori_upgrade2_12
+  - first:
+      213: 6204034665347562835
+    second: seori_upgrade2_13
+  - first:
+      213: -8751073278453346581
+    second: seori_upgrade2_14
+  - first:
+      213: 3896986743865999674
+    second: seori_upgrade2_15
+  - first:
+      213: 7713229127091739630
+    second: seori_upgrade2_16
+  - first:
+      213: -5469283695265918266
+    second: seori_upgrade2_17
+  - first:
+      213: 7289850155798977357
+    second: seori_upgrade2_18
+  - first:
+      213: -2770288148462167170
+    second: seori_upgrade2_19
+  - first:
+      213: -1293498564448164660
+    second: seori_upgrade2_20
+  - first:
+      213: 6777510070316134108
+    second: seori_upgrade2_21
+  - first:
+      213: 4555213606336341509
+    second: seori_upgrade2_22
+  - first:
+      213: -5013560185091136013
+    second: seori_upgrade2_23
+  - first:
+      213: -6229496310229167332
+    second: seori_upgrade2_24
+  - first:
+      213: 712196239772693109
+    second: seori_upgrade2_25
+  - first:
+      213: 371136037351069607
+    second: seori_upgrade2_26
+  - first:
+      213: 5365944986385165022
+    second: seori_upgrade2_27
+  - first:
+      213: 3854962227417578472
+    second: seori_upgrade2_28
+  - first:
+      213: -1683358620840847687
+    second: seori_upgrade2_29
+  - first:
+      213: -63315732841472451
+    second: seori_upgrade2_30
+  - first:
+      213: -9162061315290347234
+    second: seori_upgrade2_31
+  - first:
+      213: 3322205689430869596
+    second: seori_upgrade2_32
+  - first:
+      213: 7936703586379148596
+    second: seori_upgrade2_33
+  - first:
+      213: -5158703440513207295
+    second: seori_upgrade2_34
+  - first:
+      213: 2366624090711628205
+    second: seori_upgrade2_35
+  - first:
+      213: 8346423524621488131
+    second: seori_upgrade2_36
+  - first:
+      213: -1851892964175384451
+    second: seori_upgrade2_37
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 64
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: seori_upgrade2_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 192
+        height: 192
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4b35f204eda464d0800000000000000
+      internalID: -3142195445183988916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: seori_upgrade2_1
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 192
+        width: 192
+        height: 192
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3965df1c008893510800000000000000
+      internalID: 1529403085304977043
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: seori_upgrade2_2
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 192
+        width: 192
+        height: 192
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bf66f3aea16afea0800000000000000
+      internalID: -5838246564229386312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: seori_upgrade2_3
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 192
+        width: 192
+        height: 192
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1035b7b595e124b10800000000000000
+      internalID: 1964165756622689025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: seori_upgrade2_4
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 192
+        width: 192
+        height: 192
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad9f05a42fff04540800000000000000
+      internalID: 4990269803220498906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: seori_upgrade2_5
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 192
+        width: 192
+        height: 192
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac35d7cca682a78d0800000000000000
+      internalID: -2847919375196007478
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: seori_upgrade2_6
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 192
+        width: 192
+        height: 192
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd2fa57d87baafa90800000000000000
+      internalID: -7279317312193498401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: seori_upgrade2_7
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 192
+        width: 192
+        height: 192
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88b15266b34b2f390800000000000000
+      internalID: -7785962638560388216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: seori_upgrade2_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 192
+        height: 192
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26172c0838c3e8f20800000000000000
+      internalID: 3426742901974135138
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: seori_upgrade2_9
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 192
+        height: 192
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 243f7b316533bee30800000000000000
+      internalID: 4533773894669562690
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: seori_upgrade2_10
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 192
+        height: 192
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d934683a0b1a2eb00800000000000000
+      internalID: 856424659183616925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: seori_upgrade2_11
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 0
+        width: 192
+        height: 192
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6feb8f94e5ce39d80800000000000000
+      internalID: -8244986603073126666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: seori_upgrade2_12
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 0
+        width: 192
+        height: 192
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7ed61f3b230b1020800000000000000
+      internalID: 2313446317861822074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: seori_upgrade2_13
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 0
+        width: 192
+        height: 192
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35d304268a8291650800000000000000
+      internalID: 6204034665347562835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: ac556ab485b653e46a00c17c4d97fc0a
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":8.0,"y":2.0},"gridSpriteSize":{"x":192.0,"y":192.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      seori_upgrade2_0: -3142195445183988916
+      seori_upgrade2_1: 1529403085304977043
+      seori_upgrade2_10: 856424659183616925
+      seori_upgrade2_11: -8244986603073126666
+      seori_upgrade2_12: 2313446317861822074
+      seori_upgrade2_13: 6204034665347562835
+      seori_upgrade2_2: -5838246564229386312
+      seori_upgrade2_3: 1964165756622689025
+      seori_upgrade2_4: 4990269803220498906
+      seori_upgrade2_5: -2847919375196007478
+      seori_upgrade2_6: -7279317312193498401
+      seori_upgrade2_7: -7785962638560388216
+      seori_upgrade2_8: 3426742901974135138
+      seori_upgrade2_9: 4533773894669562690
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -19,6 +19,14 @@ public class Skill1_Re : MonoBehaviour
     float timer;
     Player player;
 
+    /*
+    // ----- Active Skill -----
+    float activeCooldown = 5f;    // 기본 쿨타임
+    float activeTimer = 0f;
+    bool isActiveReady = true;
+    */
+
+
     void Awake()
     {
         player = GetComponentInParent<Player>();
@@ -34,23 +42,39 @@ public class Skill1_Re : MonoBehaviour
     void Update()
     {
         timer += Time.deltaTime;
+        // activeTimer += Time.deltaTime;
+
         if (timer >= 1f / attackRate)
         {
             timer = 0f;
             TryFire();
-            Debug.Log("Update"); // 오류 검사
         }
+
+        /*
+        // Q키 입력 시 사용 스킬 발동
+        if (Input.GetKeyDown(KeyCode.Q) && isActiveReady)
+        {
+            StartCoroutine(UseActiveSkill());
+        }
+
+        if (activeTimer >= activeCooldown)
+            isActiveReady = true;
+        */
+
         SyncWithStats();
     }
+
 
     public void Init()
     {
         prefabId = 2;
-        attackRate = 1f + 0.08f * electricCount;        
-        damage = 10f + 0.6f * electricCount + fireCount;             
-        count = 0 + (int)((fireCount * 0.25) / 1);      
-        projectileSize = 0.2f + earthCount * 0.08f;   
-        projectileCount = 1 + (int)((iceCount * 0.34f)/1);
+        attackRate = 1f + 0.08f * electricCount;
+
+        damage = StatsManager.instance.Attack + (0.6f * earthCount);
+
+        count = 0 + (int)((iceCount * 0.25) / 1);      
+        projectileSize = (1 );   
+        projectileCount = 1 + (int)((electricCount * 0.25f)/1);
 
         // attakRate: 초당 발사 횟수 + 전기 개수에 비례한 공격 속도 증가
         // damage: 기본 대미지 + 전기 개수에 비례한 대미지 증가 + 불 개수에 비례한 대미지 증가
@@ -109,8 +133,59 @@ public class Skill1_Re : MonoBehaviour
             evo.Setup(this);
 
         bullet.GetComponent<Bullet_Re>().Init(damage, per, dir, electricCount);
-        Debug.Log("Fire");
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.ele_shot);
+        //Debug.Log("Fire");
     }
+
+    void Fire8Directions()
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            float angle = Random.Range(0f, 360f);
+            Vector3 dir = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad),
+                                      Mathf.Sin(angle * Mathf.Deg2Rad),
+                                      0f);
+
+            FireDirectionalBullet(dir);
+        }
+    }
+
+    void FireDirectionalBullet(Vector3 dir)
+    {
+        Transform bullet = GameManager.instance.pool.Get(prefabId).transform;
+        bullet.position = transform.position;
+        bullet.rotation = Quaternion.FromToRotation(Vector3.up, dir);
+        bullet.localScale = Vector3.one * projectileSize;
+
+        BulletEvolution evo = bullet.GetComponent<BulletEvolution>();
+        if (evo != null)
+            evo.Setup(this);
+
+        bullet.GetComponent<Bullet_Re>().Init(damage, count, dir, electricCount);
+    }
+
+
+    // 외부에서 참조 가능하도록
+    public void CastActiveSkill()
+    {
+        StartCoroutine(UseActiveSkill());
+    }
+
+    IEnumerator UseActiveSkill()
+    {
+        // isActiveReady = false;
+        // activeTimer = 0f;
+
+        int cycles = 5;
+
+        for (int i = 0; i < cycles; i++)
+        {
+            Fire8Directions();       // 8발 동시 발사
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+
 
     void SyncWithStats()
     {

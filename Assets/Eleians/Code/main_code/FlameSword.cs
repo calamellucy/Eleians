@@ -1,108 +1,87 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using System.Resources;
 using UnityEngine;
 
 public class FlameSword : MonoBehaviour
 {
-    [Header("세팅")]
-    public float interval = 1.5f;      // 1초마다 발동
-    public float scale = 3f;         // 초기 스케일 배수
-    public float subAngle = 55f;
+    [Header("투사체 ID")]
+    public int projectileId = 8;
 
-    [Header("히트 타이밍")]
-    public float hitStart = 0.1f;    // 애니 시작 후 몇 초 뒤부터 판정 있을지
-    public float hitEnd = 0.3f;      // 언제까지 판정 줄지
-    public float damage = 250f;
+    // 검 데미지 (외부 공개용)
+    public float damage;
+
+    // 투사체 전용 스펙 (내부 저장용)
+    private float projDamage;
+    private float projScale;
+
+    // ★ 안전장치: 애니메이션 길이보다 넉넉한 시간 (예: 1초)
+    private float lifeTimeSafety = 1.0f;
 
     Animator anim;
     Collider2D col;
     SpriteRenderer sr;
 
-    float timer;
-    private HashSet<Collider2D> hitTargets = new HashSet<Collider2D>();
-
+    private bool isTriggerAttack;
+    private Vector2 attackDir;
+    private Transform owner;
 
     void Awake()
     {
         anim = GetComponent<Animator>();
         col = GetComponent<Collider2D>();
         sr = GetComponent<SpriteRenderer>();
-
-        col.isTrigger = true;
-        col.enabled = false;                 // 시작엔 꺼두기
-        sr.enabled = false;                       // 처음엔 안 보이게
-        transform.localScale = Vector3.one * scale;  // 3배로 키우기
     }
 
-    void Update()
+    void LateUpdate()
     {
-        timer += Time.deltaTime;
-
-        if (timer >= interval) {
-            timer = 0f;
-            Slash();
-        }
-    }
-
-    public void GiveLevelSystemToSkill2()
-    {
-        interval = 1.5f / (StatsManager.instance.AttackSpeed);
-
-        // 불 - 공격계수 +7%
-        damage = StatsManager.instance.Attack * 2.5f * (1 + 0.07f * StatsManager.instance.FireCnt);
-
-        // 얼음 - 검을 휘두를 때 이동속도 +2
-        
-
-        // 전기 - 검을 휘두를 때 크리티컬 배율 + 10%
-
-
-        // 흙 - 검의 크기 +7% 
-        scale = 3f + (StatsManager.instance.EarthCnt * 0.07f);
-
-        if (StatsManager.instance.FireCnt >= 5) {
-            scale += 0.35f;
-        }
-        if (StatsManager.instance.FireCnt >= 10)
+        // 주인 따라다니기
+        if (owner != null)
         {
+            transform.position = owner.position;
         }
-        if (StatsManager.instance.FireCnt >= 15)
+        else
         {
-        }
-        if (StatsManager.instance.FireCnt >= 20)
-        {
+            // 주인이 없으면(사망 등) 즉시 비활성화
+            Unact();
         }
     }
 
-    void Slash()
+    public void Init(float sDmg, float sScale, float pDmg, float pScale, bool _isReverse, bool _isTrigger, Vector2 _dir, Transform _owner)
     {
-        transform.localScale = Vector3.one * scale;
+        damage = sDmg;
+        projDamage = pDmg;
+        projScale = pScale;
 
-        Transform target = GameManager.instance.player.scans.GetNearest(1)[0];
+        isTriggerAttack = _isTrigger;
+        attackDir = _dir;
+        owner = _owner;
 
-        if (target != null)
-        {
-            // 플레이어 위치 기준 방향 계산
-            Vector2 dir = (target.position - transform.parent.position).normalized;
+        // 크기 및 방향 설정
+        transform.localScale = Vector3.one * sScale;
+        sr.flipY = _isReverse;
 
-            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-
-            // 🔥 스프라이트 기본 방향이 "오른쪽(→)"이라고 가정
-            // 만약 위(↑)가 기본이면 angle - 90f 로 바꿔줘
-            transform.rotation = Quaternion.AngleAxis(angle - subAngle, Vector3.forward);
-
-        }
-
+        col.enabled = false;
         sr.enabled = true;
-        hitTargets.Clear();
 
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.flame_sword);
+
+        // ★ 중요: 이전 실행 때 남아있을지 모르는 예약 취소
+        CancelInvoke(nameof(Unact));
+
+        // 애니메이션 재생
         anim.Play("fire slash", -1, 0f);
+
+        // ★ 안전장치 가동: 
+        // 애니메이션 이벤트가 실패하더라도 lifeTimeSafety초 뒤에는 무조건 꺼짐.
+        // (fire slash 애니메이션 길이보다 조금 더 길게 잡아줘, 보통 0.6~1.0초면 충분)
+        Invoke(nameof(Unact), lifeTimeSafety);
     }
+
+    // --- 애니메이션 이벤트 ---
 
     void MakeHitBox()
     {
         col.enabled = true;
+        CheckAndFireProjectile();
     }
 
     void DeleteHitbox()
@@ -112,22 +91,44 @@ public class FlameSword : MonoBehaviour
 
     void Unact()
     {
-        sr.enabled = false;
-        col.enabled = false;
+        // 혹시 Invoke로 불렸을 때를 대비해 중복 실행 방지
+        if (!gameObject.activeSelf) return;
+
+        gameObject.SetActive(false);
     }
-    private void OnTriggerEnter2D(Collider2D other)
+
+    void CheckAndFireProjectile()
     {
-        if (!col.enabled) return;
-        if (!other.CompareTag("Enemy")) return;
-        if (hitTargets.Contains(other)) return;
-
-        if (hitTargets.Contains(other)) return;
-        hitTargets.Add(other);
-
-        NormalMonster monster = other.GetComponent<NormalMonster>();
-        if (monster != null)
+        // [불 20] 3방향 발사
+        if (isTriggerAttack)
         {
-            monster.ApplyDamage(damage);
+            FireProjectile(attackDir);
+            Vector2 dirUp = Quaternion.AngleAxis(30f, Vector3.forward) * attackDir;
+            FireProjectile(dirUp);
+            Vector2 dirDown = Quaternion.AngleAxis(-30f, Vector3.forward) * attackDir;
+            FireProjectile(dirDown);
+            isTriggerAttack = false;
+        }
+        // [불 10] 기본 1방향 발사
+        else if (StatsManager.instance.FireCnt >= 10)
+        {
+            FireProjectile(attackDir);
+        }
+    }
+
+    void FireProjectile(Vector2 direction)
+    {
+        GameObject shotObj = GameManager.instance.pool.Get(projectileId);
+
+        shotObj.transform.position = transform.position;
+        shotObj.transform.rotation = Quaternion.identity;
+
+        FireSlashShots shotScript = shotObj.GetComponent<FireSlashShots>();
+        if (shotScript != null)
+        {
+            shotObj.transform.localScale = Vector3.one * projScale;
+            shotScript.damage = projDamage;
+            shotScript.Launch(direction);
         }
     }
 }

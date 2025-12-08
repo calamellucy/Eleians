@@ -1,10 +1,24 @@
 using UnityEngine;
+using UnityEngine.EventSystems; // 1. 마우스 감지를 위해 필수!
 
-public class button : MonoBehaviour
+// 2. IPointerEnterHandler 인터페이스 추가
+public class button : MonoBehaviour, IPointerEnterHandler
 {
     public int type;
+
+    // 마우스가 버튼 위에 올라갈 때 실행 (호버 사운드)
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.mouse_on_button);
+    }
+
+    // 버튼을 클릭할 때 실행
     public void OnClick()
     {
+        // 클릭 사운드 호출
+        // Enum 이름(click)이 정확한지 확인해줘
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.click);
+
         switch (type)
         {
             case 0:
@@ -15,12 +29,12 @@ public class button : MonoBehaviour
                 break;
             case 2:
                 StatsManager.instance.IceCnt++;
-                GameManager.instance.health += 8;
                 break;
             case 3:
                 StatsManager.instance.EarthCnt++;
                 break;
         }
-        StatsManager.instance.LevelUpdate();
+
+        StatsManager.instance.RecalculateStats();
     }
 }

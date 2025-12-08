@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 3140858909655477472}
   - component: {fileID: 4521280711136858263}
   - component: {fileID: 161719883621589611}
-  - component: {fileID: 298621037302665911}
-  - component: {fileID: 2387586053923382312}
+  - component: {fileID: 2960152941016033321}
+  - component: {fileID: 7973564367835131337}
   m_Layer: 0
   m_Name: dust effect
   m_TagString: dust
@@ -30,8 +30,8 @@ Transform:
   m_GameObject: {fileID: 510825252906416928}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.96, y: -1.93, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -83,9 +83,9 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7302673073982842297, guid: 231b99767dd796e459695174cc037f91, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_Sprite: {fileID: -7162180666882529262, guid: 50d6afd9222721d4db2f04ad9e2b6175, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.5137255}
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1, y: 1}
@@ -104,7 +104,7 @@ Animator:
   m_GameObject: {fileID: 510825252906416928}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: a82e3b0399dec1642adec09bcf8ddbbb, type: 2}
+  m_Controller: {fileID: 9100000, guid: 86448afb9c9eae648a101865ee1f80ee, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -143,8 +143,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!68 &298621037302665911
-EdgeCollider2D:
+--- !u!60 &2960152941016033321
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -173,25 +173,37 @@ EdgeCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_EdgeRadius: 0
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.5625, y: 1.5625}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   m_Points:
-  - {x: 0.3656575, y: -0.23686278}
-  - {x: 0.13735366, y: -0.27344996}
-  - {x: -0.16600609, y: -0.3220653}
-  - {x: -0.23097199, y: -0.123827875}
-  - {x: -0.17798531, y: 0.0511384}
-  - {x: 0.19162488, y: 0.07621306}
-  - {x: 0.36538005, y: -0.23515886}
-  m_AdjacentStartPoint: {x: 0, y: 0}
-  m_AdjacentEndPoint: {x: 0, y: 0}
-  m_UseAdjacentStartPoint: 0
-  m_UseAdjacentEndPoint: 0
---- !u!114 &2387586053923382312
+    m_Paths:
+    - - {x: 0.843588, y: -0.2600382}
+      - {x: 0.83415085, y: 0.061087787}
+      - {x: 0.7214923, y: 0.34365693}
+      - {x: 0.4930633, y: 0.62495214}
+      - {x: 0.31509447, y: 0.59458613}
+      - {x: 0.09066616, y: 0.50633097}
+      - {x: -0.16854036, y: 0.36222515}
+      - {x: -0.4432003, y: -0.06393075}
+      - {x: -0.1795805, y: -0.40348995}
+      - {x: -0.087980404, y: -0.49203777}
+      - {x: 0.15045965, y: -0.60711056}
+      - {x: 0.48532572, y: -0.61884177}
+      - {x: 0.6941803, y: -0.4664407}
+  m_UseDelaunayMesh: 0
+--- !u!114 &7973564367835131337
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -200,10 +212,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 510825252906416928}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f17dd7c9304c5be4f8770717f63354d8, type: 3}
+  m_Script: {fileID: 11500000, guid: 3c6b2c892df10974686e244d431799a6, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StoneDust
-  explosionPrefabId: 5
-  forwardOffset: 0.3
-  clockwiseRotationOffset: 164
-  Scale: {x: 1, y: 1, z: 1}
+  m_EditorClassIdentifier: Assembly-CSharp::DustEffect
