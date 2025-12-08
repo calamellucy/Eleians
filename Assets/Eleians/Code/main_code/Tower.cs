@@ -101,6 +101,7 @@ public class Tower : MonoBehaviour
         if (jamAnimator != null)
         {
             // 파괴 애니메이션 실행!
+
             jamAnimator.SetBool("Destroyed", true);
         }
     }

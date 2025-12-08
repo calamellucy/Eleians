@@ -51,7 +51,7 @@ public class FlameSwordController : MonoBehaviour
 
         // [불 5] 검 크기 증가 (GDD 기준 0.35f)
         if (StatsManager.instance.FireCnt >= 5)
-            fireScaleMod += 0.35f;
+            fireScaleMod += 0.1f;
 
         // [불 20] 스택 시스템 (GDD: 7% 중첩)
         bool isTriggerAttack = false;
