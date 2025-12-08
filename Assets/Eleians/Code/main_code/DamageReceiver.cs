@@ -105,14 +105,14 @@ public class DamageReceiver : MonoBehaviour
 
         if (collision.CompareTag("dust"))
         {
-            float baseDamage = (StatsManager.instance.Attack + (StatsManager.instance.EarthCnt * 2)) * 0.3f;
+            float baseDamage = (StatsManager.instance.Attack * 0.3f);
             monster.ApplyDamage(baseDamage, ElementType.Earth);
             return;
         }
 
         if (collision.CompareTag("Bump"))
         {
-            float baseDamage = (StatsManager.instance.Attack + (StatsManager.instance.EarthCnt * 8)) * 2f;
+            float baseDamage = (StatsManager.instance.Attack + (StatsManager.instance.EarthCnt * 8)) * 3f;
             monster.ApplyDamage(baseDamage, ElementType.Earth);
             return;
         }

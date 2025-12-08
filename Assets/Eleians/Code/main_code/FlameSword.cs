@@ -1,164 +1,87 @@
 ﻿using System.Collections;
-using UnityEngine; // HashSet을 안 쓰니까 Collections.Generic 삭제
+using UnityEngine;
 
 public class FlameSword : MonoBehaviour
 {
-    [Header("세팅")]
-    public float interval = 1.5f;
-    public float scale = 3f;
-    public float subAngle = 55f;
+    [Header("투사체 ID")]
+    public int projectileId = 8;
 
-    [Header("히트 타이밍")]
-    public float hitStart = 0.1f;
-    public float hitEnd = 0.3f;
+    // 검 데미지 (외부 공개용)
+    public float damage;
 
-    // DamageReceiver가 가져갈 데미지 변수
-    public float damage = 150f;
+    // 투사체 전용 스펙 (내부 저장용)
+    private float projDamage;
+    private float projScale;
 
-    [Header("2차 각성 (Fire 20)")]
-    public int fireStack = 0;
-    private const int MaxFireStack = 7;
+    // ★ 안전장치: 애니메이션 길이보다 넉넉한 시간 (예: 1초)
+    private float lifeTimeSafety = 1.0f;
 
     Animator anim;
     Collider2D col;
     SpriteRenderer sr;
 
-    float timer;
-    // HashSet 삭제됨 (DamageReceiver가 처리함)
+    private bool isTriggerAttack;
+    private Vector2 attackDir;
+    private Transform owner;
 
     void Awake()
     {
         anim = GetComponent<Animator>();
         col = GetComponent<Collider2D>();
         sr = GetComponent<SpriteRenderer>();
-
-        col.isTrigger = true;
-        col.enabled = false;
-        sr.enabled = false;
-        transform.localScale = Vector3.one * scale;
     }
 
-    void Update()
+    void LateUpdate()
     {
-        timer += Time.deltaTime;
-
-        if (timer >= interval)
+        // 주인 따라다니기
+        if (owner != null)
         {
-            timer = 0f;
-            Slash();
-        }
-    }
-
-    public void GiveLevelSystemToSkill2()
-    {
-        interval = 1.5f / (StatsManager.instance.AttackSpeed + StatsManager.instance.EarthCnt * 0.05f);
-
-        // 불 - 공격계수 +7%
-        damage = StatsManager.instance.Attack * 1.5f * (1 + 0.04f * StatsManager.instance.IceCnt);
-
-        // 흙 - 검의 크기 +7%
-        scale = 3f + (StatsManager.instance.FireCnt * 0.07f);
-
-        if (StatsManager.instance.FireCnt >= 5)
-        {
-            scale += 0.35f;
-        }
-    }
-
-    void Slash()
-    {
-        GiveLevelSystemToSkill2();
-
-        bool isTriggerAttack = false;
-
-        if (StatsManager.instance.FireCnt >= 20)
-        {
-            fireStack++;
-
-            float bonusMultiplier = 1f + (fireStack * 0.15f);
-
-            scale *= bonusMultiplier;
-            damage *= bonusMultiplier;
-
-            if (fireStack >= MaxFireStack)
-            {
-                isTriggerAttack = true;
-                fireStack = 0;
-            }
-        }
-
-        transform.localScale = Vector3.one * scale;
-
-        // --- 수정된 부분 시작 ---
-
-        // 1. 스캔 결과를 배열로 먼저 받아서 안전하게 처리
-        Transform[] targets = GameManager.instance.player.scans.GetNearest(1);
-        Transform target = null;
-
-        // 배열에 내용이 있을 때만 첫 번째 타겟 가져오기
-        if (targets != null && targets.Length > 0)
-        {
-            target = targets[0];
-        }
-
-        Vector2 dir;
-
-        if (target != null)
-        {
-            // 타겟이 있으면 : 타겟 방향으로 설정
-            dir = (target.position - transform.parent.position).normalized;
+            transform.position = owner.position;
         }
         else
         {
-            // 타겟이 없으면(NULL이면) : 랜덤 방향 설정
-            // Random.insideUnitCircle은 반지름 1인 원 안의 랜덤 좌표를 반환하므로 normalized로 방향만 따옴
-            dir = Random.insideUnitCircle.normalized;
-
-            // 혹시라도 (0,0)이 나오면 기본값(오른쪽) 설정
-            if (dir == Vector2.zero) dir = Vector2.right;
+            // 주인이 없으면(사망 등) 즉시 비활성화
+            Unact();
         }
+    }
 
-        // 결정된 방향(dir)에 맞춰 칼 회전 (타겟이 있든 없든 공통 적용)
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.AngleAxis(angle - subAngle, Vector3.forward);
+    public void Init(float sDmg, float sScale, float pDmg, float pScale, bool _isReverse, bool _isTrigger, Vector2 _dir, Transform _owner)
+    {
+        damage = sDmg;
+        projDamage = pDmg;
+        projScale = pScale;
 
-        // --- 수정된 부분 끝 ---
+        isTriggerAttack = _isTrigger;
+        attackDir = _dir;
+        owner = _owner;
 
-        if (isTriggerAttack)
-        {
-            FireProjectile(dir);
-            Vector2 dirUp = Quaternion.AngleAxis(30f, Vector3.forward) * dir;
-            FireProjectile(dirUp);
-            Vector2 dirDown = Quaternion.AngleAxis(-30f, Vector3.forward) * dir;
-            FireProjectile(dirDown);
-        }
-        else if (StatsManager.instance.FireCnt >= 10)
-        {
-            FireProjectile(dir);
-        }
+        // 크기 및 방향 설정
+        transform.localScale = Vector3.one * sScale;
+        sr.flipY = _isReverse;
 
+        col.enabled = false;
         sr.enabled = true;
+
         AudioManager.instance.PlaySfx(AudioManager.Sfx.flame_sword);
 
+        // ★ 중요: 이전 실행 때 남아있을지 모르는 예약 취소
+        CancelInvoke(nameof(Unact));
+
+        // 애니메이션 재생
         anim.Play("fire slash", -1, 0f);
+
+        // ★ 안전장치 가동: 
+        // 애니메이션 이벤트가 실패하더라도 lifeTimeSafety초 뒤에는 무조건 꺼짐.
+        // (fire slash 애니메이션 길이보다 조금 더 길게 잡아줘, 보통 0.6~1.0초면 충분)
+        Invoke(nameof(Unact), lifeTimeSafety);
     }
 
-    void FireProjectile(Vector2 direction)
-    {
-        GameObject shotObj = PoolManager.instance.Get(8);
-        shotObj.transform.position = transform.parent.position;
+    // --- 애니메이션 이벤트 ---
 
-        FireSlashShots shotScript = shotObj.GetComponent<FireSlashShots>();
-        if (shotScript != null)
-        {
-            shotScript.Launch(direction);
-        }
-    }
-
-    // 애니메이션 이벤트에서 호출
     void MakeHitBox()
     {
         col.enabled = true;
+        CheckAndFireProjectile();
     }
 
     void DeleteHitbox()
@@ -168,9 +91,44 @@ public class FlameSword : MonoBehaviour
 
     void Unact()
     {
-        sr.enabled = false;
-        col.enabled = false;
+        // 혹시 Invoke로 불렸을 때를 대비해 중복 실행 방지
+        if (!gameObject.activeSelf) return;
+
+        gameObject.SetActive(false);
     }
 
-    // OnTriggerEnter2D 삭제됨 (DamageReceiver로 이관)
+    void CheckAndFireProjectile()
+    {
+        // [불 20] 3방향 발사
+        if (isTriggerAttack)
+        {
+            FireProjectile(attackDir);
+            Vector2 dirUp = Quaternion.AngleAxis(30f, Vector3.forward) * attackDir;
+            FireProjectile(dirUp);
+            Vector2 dirDown = Quaternion.AngleAxis(-30f, Vector3.forward) * attackDir;
+            FireProjectile(dirDown);
+            isTriggerAttack = false;
+        }
+        // [불 10] 기본 1방향 발사
+        else if (StatsManager.instance.FireCnt >= 10)
+        {
+            FireProjectile(attackDir);
+        }
+    }
+
+    void FireProjectile(Vector2 direction)
+    {
+        GameObject shotObj = GameManager.instance.pool.Get(projectileId);
+
+        shotObj.transform.position = transform.position;
+        shotObj.transform.rotation = Quaternion.identity;
+
+        FireSlashShots shotScript = shotObj.GetComponent<FireSlashShots>();
+        if (shotScript != null)
+        {
+            shotObj.transform.localScale = Vector3.one * projScale;
+            shotScript.damage = projDamage;
+            shotScript.Launch(direction);
+        }
+    }
 }

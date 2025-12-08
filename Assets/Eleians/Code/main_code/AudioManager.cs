@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.Collections.AllocatorManager;
 
 public class AudioManager : MonoBehaviour
 {
@@ -79,7 +80,7 @@ public class AudioManager : MonoBehaviour
     public void PlaySfx(Sfx sfx)
     {
         // 1. 쿨타임 체크
-        if (sfx != Sfx.mouse_on_button && Time.time - sfxLimitTimes[(int)sfx] < sfxCooldown)
+        if (sfx != Sfx.mouse_on_button && sfx != Sfx.click && Time.time - sfxLimitTimes[(int)sfx] < sfxCooldown)
             return;
 
         sfxLimitTimes[(int)sfx] = Time.time;
