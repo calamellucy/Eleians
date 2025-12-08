@@ -78,8 +78,26 @@ public class BossMonster : NormalMonster
 
     public override void Die(bool giveReward)
     {
+        // 1. 모든 패턴 코루틴(창 던지기, 암흑 시야 대기 등) 즉시 중단
+        StopAllCoroutines();
+
+        // 2. [암흑 시야] 켜져 있다면 즉시 끄기 (화면 밝아짐)
+        if (darkVision != null)
+            darkVision.DisableImmediately();
+
+        // 3. [유령 군단] 살아있는 유령 모두 찾아서 죽이기
+        GhostMonster[] ghosts = FindObjectsByType<GhostMonster>(FindObjectsSortMode.None);
+        foreach (var ghost in ghosts)
+        {
+            if (ghost.gameObject.activeSelf)
+                ghost.Die(false); // 보상 없이 즉사
+        }
+
         base.Die(giveReward);
 
+        GameManager.instance.GameClear();
+
+        /*
         // 보스 죽으면 패턴 중지
         if (patternRoutine != null)
             StopCoroutine(patternRoutine);
@@ -87,6 +105,7 @@ public class BossMonster : NormalMonster
         // 암흑 시야 켜져 있으면 끄기
         if (darkVision != null)
             darkVision.DisableImmediately();
+        */
     }
 
     public void BossInit()

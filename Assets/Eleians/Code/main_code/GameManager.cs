@@ -80,6 +80,10 @@ public class GameManager : MonoBehaviour
     public GameObject gameOverPanel;
     public Text gameOverReasonText;
 
+    [Header("# Ending Settings")]
+    public Image fadeImage; // ★ 화면을 덮을 하얀색 패널 (인스펙터 연결)
+    public string endingSceneName = "EndingCutscene"; // ★ 이동할 엔딩 씬 이름
+
     [Header("# UI Control")]
     public GameObject expBarObject;    // ★ 기존 경험치바 오브젝트 (Slider나 부모 오브젝트)
     public Slider bossHpSlider;        // ★ 새로 만든 보스 체력바 Slider
@@ -938,6 +942,64 @@ public class GameManager : MonoBehaviour
             // F0은 소수점을 없애는 포맷입니다 (깔끔하게 정수만 표시)
             bossHpText.text = $"{currentHp:F0} / {maxHp:F0}";
         }
+    }
+
+    // 보스가 죽었을 때 호출
+    public void GameClear()
+    {
+        // 이미 엔딩 진행 중이면 무시
+        if (!isLive) return;
+
+        isLive = false; // 게임 로직 정지 (시간은 흐름)
+        StartCoroutine(CoGameClearSequence());
+    }
+
+    IEnumerator CoGameClearSequence()
+    {
+        Debug.Log("Game Clear! Ending Sequence Start.");
+
+        // 1. [플레이어 정지] 조작 멈춤 & 무적 & 스킬 끄기
+        if (player != null)
+        {
+            player.LockState(true);
+            player.isInvincible = true;
+            // 플레이어 물리 속도 완전 정지
+            Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+            if (rb != null) rb.linearVelocity = Vector2.zero;
+        }
+        DisableAllSkills(); // 스킬 오브젝트 끄기
+
+        // 2. [UI 유지] UI 숨김 코드는 제거했습니다. (체력바 등 그대로 보임)
+
+        // 3. [보스 사망 모션 감상] 
+        // 보스 사망 애니메이션 길이만큼 대기 (예: 3초)
+        yield return new WaitForSeconds(3.0f);
+
+        // 4. [화이트 아웃] 화면이 점점 하얗게 밝아짐
+        if (fadeImage != null)
+        {
+            fadeImage.gameObject.SetActive(true);
+            float fadeDuration = 2.0f;
+            float t = 0f;
+
+            while (t < fadeDuration)
+            {
+                t += Time.deltaTime;
+                // 알파값 0(투명) -> 1(불투명 흰색)
+                fadeImage.color = new Color(1, 1, 1, t / fadeDuration);
+                yield return null;
+            }
+            // 확실하게 흰색 고정
+            fadeImage.color = new Color(1, 1, 1, 1);
+        }
+        else
+        {
+            // 페이드 이미지가 없다면 그냥 대기
+            yield return new WaitForSeconds(1.0f);
+        }
+
+        // 5. [씬 전환] 엔딩 컷씬 씬으로 이동
+        SceneManager.LoadScene(endingSceneName);
     }
 
     // ★ [추가] 재시작 함수 (버튼에 연결할 것)
