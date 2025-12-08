@@ -3,9 +3,12 @@ using UnityEngine;
 
 public class IceShield : MonoBehaviour
 {
+    public static IceShield instance;
+
     public int requiredIce = 15;
     public float duration = 4f;
     public float cooldown = 8f;
+    public bool active = false;
 
     bool isReady = true;
 
@@ -48,10 +51,11 @@ public class IceShield : MonoBehaviour
         originalMaxHP = gm.maxHealth;
 
         // ===== 버프 적용 =====
-        gm.maxHealth += 200;
-        gm.health += 200;
+        gm.maxHealth += 100;
+        gm.health += 100;
 
-        player.speed = originalSpeed * 3f;
+        //player.speed = originalSpeed * 3f;
+        active = true;
 
         DamageReduction.instance.IsIceShield = true;
 
@@ -81,5 +85,7 @@ public class IceShield : MonoBehaviour
         // ===== 쿨타임 =====
         yield return new WaitForSeconds(cooldown);
         isReady = true;
+
+        active = false;
     }
 }

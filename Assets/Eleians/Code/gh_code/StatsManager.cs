@@ -67,6 +67,8 @@ public class StatsManager : MonoBehaviour
         // GameManager에서 레벨업 할 때 RecalculateStats()를 호출하는 게 정석이지만
         // 편의상 여기서 계속 갱신해도 됩니다. (단, 아래 로직으로)
         // RecalculateStats();
+       // if (IceShield.instance.active == true) MovementSpeed = baseMoveSpeed * artifactSpeedMult * 2f;
+       // else MovementSpeed = baseMoveSpeed * artifactSpeedMult;
     }
 
     public void RecalculateStats()
