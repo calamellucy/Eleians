@@ -18683,8 +18683,15 @@ MonoBehaviour:
   waves:
   - waveName: S1_Easy
     startTime: 0
-    endTime: 60
+    endTime: 20
     spawnInterval: 1.2
+    type: 0
+    spriteIndices: 00000000
+    spawnAmountOnce: 1
+  - waveName: S1_EN
+    startTime: 20
+    endTime: 60
+    spawnInterval: 0.8
     type: 0
     spriteIndices: 00000000
     spawnAmountOnce: 1
@@ -18712,14 +18719,14 @@ MonoBehaviour:
   - waveName: S2_Easy
     startTime: 180
     endTime: 240
-    spawnInterval: 1
+    spawnInterval: 0.7
     type: 0
     spriteIndices: 02000000
     spawnAmountOnce: 1
   - waveName: S2_Normal
     startTime: 240
     endTime: 300
-    spawnInterval: 0.6
+    spawnInterval: 0.4
     type: 0
     spriteIndices: 0200000000000000
     spawnAmountOnce: 1
@@ -18740,14 +18747,14 @@ MonoBehaviour:
   - waveName: S3_Easy
     startTime: 360
     endTime: 420
-    spawnInterval: 0.9
+    spawnInterval: 0.6
     type: 0
     spriteIndices: 03000000
     spawnAmountOnce: 1
   - waveName: S3_Normal
     startTime: 420
     endTime: 480
-    spawnInterval: 0.5
+    spawnInterval: 0.4
     type: 0
     spriteIndices: 0300000002000000
     spawnAmountOnce: 1
@@ -18768,14 +18775,14 @@ MonoBehaviour:
   - waveName: S4_Easy
     startTime: 540
     endTime: 600
-    spawnInterval: 0.6
+    spawnInterval: 0.4
     type: 0
     spriteIndices: 01000000
     spawnAmountOnce: 2
   - waveName: S4_Normal
     startTime: 600
     endTime: 660
-    spawnInterval: 0.3
+    spawnInterval: 0.2
     type: 0
     spriteIndices: 0100000003000000
     spawnAmountOnce: 2
