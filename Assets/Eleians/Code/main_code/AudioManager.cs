@@ -32,7 +32,10 @@ public class AudioManager : MonoBehaviour
         mobDead = 14, // ★ 몬스터 사망 (피치 낮춰서 사용)
         Ice, Ice_10, Ice_20, Ice_15,
         pop = 19,     // ★ 5개 랜덤 (피치는 정상)
-        Achieve = 24
+        Achieve = 24,
+        elite_stone, elite_spit, elite_rush, elite_def,
+        Loot, point_break, point_clear, Gameover, clear,
+        boss_sword = 34, boss_darkness, boss_ghost, boss_summon
     };
 
     void Awake()
@@ -148,6 +151,8 @@ public class AudioManager : MonoBehaviour
             case Sfx.mobDead:
             case Sfx.Ice:
             case Sfx.pop:
+            case Sfx.elite_def:
+            case Sfx.boss_ghost:
                 return true;
 
             default:

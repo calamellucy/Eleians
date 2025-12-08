@@ -43,10 +43,6 @@ public class StatusUIManager : MonoBehaviour
             // 혹시 연결 안 됐을 때 갇히지 않게 비상용
             Time.timeScale = 1f;
         }
-
-        // 클릭음
-        if (AudioManager.instance != null)
-            AudioManager.instance.PlaySfx(AudioManager.Sfx.click);
     }
 
     // --- [값 갱신 로직] ---

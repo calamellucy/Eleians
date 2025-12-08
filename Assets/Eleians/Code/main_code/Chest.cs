@@ -18,6 +18,8 @@ public class Chest : MonoBehaviour
         if (collision.collider.CompareTag("Player"))
         {
             opened = true;
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.Loot);
+
             anim.SetTrigger("open");
             StartCoroutine(WaitAndShowUI());
         }
