@@ -318,6 +318,7 @@ public class GameManager : MonoBehaviour
         }
 
         // ★ [카메라] 1. Damping을 높여서(2.0) 아주 부드럽게 이동하게 변경
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.boss_summon);
         SetCameraDamping(2.0f);
 
         // ★ [카메라] 1. 원래 보고 있던 대상(플레이어) 저장 & 보스 위치 바라보기
@@ -765,6 +766,7 @@ public class GameManager : MonoBehaviour
 
     public void OnTowerDefenseSuccess()
     {
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.point_clear);
         Instantiate(chestPrefab, tower.transform.position + Vector3.right * 2f, Quaternion.identity);
     }
 
@@ -838,8 +840,13 @@ public class GameManager : MonoBehaviour
         // 1. 시간 정지
         Time.timeScale = 0f;
 
+        // ★★★ [수정 핵심] ★★★
+        // 물리 충돌(FixedUpdate)로 인해 이 함수가 들어왔을 때, 
+        // 바로 카메라를 건드리면 에러가 납니다.
+        // 한 프레임 쉬어주면 물리 연산이 끝나고 Update 타이밍으로 넘어가서 안전해집니다.
+        yield return null;
+
         // ★ [수정 1] 'UnscaledTime' 대신 'ManualUpdate'로 설정
-        // "이제부터 카메라는 내가 수동으로 업데이트한다!" 라고 선언
         CinemachineBrain brain = Camera.main.GetComponent<CinemachineBrain>();
         if (brain != null)
         {
@@ -868,7 +875,6 @@ public class GameManager : MonoBehaviour
                 virtualCam.Lens = lensSettings;
 
                 // ★ [수정 2] 여기서 강제로 카메라를 갱신시킴
-                // 시간이 0이어도 수동으로 "카메라야 일해라!" 하고 명령하는 코드
                 if (brain != null) brain.ManualUpdate();
 
                 yield return null;
@@ -883,6 +889,7 @@ public class GameManager : MonoBehaviour
         if (tower != null)
         {
             // 타워 스크립트에 있는 파괴 함수 호출
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.point_break);
             tower.GetComponent<Tower>().PlayDestructionEffect();
         }
 
@@ -904,7 +911,7 @@ public class GameManager : MonoBehaviour
     void ShowGameOverUI(string reason)
     {
         Time.timeScale = 0f; // 확실하게 정지
-
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Gameover);
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
