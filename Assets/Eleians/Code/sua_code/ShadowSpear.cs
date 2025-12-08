@@ -86,6 +86,11 @@ public class ShadowSpear : MonoBehaviour
         // 바닥 도착 확정
         if (spearVisual != null) spearVisual.localPosition = endLocalPos;
 
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.boss_sword); // 미리 정의된 Sfx 열거형 사용
+        }
+
         // ----------------------------------------
         // 3단계: 착지 및 소멸 (Impact)
         // ----------------------------------------
