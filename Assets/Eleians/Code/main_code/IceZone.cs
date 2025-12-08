@@ -10,7 +10,7 @@ public class IceZone : MonoBehaviour
     [Header("Heal Settings")]
     public float healTickInterval = 1f;
     public float healBase = 10f;
-    public float healMissingHpRatio = 0.10f;
+    public float healMissingHpRatio = 0.05f;
 
     [Header("Damage Settings")]
     public float damageInterval = 0.2f;

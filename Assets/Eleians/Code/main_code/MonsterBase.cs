@@ -232,7 +232,7 @@ public class MonsterBase : MonoBehaviour
     {
         if (effectFire != null) effectFire.SetActive(true);
 
-        float dotDamage = StatsManager.instance.Attack * 0.05f;
+        float dotDamage = StatsManager.instance.Attack * 0.05f * (1f + StatsManager.instance.ElectricCnt * 0.1f);
 
         for (int i = 0; i < 3; i++)
         {
@@ -260,7 +260,7 @@ public class MonsterBase : MonoBehaviour
         if (effectLightning != null) effectLightning.SetActive(true);
         rigid.linearVelocity = Vector2.zero;
 
-        yield return new WaitForSeconds(0.15f);
+        yield return new WaitForSeconds(0.15f * (StatsManager.instance.FireCnt * 0.05f + 1f));
 
         if (effectLightning != null) effectLightning.SetActive(false);
         isStunned = false;

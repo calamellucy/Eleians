@@ -20,7 +20,7 @@ public class EarthActive : ActiveSkillBase
     // 2. 입력 키 (Q키)
     protected override bool CheckInput()
     {
-        return Input.GetKeyDown(KeyCode.Q);
+        return Input.GetKeyDown(KeyCode.Alpha4);
     }
 
     // 3. 스킬 발동
