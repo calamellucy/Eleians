@@ -34,7 +34,7 @@ public class ShadowSpear : MonoBehaviour
 
         // 경고 장판 켜기
         if (warningObject != null) warningObject.SetActive(true);
-        if (warningAnim != null) warningAnim.Play("boss_spear_warning"); // 페이드인 애니메이션이 있다면 재생
+        // if (warningAnim != null) warningAnim.Play("boss_spear_warning"); // 페이드인 애니메이션이 있다면 재생
 
         // 창(Visual)은 안 보이게 하거나 하늘 위로 올려둠
         if (spearVisual != null)

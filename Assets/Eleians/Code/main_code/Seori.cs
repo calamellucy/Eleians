@@ -119,12 +119,11 @@ public class Seori : MonoBehaviour
         damage = (atk * 0.4f) * Mathf.Pow(1.04f, earthCount);
         count = 1 + (int)(iceCount * 0.2f);
         range = 1 + fireCount * 0.05f;
-        slowRate = 0.3f + (electricCount * 0.04f);
+        slowRate = 0.4f + (electricCount * 0.04f);
 
         if (iceCount >= 5)
         {
             speed *= 1.2f;
-            slowRate += 0.15f;
             count += 2;
             range += 0.75f;
         }

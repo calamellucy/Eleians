@@ -24,6 +24,9 @@ public class EliteMonster : NormalMonster
     public int rapidShotCount = 3;      // 몇 발 쏠지 (3발)
     public float rapidShotInterval = 0.2f; // 연사 속도 (0.2초마다 발사)
 
+    [Header("Effects")]
+    public GameObject warningEffect;
+
     // 방어 스킬용 변수
     private bool isDefending = false;
     
@@ -42,6 +45,7 @@ public class EliteMonster : NormalMonster
         skillTimer = skillCooldown; // 나오자마자 바로 스킬 쓰지 않게 쿨타임 채워둠 (원하면 0으로)
         isUsingSkill = false;
         isDefending = false;
+        if (warningEffect != null) warningEffect.SetActive(false);
     }
 
     // NormalMonster의 이동 로직(FixedUpdate)을 그대로 쓰되,
@@ -97,10 +101,10 @@ public class EliteMonster : NormalMonster
         isUsingSkill = true; // 이동 멈춤
         anim.SetTrigger("attack");
 
-        // 1. 텔레그래프 (빨개지면서 경고)
-        spriter.color = Color.red;
-        yield return new WaitForSeconds(0.5f); // 0.5초 대기
-        spriter.color = Color.white;
+        // 1. 경고
+        if (warningEffect != null) warningEffect.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        if (warningEffect != null) warningEffect.SetActive(false);
 
         // 돌진 시작!
         if (target != null)
@@ -146,7 +150,11 @@ public class EliteMonster : NormalMonster
 
         isDefending = true;
         anim.SetBool("isDefending", true);
-        // spriter.color = Color.blue; // 파랗게 변함 (방어 상태 표시)
+
+        // 1. 경고
+        if (warningEffect != null) warningEffect.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        if (warningEffect != null) warningEffect.SetActive(false);
 
         // 3초간 방어 상태
         yield return new WaitForSeconds(3f);
@@ -166,6 +174,11 @@ public class EliteMonster : NormalMonster
 
         isUsingSkill = true;       // 1. 이동 멈춤
         anim.SetTrigger("attack");  // 2. 애니메이션 시작
+
+        // 1. 경고
+        if (warningEffect != null) warningEffect.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        if (warningEffect != null) warningEffect.SetActive(false);
 
         // [핵심] 공격 모션이 나올 때까지 기다림!
         // 인스펙터에서 rockThrowDelay 값을 조절해서 0.07 프레임과 딱 맞추세요.
@@ -196,6 +209,11 @@ public class EliteMonster : NormalMonster
 
         isUsingSkill = true;       // 이동 멈춤
         anim.SetTrigger("attack");  // 공격 모션 시작
+
+        // 경고
+        if (warningEffect != null) warningEffect.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        if (warningEffect != null) warningEffect.SetActive(false);
 
         // 1. 첫 발 발사 전, 애니메이션 타이밍 맞추기 (선딜레이)
         // 아까 설정한 spitThrowDelay(예: 0.12초) 만큼 기다림
