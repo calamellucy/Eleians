@@ -131,6 +131,8 @@ public class GameManager : MonoBehaviour
             // 몹 잡는 속도도 빨라지므로 체감상 템포는 유지됨.
             float expCalc = baseExp * Mathf.Pow(i + 1, growth);
 
+            if (level > 30) growth = 1.6f;
+
             // 정수로 변환 시 5단위나 10단위로 끊어주면 깔끔함 (선택사항)
             nextExp[i] = Mathf.RoundToInt(expCalc);
         }
