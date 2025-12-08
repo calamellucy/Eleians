@@ -13461,7 +13461,7 @@ MonoBehaviour:
   coolTime: 10
   borderImage: {fileID: 1279463353}
   skillName: Fire
-  fireSkill: {fileID: 0}
+  fireSkill: {fileID: 1602427844}
   triggerKey: 50
 --- !u!114 &880838740
 MonoBehaviour:
@@ -15626,7 +15626,7 @@ MonoBehaviour:
   coolTime: 10
   borderImage: {fileID: 373177489}
   skillName: Earth
-  earthbump: {fileID: 0}
+  earthbump: {fileID: 1337961718}
 --- !u!114 &1011682341
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89922,7 +89922,7 @@ MonoBehaviour:
   coolTime: 12
   borderImage: {fileID: 53337490}
   skillName: Ice
-  iceSkill: {fileID: 0}
+  iceSkill: {fileID: 1602427847}
   triggerKey: 51
 --- !u!114 &1473641934
 MonoBehaviour:
@@ -90814,8 +90814,8 @@ RectTransform:
   - {fileID: 1614137238}
   - {fileID: 926371927}
   - {fileID: 215232779}
-  - {fileID: 1827811435}
   - {fileID: 1685814579}
+  - {fileID: 1827811435}
   - {fileID: 421195835}
   - {fileID: 311367046}
   - {fileID: 177320207}
@@ -133180,7 +133180,7 @@ MonoBehaviour:
   coolTime: 5
   borderImage: {fileID: 1171156133}
   skillName: Electric
-  skillScript: {fileID: 0}
+  skillScript: {fileID: 1602427842}
   triggerKey: 49
 --- !u!114 &1966913102
 MonoBehaviour:
