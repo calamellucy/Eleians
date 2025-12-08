@@ -9,7 +9,7 @@ public class Seori : MonoBehaviour
     public int count = 1;
     public float speed;
     public float range;
-    public float slowRate = 0.3f;
+    public float slowRate = 0.4f;
 
     // 원소 수
     public int electricCount = 0;
@@ -30,7 +30,7 @@ public class Seori : MonoBehaviour
     public int iceZonePrefabId = 13;
 
     // 15진화 즉시 발동 플래그
-    float iceZoneCooldown = 7f;
+    float iceZoneCooldown = 20f;
     float iceZoneTimer = 0f;
     bool iceZoneFirstTriggered = false;
 
@@ -115,17 +115,18 @@ public class Seori : MonoBehaviour
         }
 
         // 진화 옵션 계산
-        speed = 270f;
-        damage = (atk * 1.5f) * Mathf.Pow(1.04f, earthCount);
-        count = 1 + (int)(iceCount * 0.25f);
+        speed = 240f;
+        damage = (atk * 0.4f) * Mathf.Pow(1.04f, earthCount);
+        count = 1 + (int)(iceCount * 0.2f);
         range = 1 + fireCount * 0.05f;
         slowRate = 0.3f + (electricCount * 0.04f);
 
         if (iceCount >= 5)
         {
-            speed *= 1.35f;
+            speed *= 1.2f;
             slowRate += 0.15f;
             count += 2;
+            range += 0.75f;
         }
 
         // 얼음 20 진화
@@ -179,6 +180,7 @@ public class Seori : MonoBehaviour
         zone.transform.position = spawnPos;
         zone.transform.rotation = Quaternion.identity;
         zone.SetActive(true);
+        Debug.Log("IceZone 생성!");
     }
 
     // 20진화: dhwyy 생성 / 유지
