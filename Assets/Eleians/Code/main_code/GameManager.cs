@@ -115,7 +115,7 @@ public class GameManager : MonoBehaviour
 
         // 설정값
         float baseExp = 10f;  // 기본 경험치
-        float growth = 1.3f;  // 성장 계수 (1.1~1.5 추천)
+        float growth = 1.2f;  // 성장 계수 (1.1~1.5 추천)
                               // 1.1 : 엄청 빠름 (선형에 가까움)
                               // 1.3 : 뱀서 느낌 (추천)
                               // 1.5 : 약간 빡빡함
