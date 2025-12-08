@@ -43,7 +43,18 @@ public class AchievementManager : MonoBehaviour
         instance = this;
         // 업적 개수만큼 불리언 배열 초기화 (기본 false)
         if (achievementUIs != null)
+        {
             isUnlocked = new bool[achievementUIs.Length];
+
+            // ★ [저장된 데이터 불러오기]
+            for (int i = 0; i < isUnlocked.Length; i++)
+            {
+                // "Achievement_0", "Achievement_1" ... 키로 저장된 값(0 or 1)을 가져옴
+                // 값이 1이면 true(달성함), 0이면 false(미달성)
+                int savedValue = PlayerPrefs.GetInt($"Achievement_{i}", 0);
+                isUnlocked[i] = (savedValue == 1);
+            }
+        }
     }
 
     void Start()
@@ -74,6 +85,19 @@ public class AchievementManager : MonoBehaviour
         }
     }
 
+    [ContextMenu("테스트: 모든 업적 초기화")]
+    public void ClearAllAchievements()
+    {
+        // PlayerPrefs.DeleteAll(); // 모든 저장 데이터 삭제 (주의: 소리 설정 등도 날아감)
+
+        // 업적만 골라서 지우려면 반복문 사용
+        for(int i=0; i<achievementUIs.Length; i++) {
+            PlayerPrefs.DeleteKey($"Achievement_{i}");
+        }
+
+        Debug.Log("모든 업적 데이터 초기화 완료!");
+    }
+
     public bool CheckUnlocked(int index)
     {
         // 배열이 없거나 인덱스가 범위를 벗어나면 false (잠김 처리)
@@ -99,6 +123,10 @@ public class AchievementManager : MonoBehaviour
         // 달성 처리
         isUnlocked[index] = true;
         Debug.Log($"업적 달성! ID: {id} (Index: {index})");
+
+        // ★ [즉시 저장] 달성하자마자 저장해둬야 튕겨도 안 날아감
+        PlayerPrefs.SetInt($"Achievement_{index}", 1);
+        PlayerPrefs.Save(); // 디스크에 쓰기
 
         // UI 큐에 추가 및 애니메이션 시작
         displayQueue.Enqueue(achievementUIs[index]);
