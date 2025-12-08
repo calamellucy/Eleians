@@ -168,6 +168,8 @@ public class BossMonster : NormalMonster
         if (anim != null)
             anim.SetTrigger("castDarkVision");
 
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.boss_darkness);
+
         // 화면 어둡게
         if (darkVision != null)
             darkVision.Enable(darkVisionDuration);
@@ -233,6 +235,8 @@ public class BossMonster : NormalMonster
             if (!isLive) yield break;
 
             SpawnGhost();
+
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.boss_ghost);
 
             // 다음 유령 나올 때까지 잠깐 대기 (다다다다 효과)
             yield return new WaitForSeconds(ghostSpawnInterval);
