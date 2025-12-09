@@ -17,6 +17,7 @@ public class AudioManager : MonoBehaviour
     public float sfxVolume;
     public int channels;
     AudioSource[] sfxPlayers;
+    AudioSource uiPlayer;
     int channelIndex;
 
     // 쿨타임 관리를 위한 변수들
@@ -66,6 +67,17 @@ public class AudioManager : MonoBehaviour
             sfxPlayers[index].spatialBlend = 0f;
         }
 
+        // 3. ★★★ [추가] UI 전용 플레이어 생성 ★★★
+        GameObject uiObject = new GameObject("UiPlayer");
+        uiObject.transform.parent = transform;
+        uiPlayer = uiObject.AddComponent<AudioSource>();
+        uiPlayer.playOnAwake = false;
+        uiPlayer.volume = sfxVolume; // 볼륨은 SFX와 동일하게
+        uiPlayer.spatialBlend = 0f;  // 2D 사운드
+
+        // ★★★ [핵심] 이 옵션을 켜야 일시정지 때도 소리가 납니다! ★★★
+        uiPlayer.ignoreListenerPause = true;
+
         // ★★★ [수정됨] 인스펙터에 등록된 sfxClips 개수만큼 쿨타임 배열 생성
         // 이제 인스펙터에서 Size를 25로 늘려놨으니, 자동으로 크기 25짜리 배열이 됨!
         // Achieve(24번)도 안전하게 들어감.
@@ -88,6 +100,24 @@ public class AudioManager : MonoBehaviour
 
         sfxLimitTimes[(int)sfx] = Time.time;
 
+        // 2. 인덱스 계산
+        int clipIndex = (int)sfx;
+
+        if (sfx == Sfx.pop)
+        {
+            clipIndex += Random.Range(0, 5);
+        }
+
+        if (clipIndex >= sfxClips.Length) return; // 예외처리
+
+        // ★★★ [수정] UI 소리인지 확인하고 분기 처리 ★★★
+        if (sfx == Sfx.click || sfx == Sfx.mouse_on_button)
+        {
+            // UI 소리면 uiPlayer로 재생 (일시정지 무시함)
+            uiPlayer.PlayOneShot(sfxClips[clipIndex]);
+            return; // 여기서 끝냄 (아래 SFX 로직 실행 안 함)
+        }
+
         // 2. 빈 오디오 소스 찾기
         for (int index = 0; index < sfxPlayers.Length; index++)
         {
@@ -99,6 +129,7 @@ public class AudioManager : MonoBehaviour
             channelIndex = loopIndex;
 
             // --- 인덱스 결정 ---
+            /*
             int clipIndex = (int)sfx;
 
             if (sfx == Sfx.pop)
@@ -116,6 +147,7 @@ public class AudioManager : MonoBehaviour
                 return;
             }
             // ---------------------
+            */
 
             sfxPlayers[loopIndex].clip = sfxClips[clipIndex];
 

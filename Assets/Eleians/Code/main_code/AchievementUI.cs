@@ -11,6 +11,17 @@ public class AchievementUI : MonoBehaviour
         UpdateAllSlots();
     }
 
+    // ★★★ [추가] 켜져 있을 때 ESC 키 감지 ★★★
+    void Update()
+    {
+        // 이 창이 켜져 있을 때만 Update가 돌아갑니다.
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            // 나 자신을 끄기 (닫기)
+            gameObject.SetActive(false);
+        }
+    }
+
     public void UpdateAllSlots()
     {
         // 모든 슬롯을 돌면서 상태 갱신 명령
