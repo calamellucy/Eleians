@@ -4,6 +4,8 @@ using UnityEngine;
 // 이름 변경: IceShield -> IceShieldSkill (역할 명확화)
 public class IceShieldSkill : MonoBehaviour
 {
+    public static IceShieldSkill instance;
+
     [Header("Skill Settings")]
     public float duration = 4f; // 지속 시간
     public GameObject shieldPrefab; // 프리팹
@@ -16,6 +18,7 @@ public class IceShieldSkill : MonoBehaviour
 
     float originalSpeed;
     float originalMaxHP;
+    public bool active = false;
 
     void Awake()
     {
@@ -37,14 +40,17 @@ public class IceShieldSkill : MonoBehaviour
 
     IEnumerator ShieldRoutine()
     {
+        active = true;
+        StatsManager.instance.RecalculateStats();
+
         // ===== 원본 스탯 저장 =====
-        originalSpeed = player.speed;
+        //originalSpeed = player.speed;
         originalMaxHP = gm.maxHealth;
 
         // ===== 버프 적용 =====
         gm.maxHealth += 100;
         gm.health += 100;
-        player.speed = originalSpeed * 3f;
+        //player.speed = originalSpeed * 3f;
 
         if (DamageReduction.instance != null)
             DamageReduction.instance.IsIceShield = true;
@@ -67,7 +73,7 @@ public class IceShieldSkill : MonoBehaviour
         // ===== 버프 해제 (원복) =====
         gm.maxHealth = originalMaxHP;
         gm.health = Mathf.Clamp(gm.health, 0f, gm.maxHealth); // 체력 초과 방지
-        player.speed = originalSpeed;
+        //player.speed = originalSpeed;
 
         if (DamageReduction.instance != null)
             DamageReduction.instance.IsIceShield = false;
@@ -77,5 +83,8 @@ public class IceShieldSkill : MonoBehaviour
             Destroy(activeShield);
 
         // [삭제] 쿨타임 대기 로직 (UI 스크립트가 따로 쿨타임을 돌리므로 여기선 필요 없음)
+
+        active = false;
+        StatsManager.instance.RecalculateStats();
     }
 }
