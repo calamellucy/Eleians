@@ -94428,7 +94428,6 @@ RectTransform:
   - {fileID: 215232779}
   - {fileID: 1685814579}
   - {fileID: 1827811435}
-  - {fileID: 421195835}
   - {fileID: 311367046}
   - {fileID: 177320207}
   - {fileID: 191511793}
@@ -94436,6 +94435,7 @@ RectTransform:
   - {fileID: 1595816574}
   - {fileID: 580216794}
   - {fileID: 866793048}
+  - {fileID: 421195835}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -133461,6 +133461,7 @@ MonoBehaviour:
   explainationUI: {fileID: 177320202}
   statusManager: {fileID: 1595816571}
   skillManager: {fileID: 177320203}
+  gameRuleUI: {fileID: 1685814578}
 --- !u!114 &1827811437
 MonoBehaviour:
   m_ObjectHideFlags: 0

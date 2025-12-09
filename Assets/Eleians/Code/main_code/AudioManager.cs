@@ -111,7 +111,7 @@ public class AudioManager : MonoBehaviour
         if (clipIndex >= sfxClips.Length) return; // 예외처리
 
         // ★★★ [수정] UI 소리인지 확인하고 분기 처리 ★★★
-        if (sfx == Sfx.click || sfx == Sfx.mouse_on_button)
+        if (sfx == Sfx.click || sfx == Sfx.mouse_on_button || sfx == Sfx.Lvup2)
         {
             // UI 소리면 uiPlayer로 재생 (일시정지 무시함)
             uiPlayer.PlayOneShot(sfxClips[clipIndex]);
