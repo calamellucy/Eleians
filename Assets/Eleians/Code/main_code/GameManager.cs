@@ -89,6 +89,14 @@ public class GameManager : MonoBehaviour
     public Slider bossHpSlider;        // ★ 새로 만든 보스 체력바 Slider
     public Text bossHpText;
 
+    [Header("# Boss Dialogue")]
+    public GameObject dialoguePanel;  // 검은 배경 패널 (자막바)
+    public Text dialogueText;         // 자막 텍스트
+    [TextArea]                        // 인스펙터에서 줄바꿈 입력 가능하게 함
+    public string[] bossLines;        // 대사 목록
+    public float typingSpeed = 0.05f; // 글자 하나 나오는 속도 (낮을수록 빠름)
+    public float readDelay = 2.0f;    // 다 쳐진 후 읽을 시간
+
     void Awake()
     {
         instance = this;
@@ -119,17 +127,29 @@ public class GameManager : MonoBehaviour
 
         // 설정값
         float baseExp = 10f;  // 기본 경험치
-        float growth = 1.2f;  // 성장 계수 (1.1~1.5 추천)
+        // float growth = 1.2f;  // 성장 계수 (1.1~1.5 추천)
                               // 1.1 : 엄청 빠름 (선형에 가까움)
                               // 1.3 : 뱀서 느낌 (추천)
                               // 1.5 : 약간 빡빡함
 
         for (int i = 1; i <= maxLevel; i++)
         {
+            float currentGrowth; // 현재 레벨에 적용할 계수
+
+            // ★★★ [수정된 부분] 30레벨 기준으로 계수 변경 ★★★
+            if (i < 30)
+            {
+                currentGrowth = 1.3f; // 0~29레벨 구간
+            }
+            else
+            {
+                currentGrowth = 1.4f; // 30레벨~ 구간 (난이도 급상승)
+            }
+
             // 공식: 10 * (레벨 ^ 1.3)
             // 레벨이 오를수록 요구량이 늘어나지만, 
             // 몹 잡는 속도도 빨라지므로 체감상 템포는 유지됨.
-            float expCalc = baseExp * Mathf.Pow(i + 1, growth);
+            float expCalc = baseExp * Mathf.Pow(i + 1, currentGrowth);
 
             // 정수로 변환 시 5단위나 10단위로 끊어주면 깔끔함 (선택사항)
             nextExp[i] = Mathf.RoundToInt(expCalc);
@@ -490,6 +510,13 @@ public class GameManager : MonoBehaviour
             StartCoroutine(FadeOutMagicCircle(magicCircle, 1.0f));
         }
 
+        yield return new WaitForSeconds(1.0f);
+
+        // 대사 출력 함수 실행 (대사가 다 끝날 때까지 여기서 코드 멈춤)
+        yield return StartCoroutine(CoPlayBossDialogue());
+
+        yield return new WaitForSeconds(1.0f);
+
         // 5. 전투 시작 & UI 복구
         isBossPhase = true;
         StartCoroutine(SlideUI(true));
@@ -631,6 +658,87 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // ★★★ [추가] 보스 대사 출력 코루틴 ★★★
+    // ★★★ [수정됨] 페이드 인/아웃 + 타자 효과 자막 시스템 ★★★
+    // ★★★ [수정됨] 스페이스바 스킵 기능이 추가된 대사 시스템 ★★★
+    IEnumerator CoPlayBossDialogue()
+    {
+        if (dialoguePanel == null) yield break;
+
+        // 0. 투명도 조절을 위한 CanvasGroup 가져오기
+        CanvasGroup cg = dialoguePanel.GetComponent<CanvasGroup>();
+        if (cg == null) cg = dialoguePanel.AddComponent<CanvasGroup>();
+
+        // 초기화
+        dialoguePanel.SetActive(true);
+        cg.alpha = 0f;
+        dialogueText.text = "";
+
+        // 1. [페이드 인]
+        float fadeDuration = 0.5f;
+        float timer = 0f;
+        while (timer < fadeDuration)
+        {
+            timer += Time.deltaTime;
+            cg.alpha = Mathf.Lerp(0f, 1f, timer / fadeDuration);
+            yield return null;
+        }
+        cg.alpha = 1f;
+
+        // 2. [대사 출력 루프]
+        if (bossLines != null)
+        {
+            foreach (string line in bossLines)
+            {
+                dialogueText.text = ""; // 텍스트 초기화
+
+                // A. 타자 치는 효과 (글자 단위)
+                foreach (char letter in line.ToCharArray())
+                {
+                    // ★ 스킵: 스페이스 바 누르면 즉시 완성
+                    if (Input.GetKeyDown(KeyCode.Space))
+                    {
+                        dialogueText.text = line; // 전체 문장 보여줌
+                        break; // 타자 루프 탈출
+                    }
+
+                    dialogueText.text += letter;
+                    yield return new WaitForSeconds(typingSpeed);
+                }
+
+                // (혹시 모를 키 중복 입력 방지를 위해 한 프레임 대기)
+                yield return null;
+
+                // B. 다 쳐진 후 읽는 시간 (대기)
+                // 단순히 WaitForSeconds를 쓰면 입력을 못 받으므로 while문 사용
+                float waitTimer = 0f;
+                while (waitTimer < readDelay)
+                {
+                    // ★ 스킵: 스페이스 바 누르면 읽는 시간 무시하고 다음으로
+                    if (Input.GetKeyDown(KeyCode.Space))
+                    {
+                        break; // 대기 루프 탈출
+                    }
+
+                    waitTimer += Time.deltaTime;
+                    yield return null;
+                }
+            }
+        }
+
+        // 3. [페이드 아웃]
+        timer = 0f;
+        while (timer < fadeDuration)
+        {
+            timer += Time.deltaTime;
+            cg.alpha = Mathf.Lerp(1f, 0f, timer / fadeDuration);
+            yield return null;
+        }
+        cg.alpha = 0f;
+
+        dialoguePanel.SetActive(false);
+    }
+
     // 필드에 있는 잡몹들 제거 (보스 등장 시 방해 안 되게)
     void ClearFieldMonsters()
     {
@@ -768,11 +876,30 @@ public class GameManager : MonoBehaviour
     {
         Living = false;
         Time.timeScale = 0f;
+        AudioListener.pause = true;
     }
     public void Resume()
     {
+        // 1. 레벨업 창 체크
+        if (uiLevelUp != null && uiLevelUp.transform.localScale.x > 0.1f)
+        {
+            return;
+        }
+
+        // 2. 아티팩트 선택창 체크
+        if (uiSelectArt != null)
+        {
+            // 두 방식 모두 대응하기 위해 "켜져 있고(Active) && 크기도 원래대로라면(Scale > 0)"으로 체크
+            if (uiSelectArt.gameObject.activeSelf && uiSelectArt.transform.localScale.x > 0.1f)
+            {
+                return;
+            }
+        }
+
         Living = true;
         Time.timeScale = 1f;
+
+        AudioListener.pause = false;
     }
 
     public void OnTowerDefenseSuccess()
