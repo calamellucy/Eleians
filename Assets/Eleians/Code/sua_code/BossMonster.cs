@@ -112,7 +112,7 @@ public class BossMonster : NormalMonster
     {
         speed = 1f; // 
         originalSpeed = speed;
-        maxHealth = 10000;
+        maxHealth = 150000;
         health = maxHealth;
         damage = 50;
     }
@@ -167,6 +167,8 @@ public class BossMonster : NormalMonster
         // 모션: 암흑 시야 캐스팅 애니메이션
         if (anim != null)
             anim.SetTrigger("castDarkVision");
+
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.boss_darkness);
 
         // 화면 어둡게
         if (darkVision != null)
@@ -233,6 +235,8 @@ public class BossMonster : NormalMonster
             if (!isLive) yield break;
 
             SpawnGhost();
+
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.boss_ghost);
 
             // 다음 유령 나올 때까지 잠깐 대기 (다다다다 효과)
             yield return new WaitForSeconds(ghostSpawnInterval);

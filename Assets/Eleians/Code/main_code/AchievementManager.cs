@@ -43,7 +43,18 @@ public class AchievementManager : MonoBehaviour
         instance = this;
         // 업적 개수만큼 불리언 배열 초기화 (기본 false)
         if (achievementUIs != null)
+        {
             isUnlocked = new bool[achievementUIs.Length];
+
+            // ★ [저장된 데이터 불러오기]
+            for (int i = 0; i < isUnlocked.Length; i++)
+            {
+                // "Achievement_0", "Achievement_1" ... 키로 저장된 값(0 or 1)을 가져옴
+                // 값이 1이면 true(달성함), 0이면 false(미달성)
+                int savedValue = PlayerPrefs.GetInt($"Achievement_{i}", 0);
+                isUnlocked[i] = (savedValue == 1);
+            }
+        }
     }
 
     void Start()
@@ -74,6 +85,19 @@ public class AchievementManager : MonoBehaviour
         }
     }
 
+    [ContextMenu("테스트: 모든 업적 초기화")]
+    public void ClearAllAchievements()
+    {
+        // PlayerPrefs.DeleteAll(); // 모든 저장 데이터 삭제 (주의: 소리 설정 등도 날아감)
+
+        // 업적만 골라서 지우려면 반복문 사용
+        for(int i=0; i<achievementUIs.Length; i++) {
+            PlayerPrefs.DeleteKey($"Achievement_{i}");
+        }
+
+        Debug.Log("모든 업적 데이터 초기화 완료!");
+    }
+
     public bool CheckUnlocked(int index)
     {
         // 배열이 없거나 인덱스가 범위를 벗어나면 false (잠김 처리)
@@ -85,6 +109,7 @@ public class AchievementManager : MonoBehaviour
     }
 
     // ★ 업적 달성 함수 (ID는 1부터 시작하는 걸로 가정)
+    /*
     public void Unlock(int id)
     {
         int index = id - 1;
@@ -100,7 +125,28 @@ public class AchievementManager : MonoBehaviour
         isUnlocked[index] = true;
         Debug.Log($"업적 달성! ID: {id} (Index: {index})");
 
+        // ★ [즉시 저장] 달성하자마자 저장해둬야 튕겨도 안 날아감
+        PlayerPrefs.SetInt($"Achievement_{index}", 1);
+        PlayerPrefs.Save(); // 디스크에 쓰기
+
         // UI 큐에 추가 및 애니메이션 시작
+        displayQueue.Enqueue(achievementUIs[index]);
+
+        if (!isAnimating)
+        {
+            StartCoroutine(CoAnimateAchievement());
+        }
+    }
+    */
+
+    // ★★★ [복구 및 수정] DataManager가 호출하는 알림 함수 ★★★
+    public void ShowNotification(int index)
+    {
+        // 예외 처리
+        if (achievementUIs == null || index < 0 || index >= achievementUIs.Length) return;
+        if (achievementUIs[index] == null) return;
+
+        // 큐에 넣고 애니메이션 시작
         displayQueue.Enqueue(achievementUIs[index]);
 
         if (!isAnimating)
@@ -167,30 +213,87 @@ public class AchievementManager : MonoBehaviour
         if (stats == null) return;
 
         // 10. 럭키가이 (치명타 50%)
-        if (stats.CritChance >= 0.5f) Unlock(10);
+        if (stats.CritChance >= 0.5f)
+        {
+            if (DataManager.Instance != null)
+            {
+                DataManager.Instance.UnlockAchievement(10);
+            }
+        } 
+            //Unlock(10);
 
         // ★ [복구] 7. 토르 (전기 28레벨 -> 발사체 10개 자동 달성)
         // 네 말대로 레벨만 체크하면 끝!
-        if (stats.ElectricCnt >= 28) Unlock(7);
+        if (stats.ElectricCnt >= 28)
+        {
+            if (DataManager.Instance != null)
+            {
+                DataManager.Instance.UnlockAchievement(7);
+            }
+        }
+            //Unlock(7);
 
         // 11~14. 속성 지배자
-        if (stats.ElectricCnt >= 40) Unlock(11);
-        if (stats.FireCnt >= 40) Unlock(12);
-        if (stats.IceCnt >= 40) Unlock(13);
-        if (stats.EarthCnt >= 40) Unlock(14);
+        if (stats.ElectricCnt >= 40)
+        {
+            if (DataManager.Instance != null)
+            {
+                DataManager.Instance.UnlockAchievement(11);
+            }
+        }
+            //Unlock(11);
+        if (stats.FireCnt >= 40)
+        {
+            if (DataManager.Instance != null)
+            {
+                DataManager.Instance.UnlockAchievement(12);
+            }
+        }
+            //Unlock(12);
+        if (stats.IceCnt >= 40)
+        {
+            if (DataManager.Instance != null)
+            {
+                DataManager.Instance.UnlockAchievement(13);
+            }
+        }
+            //Unlock(13);
+        if (stats.EarthCnt >= 40)
+        {
+            if (DataManager.Instance != null)
+            {
+                DataManager.Instance.UnlockAchievement(14);
+            }
+        }
+            //Unlock(14);
 
         // 15. 균형의 수호자
         if (stats.ElectricCnt >= 10 && stats.FireCnt >= 10 &&
-            stats.IceCnt >= 10 && stats.EarthCnt >= 10) Unlock(15);
+            stats.IceCnt >= 10 && stats.EarthCnt >= 10)
+        {
+            if (DataManager.Instance != null)
+            {
+                DataManager.Instance.UnlockAchievement(15);
+            }
+        }
+            //Unlock(15);
     }
 
     public void OnTowerDefended()
     {
         protectedTowerCount++;
-        Unlock(1);
+        if (DataManager.Instance != null)
+        {
+            DataManager.Instance.UnlockAchievement(1);
+        }
+        //Unlock(1);
         if (protectedTowerCount >= 4)
         {
-            Unlock(2);
+            if (DataManager.Instance != null)
+            {
+                DataManager.Instance.UnlockAchievement(2);
+            }
+            //Unlock(2);
             checkBlueFrog = true;
         }
     }
@@ -199,18 +302,39 @@ public class AchievementManager : MonoBehaviour
 
     public void OnBossKilled()
     {
-        Unlock(3);
+        if (DataManager.Instance != null)
+        {
+            DataManager.Instance.UnlockAchievement(3);
+        }
+        //Unlock(3);
 
         if (bossSpawnTime > 0 && (GameManager.instance.gameTime - bossSpawnTime) <= 30f)
         {
-            Unlock(4);
+            if (DataManager.Instance != null)
+            {
+                DataManager.Instance.UnlockAchievement(4);
+            }
+            //Unlock(4);
         }
 
         float hpPercent = GameManager.instance.health / GameManager.instance.maxHealth;
-        if (hpPercent <= 0.1f) Unlock(5);
+        if (hpPercent <= 0.1f)
+        {
+            if (DataManager.Instance != null)
+            {
+                DataManager.Instance.UnlockAchievement(5);
+            }
+        }
+            //Unlock(5);
 
         if (isNoDamage)
-            Unlock(6);
+        {
+            if (DataManager.Instance != null)
+            {
+                DataManager.Instance.UnlockAchievement(6);
+            }
+        }
+            //Unlock(6);
     }
 
     public void OnPlayerTakeDamage() => isNoDamage = false;
@@ -222,7 +346,15 @@ public class AchievementManager : MonoBehaviour
         {
             fireSkillUseCnt++;
             // 8. 사실 나도 학교에 가본 적이 없어 (화폭술 15회 사용)
-            if (fireSkillUseCnt >= 15) Unlock(8);
+            if (fireSkillUseCnt >= 15)
+            {
+                //Unlock(8);
+                if (DataManager.Instance != null)
+                {
+                    DataManager.Instance.UnlockAchievement(8);
+                }
+            }
+                
         }
     }
 
@@ -233,7 +365,11 @@ public class AchievementManager : MonoBehaviour
         // 9. 폭주기관차 (빙벽 돌진으로 적 300회 타격)
         if (iceChargeHitCount >= 300)
         {
-            Unlock(9);
+            //Unlock(9);
+            if (DataManager.Instance != null)
+            {
+                DataManager.Instance.UnlockAchievement(9);
+            }
         }
     }
 
@@ -248,7 +384,11 @@ public class AchievementManager : MonoBehaviour
             blueFrogTimer += Time.deltaTime;
             if (blueFrogTimer >= 30f)
             {
-                Unlock(16);
+                //Unlock(16);
+                if (DataManager.Instance != null)
+                {
+                    DataManager.Instance.UnlockAchievement(16);
+                }
                 checkBlueFrog = false;
             }
         }

@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     public int exp;
     [Header("Level Info")]
     public int maxLevel = 45;
-    public int[] nextExp; // ÀÎ½ºÆåÅÍ¿¡¼­ ÀÔ·Â X, ÄÚµå·Î »ı¼º
+    public int[] nextExp; // ì¸ìŠ¤í™í„°ì—ì„œ ì…ë ¥ X, ì½”ë“œë¡œ ìƒì„±
     [Header("# Game Object")]
     public Player player;
     public GameObject boss;
@@ -52,27 +52,27 @@ public class GameManager : MonoBehaviour
     public float normalPhaseDuration = 150f;
     public float towerPhaseDuration = 30f;
 
-    // [º¯°æ] º¸½º¹æ ÀÔÀå ´ë±â »óÅÂ È®ÀÎ¿ë º¯¼ö
+    // [ë³€ê²½] ë³´ìŠ¤ë°© ì…ì¥ ëŒ€ê¸° ìƒíƒœ í™•ì¸ìš© ë³€ìˆ˜
     private bool isWaitingForBossTrigger = false;
 
     [Header("# Boss Cutscene Settings")]
     public CinemachineCamera virtualCam;
-    public RectTransform topUIPanel;     // »ó´Ü UI ¹­À½ (À§·Î »ç¶óÁü)
-    public RectTransform bottomUIPanel;  // ÇÏ´Ü UI ¹­À½ (¾Æ·¡·Î »ç¶óÁü)
-    public float uiSlideDuration = 1.0f; // UI »ç¶óÁö´Â µ¥ °É¸®´Â ½Ã°£
+    public RectTransform topUIPanel;     // ìƒë‹¨ UI ë¬¶ìŒ (ìœ„ë¡œ ì‚¬ë¼ì§)
+    public RectTransform bottomUIPanel;  // í•˜ë‹¨ UI ë¬¶ìŒ (ì•„ë˜ë¡œ ì‚¬ë¼ì§)
+    public float uiSlideDuration = 1.0f; // UI ì‚¬ë¼ì§€ëŠ” ë° ê±¸ë¦¬ëŠ” ì‹œê°„
 
     [Header("# Boss Cutscene Effects")]
-    // [Ãß°¡] º¸½º ¿¬ÃâÀÌ ½ÃÀÛµÇ¾ú´ÂÁö Ã¼Å©ÇÏ´Â º¯¼ö
+    // [ì¶”ê°€] ë³´ìŠ¤ ì—°ì¶œì´ ì‹œì‘ë˜ì—ˆëŠ”ì§€ ì²´í¬í•˜ëŠ” ë³€ìˆ˜
     private bool isCutsceneStarted = false;
-    public Tilemap backgroundTilemap;    // ¡Ú ¹è°æ Å¸ÀÏ¸Ê (»ö ¹Ù²Ü ´ë»ó)
-    public Color bossPhaseBgColor = new Color(0.6f, 0.4f, 0.8f); // Ä¢Ä¢ÇÑ º¸¶ó»ö
-    public Transform shockwaveEffect;    // Áß¾Ó¿¡¼­ ÆÛÁú ¸µ ¸ğ¾ç Ãæ°İÆÄ (Sprite)
+    public Tilemap backgroundTilemap;    // â˜… ë°°ê²½ íƒ€ì¼ë§µ (ìƒ‰ ë°”ê¿€ ëŒ€ìƒ)
+    public Color bossPhaseBgColor = new Color(0.6f, 0.4f, 0.8f); // ì¹™ì¹™í•œ ë³´ë¼ìƒ‰
+    public Transform shockwaveEffect;    // ì¤‘ì•™ì—ì„œ í¼ì§ˆ ë§ ëª¨ì–‘ ì¶©ê²©íŒŒ (Sprite)
     public Transform magicCircle;
-    public GameObject bossBarrier;       // °á°è ¿ÀºêÁ§Æ® (³×¸ğ³­ Å×µÎ¸®)
-    public GameObject bossSpawnEffect;   // º¸½º µîÀå ½Ã ÅÍÁú ÆÄÆ¼Å¬ (Explosion µî)
+    public GameObject bossBarrier;       // ê²°ê³„ ì˜¤ë¸Œì íŠ¸ (ë„¤ëª¨ë‚œ í…Œë‘ë¦¬)
+    public GameObject bossSpawnEffect;   // ë³´ìŠ¤ ë“±ì¥ ì‹œ í„°ì§ˆ íŒŒí‹°í´ (Explosion ë“±)
 
     [Header("# Player Control")]
-    // ¡Ú ¿©±â¿¡ ½ºÅ³ °ü·Ã ¿ÀºêÁ§Æ®(¹«±â, ½ºÄ³³Ê, ¸¶¹ıºÀ µî)¸¦ ´Ù ³ÖÀ¸¼¼¿ä
+    // â˜… ì—¬ê¸°ì— ìŠ¤í‚¬ ê´€ë ¨ ì˜¤ë¸Œì íŠ¸(ë¬´ê¸°, ìŠ¤ìºë„ˆ, ë§ˆë²•ë´‰ ë“±)ë¥¼ ë‹¤ ë„£ìœ¼ì„¸ìš”
     public GameObject[] skillObjects;
     public MonoBehaviour[] skillScripts;
 
@@ -81,13 +81,21 @@ public class GameManager : MonoBehaviour
     public Text gameOverReasonText;
 
     [Header("# Ending Settings")]
-    public Image fadeImage; // ¡Ú È­¸éÀ» µ¤À» ÇÏ¾á»ö ÆĞ³Î (ÀÎ½ºÆåÅÍ ¿¬°á)
-    public string endingSceneName = "EndingCutscene"; // ¡Ú ÀÌµ¿ÇÒ ¿£µù ¾À ÀÌ¸§
+    public Image fadeImage; // â˜… í™”ë©´ì„ ë®ì„ í•˜ì–€ìƒ‰ íŒ¨ë„ (ì¸ìŠ¤í™í„° ì—°ê²°)
+    public string endingSceneName = "EndingCutscene"; // â˜… ì´ë™í•  ì—”ë”© ì”¬ ì´ë¦„
 
     [Header("# UI Control")]
-    public GameObject expBarObject;    // ¡Ú ±âÁ¸ °æÇèÄ¡¹Ù ¿ÀºêÁ§Æ® (Slider³ª ºÎ¸ğ ¿ÀºêÁ§Æ®)
-    public Slider bossHpSlider;        // ¡Ú »õ·Î ¸¸µç º¸½º Ã¼·Â¹Ù Slider
+    public GameObject expBarObject;    // â˜… ê¸°ì¡´ ê²½í—˜ì¹˜ë°” ì˜¤ë¸Œì íŠ¸ (Sliderë‚˜ ë¶€ëª¨ ì˜¤ë¸Œì íŠ¸)
+    public Slider bossHpSlider;        // â˜… ìƒˆë¡œ ë§Œë“  ë³´ìŠ¤ ì²´ë ¥ë°” Slider
     public Text bossHpText;
+
+    [Header("# Boss Dialogue")]
+    public GameObject dialoguePanel;  // ê²€ì€ ë°°ê²½ íŒ¨ë„ (ìë§‰ë°”)
+    public Text dialogueText;         // ìë§‰ í…ìŠ¤íŠ¸
+    [TextArea]                        // ì¸ìŠ¤í™í„°ì—ì„œ ì¤„ë°”ê¿ˆ ì…ë ¥ ê°€ëŠ¥í•˜ê²Œ í•¨
+    public string[] bossLines;        // ëŒ€ì‚¬ ëª©ë¡
+    public float typingSpeed = 0.05f; // ê¸€ì í•˜ë‚˜ ë‚˜ì˜¤ëŠ” ì†ë„ (ë‚®ì„ìˆ˜ë¡ ë¹ ë¦„)
+    public float readDelay = 2.0f;    // ë‹¤ ì³ì§„ í›„ ì½ì„ ì‹œê°„
 
     void Awake()
     {
@@ -101,42 +109,56 @@ public class GameManager : MonoBehaviour
         isLive = true;
         boss.SetActive(false);
 
-        // ¿¬Ãâ¿ë ¿ÀºêÁ§Æ® ÃÊ±âÈ­
+        // ì—°ì¶œìš© ì˜¤ë¸Œì íŠ¸ ì´ˆê¸°í™”
         if (bossBarrier != null) bossBarrier.SetActive(false);
         if (shockwaveEffect != null) shockwaveEffect.gameObject.SetActive(false);
         if (magicCircle != null) magicCircle.gameObject.SetActive(false);
 
 
-        InitLevelData(); // ·¹º§ µ¥ÀÌÅÍ »ı¼º
+        InitLevelData(); // ë ˆë²¨ ë°ì´í„° ìƒì„±
         InitTowerPhaseOrder();
     }
 
-    // ·¹º§¾÷ Å×ÀÌºí ÀÚµ¿ »ı¼º ÇÔ¼ö
+    // ë ˆë²¨ì—… í…Œì´ë¸” ìë™ ìƒì„± í•¨ìˆ˜
     void InitLevelData()
     {
         nextExp = new int[maxLevel + 1];
-        nextExp[0] = 10; // 1·¹º§ °¡´Âµ¥ 10 ÇÊ¿ä
+        nextExp[0] = 10; // 1ë ˆë²¨ ê°€ëŠ”ë° 10 í•„ìš”
 
-        // ¼³Á¤°ª
-        float baseExp = 10f;  // ±âº» °æÇèÄ¡
-        float growth = 1.2f;  // ¼ºÀå °è¼ö (1.1~1.5 ÃßÃµ)
-                              // 1.1 : ¾öÃ» ºü¸§ (¼±Çü¿¡ °¡±î¿ò)
-                              // 1.3 : ¹ì¼­ ´À³¦ (ÃßÃµ)
-                              // 1.5 : ¾à°£ ºıºıÇÔ
+        // ì„¤ì •ê°’
+        float baseExp = 10f;  // ê¸°ë³¸ ê²½í—˜ì¹˜
+        // float growth = 1.2f;  // ì„±ì¥ ê³„ìˆ˜ (1.1~1.5 ì¶”ì²œ)
+                              // 1.1 : ì—„ì²­ ë¹ ë¦„ (ì„ í˜•ì— ê°€ê¹Œì›€)
+                              // 1.3 : ë±€ì„œ ëŠë‚Œ (ì¶”ì²œ)
+                              // 1.5 : ì•½ê°„ ë¹¡ë¹¡í•¨
 
         for (int i = 1; i <= maxLevel; i++)
         {
-            // °ø½Ä: 10 * (·¹º§ ^ 1.3)
-            // ·¹º§ÀÌ ¿À¸¦¼ö·Ï ¿ä±¸·®ÀÌ ´Ã¾î³ªÁö¸¸, 
-            // ¸÷ Àâ´Â ¼Óµµµµ »¡¶óÁö¹Ç·Î Ã¼°¨»ó ÅÛÆ÷´Â À¯ÁöµÊ.
-            float expCalc = baseExp * Mathf.Pow(i + 1, growth);
+            float currentGrowth; // í˜„ì¬ ë ˆë²¨ì— ì ìš©í•  ê³„ìˆ˜
 
-            // Á¤¼ö·Î º¯È¯ ½Ã 5´ÜÀ§³ª 10´ÜÀ§·Î ²÷¾îÁÖ¸é ±ò²ûÇÔ (¼±ÅÃ»çÇ×)
+            // â˜…â˜…â˜… [ìˆ˜ì •ëœ ë¶€ë¶„] 30ë ˆë²¨ ê¸°ì¤€ìœ¼ë¡œ ê³„ìˆ˜ ë³€ê²½ â˜…â˜…â˜…
+            if (i < 30)
+            {
+                currentGrowth = 1.3f; // 0~29ë ˆë²¨ êµ¬ê°„
+            }
+            else
+            {
+                currentGrowth = 1.4f; // 30ë ˆë²¨~ êµ¬ê°„ (ë‚œì´ë„ ê¸‰ìƒìŠ¹)
+            }
+
+            // ê³µì‹: 10 * (ë ˆë²¨ ^ 1.3)
+            // ë ˆë²¨ì´ ì˜¤ë¥¼ìˆ˜ë¡ ìš”êµ¬ëŸ‰ì´ ëŠ˜ì–´ë‚˜ì§€ë§Œ, 
+            // ëª¹ ì¡ëŠ” ì†ë„ë„ ë¹¨ë¼ì§€ë¯€ë¡œ ì²´ê°ìƒ í…œí¬ëŠ” ìœ ì§€ë¨.
+            float expCalc = baseExp * Mathf.Pow(i + 1, currentGrowth);
+
+            if (level > 30) growth = 1.6f;
+
+            // ì •ìˆ˜ë¡œ ë³€í™˜ ì‹œ 5ë‹¨ìœ„ë‚˜ 10ë‹¨ìœ„ë¡œ ëŠì–´ì£¼ë©´ ê¹”ë”í•¨ (ì„ íƒì‚¬í•­)
             nextExp[i] = Mathf.RoundToInt(expCalc);
         }
     }
 
-    // Å¸¿ö ¼ø¼­ ·£´ı
+    // íƒ€ì›Œ ìˆœì„œ ëœë¤
     void InitTowerPhaseOrder()
     {
         towerPhaseOrder = new List<TowerType>()
@@ -147,7 +169,7 @@ public class GameManager : MonoBehaviour
             TowerType.Ice
         };
 
-        // ¼ÅÇÃ
+        // ì…”í”Œ
         for (int i = 0; i < towerPhaseOrder.Count; i++)
         {
             int rand = Random.Range(i, towerPhaseOrder.Count);
@@ -156,10 +178,10 @@ public class GameManager : MonoBehaviour
             towerPhaseOrder[rand] = tmp;
         }
 
-        Debug.Log("Å¸¿ö ÆäÀÌÁî ·£´ı ¼ø¼­: " +
-            towerPhaseOrder[0] + " ¡æ " +
-            towerPhaseOrder[1] + " ¡æ " +
-            towerPhaseOrder[2] + " ¡æ " +
+        Debug.Log("íƒ€ì›Œ í˜ì´ì¦ˆ ëœë¤ ìˆœì„œ: " +
+            towerPhaseOrder[0] + " â†’ " +
+            towerPhaseOrder[1] + " â†’ " +
+            towerPhaseOrder[2] + " â†’ " +
             towerPhaseOrder[3]);
     }
 
@@ -174,18 +196,18 @@ public class GameManager : MonoBehaviour
             gameTime = maxGameTime;
         }
 
-        // ÆäÀÌÁî °è»ê ·ÎÁ÷
+        // í˜ì´ì¦ˆ ê³„ì‚° ë¡œì§
         phaseTimer += Time.deltaTime;
 
         if (gameTime > bossPhaseStartTime)
         {
-            // ¡Ú¡Ú¡Ú [¼öÁ¤] º¸½º ½Ã°£ÀÌ µÇ¾ú´Âµ¥ ¾ÆÁ÷ Å¸¿ö ÆäÀÌÁî ÁßÀÌ¶ó¸é? °­Á¦ Á¾·á! ¡Ú¡Ú¡Ú
+            // â˜…â˜…â˜… [ìˆ˜ì •] ë³´ìŠ¤ ì‹œê°„ì´ ë˜ì—ˆëŠ”ë° ì•„ì§ íƒ€ì›Œ í˜ì´ì¦ˆ ì¤‘ì´ë¼ë©´? ê°•ì œ ì¢…ë£Œ! â˜…â˜…â˜…
             if (isTowerPhase)
             {
-                Debug.Log("º¸½º ½Ã°£ µµ´Ş! ¸¶Áö¸· °ÅÁ¡ ÆäÀÌÁî °­Á¦ Á¾·á ¹× º¸»ó Áö±Ş");
+                Debug.Log("ë³´ìŠ¤ ì‹œê°„ ë„ë‹¬! ë§ˆì§€ë§‰ ê±°ì  í˜ì´ì¦ˆ ê°•ì œ ì¢…ë£Œ ë° ë³´ìƒ ì§€ê¸‰");
                 isTowerPhase = false;
 
-                // ÇöÀç ÁøÇà ÁßÀÌ´ø Å¸¿ö Á¾·á Ã³¸® (º¸»ó »óÀÚ ¼ÒÈ¯ µî)
+                // í˜„ì¬ ì§„í–‰ ì¤‘ì´ë˜ íƒ€ì›Œ ì¢…ë£Œ ì²˜ë¦¬ (ë³´ìƒ ìƒì ì†Œí™˜ ë“±)
                 if (towerIndex < towerPhaseOrder.Count)
                 {
                     TowerType finished = towerPhaseOrder[towerIndex];
@@ -198,20 +220,20 @@ public class GameManager : MonoBehaviour
             {
                 if (!isCutsceneStarted)
                 {
-                    // 1. À¯µµ ¸ğµå ½ÃÀÛ
+                    // 1. ìœ ë„ ëª¨ë“œ ì‹œì‘
                     if (!isWaitingForBossTrigger)
                     {
-                        Debug.Log("º¸½ºÀü ½Ã°£ µµ´Ş! ¼ÒÈ¯ À§Ä¡·Î ÀÌµ¿ÇÏ¼¼¿ä.");
+                        Debug.Log("ë³´ìŠ¤ì „ ì‹œê°„ ë„ë‹¬! ì†Œí™˜ ìœ„ì¹˜ë¡œ ì´ë™í•˜ì„¸ìš”.");
                         isWaitingForBossTrigger = true;
 
-                        // È­»ìÇ¥¸¦ º¸½º ¼ÒÈ¯ À§Ä¡·Î È°¼ºÈ­
+                        // í™”ì‚´í‘œë¥¼ ë³´ìŠ¤ ì†Œí™˜ ìœ„ì¹˜ë¡œ í™œì„±í™”
                         if (bossSpawnPoint != null)
                         {
                             arrow.Activate(bossSpawnPoint, false);
                         }
                         isWaitingForBossTrigger = true;
                     }
-                    // 2. ÇÃ·¹ÀÌ¾î°¡ µµÂøÇß´ÂÁö Ã¼Å©
+                    // 2. í”Œë ˆì´ì–´ê°€ ë„ì°©í–ˆëŠ”ì§€ ì²´í¬
                     else
                     {
                         CheckPlayerArrival();
@@ -223,9 +245,9 @@ public class GameManager : MonoBehaviour
                 BossMonster bm = boss.GetComponent<BossMonster>();
                 if (!bm.isLive)
                 {
-                    // °ÔÀÓ ½Â¸®·Î ³¡
+                    // ê²Œì„ ìŠ¹ë¦¬ë¡œ ë
 
-                    // ¡Ú [Ãß°¡] º¸½º Ã³Ä¡ °ü·Ã ¾÷Àû(½ºÇÇµå·¯³Ê, ³ëÈ÷Æ® µî) Ã¼Å©
+                    // â˜… [ì¶”ê°€] ë³´ìŠ¤ ì²˜ì¹˜ ê´€ë ¨ ì—…ì (ìŠ¤í”¼ë“œëŸ¬ë„ˆ, ë…¸íˆíŠ¸ ë“±) ì²´í¬
                     AchievementManager.instance.OnBossKilled();
                 }
             }
@@ -233,19 +255,19 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            // 10ÃÊ Àü È­»ìÇ¥ Ç¥½Ã
+            // 10ì´ˆ ì „ í™”ì‚´í‘œ í‘œì‹œ
             if (!isTowerPhase && !arrowActivatedThisPhase && phaseTimer >= normalPhaseDuration - 10f)
             {
                 TowerType nextTower = towerPhaseOrder[towerIndex];
                 Transform nextTowerTransform = GetTowerTransform(nextTower);
                 arrow.Activate(nextTowerTransform, true);
 
-                arrowActivatedThisPhase = true; // ´Ù½Ã ½ÇÇàµÇÁö ¾Êµµ·Ï
+                arrowActivatedThisPhase = true; // ë‹¤ì‹œ ì‹¤í–‰ë˜ì§€ ì•Šë„ë¡
             }
 
             if (!isTowerPhase && phaseTimer >= normalPhaseDuration)
             {
-                // Å¸¿ö ÆäÀÌÁî ÁøÀÔ
+                // íƒ€ì›Œ í˜ì´ì¦ˆ ì§„ì…
                 isTowerPhase = true;
                 phaseTimer = 0f;
 
@@ -254,19 +276,19 @@ public class GameManager : MonoBehaviour
                 if (towerIndex < towerPhaseOrder.Count)
                 {
                     TowerType nextTower = towerPhaseOrder[towerIndex];
-                    Debug.Log("Å¸¿ö ÆäÀÌÁî ½ÃÀÛ: " + nextTower);
+                    Debug.Log("íƒ€ì›Œ í˜ì´ì¦ˆ ì‹œì‘: " + nextTower);
                     StartTowerPhase(nextTower);
                 }
                 else
                 {
-                    Debug.Log("¸ğµç Å¸¿ö ÆäÀÌÁî ¿Ï·á! (¿©±â¼­ º¸½º µîÀå °¡´É)");
+                    Debug.Log("ëª¨ë“  íƒ€ì›Œ í˜ì´ì¦ˆ ì™„ë£Œ! (ì—¬ê¸°ì„œ ë³´ìŠ¤ ë“±ì¥ ê°€ëŠ¥)");
                     isTowerPhase = false;
                     // SpawnBoss();
                 }
             }
             else if (isTowerPhase && phaseTimer >= towerPhaseDuration)
             {
-                // Å¸¿ö ÆäÀÌÁî Á¾·á
+                // íƒ€ì›Œ í˜ì´ì¦ˆ ì¢…ë£Œ
                 isTowerPhase = false;
                 phaseTimer = 0f;
 
@@ -277,71 +299,71 @@ public class GameManager : MonoBehaviour
                     towerIndex++;
                 }
 
-                Debug.Log("Å¸¿ö ÆäÀÌÁî Á¾·á ¡æ ÀÏ¹İ ÆäÀÌÁî Àç°³");
+                Debug.Log("íƒ€ì›Œ í˜ì´ì¦ˆ ì¢…ë£Œ â†’ ì¼ë°˜ í˜ì´ì¦ˆ ì¬ê°œ");
             }
         }
     }
 
-    // ÇÃ·¹ÀÌ¾î°¡ ¼ÒÈ¯ À§Ä¡¿¡ µµÂøÇß´ÂÁö È®ÀÎ
+    // í”Œë ˆì´ì–´ê°€ ì†Œí™˜ ìœ„ì¹˜ì— ë„ì°©í–ˆëŠ”ì§€ í™•ì¸
     void CheckPlayerArrival()
     {
         if (bossSpawnPoint == null) return;
 
-        // ÇÃ·¹ÀÌ¾î¿Í ¼ÒÈ¯ ÁöÁ¡ »çÀÌ °Å¸® °è»ê
+        // í”Œë ˆì´ì–´ì™€ ì†Œí™˜ ì§€ì  ì‚¬ì´ ê±°ë¦¬ ê³„ì‚°
         float distance = Vector2.Distance(player.transform.position, bossSpawnPoint.position);
 
-        if (distance < 2.5f) // Á¶±İ ´õ ºıºıÇÏ°Ô µµÂø ÆÇÁ¤
+        if (distance < 2.5f) // ì¡°ê¸ˆ ë” ë¹¡ë¹¡í•˜ê²Œ ë„ì°© íŒì •
         {
             if (isCutsceneStarted) return;
             isCutsceneStarted = true;
 
             isWaitingForBossTrigger = false;
 
-            // ¡Ú [Ãß°¡] µµÂøÇÏÀÚ¸¶ÀÚ È­»ìÇ¥ ²ô±â
+            // â˜… [ì¶”ê°€] ë„ì°©í•˜ìë§ˆì í™”ì‚´í‘œ ë„ê¸°
             arrow.Deactivate();
 
             StartCoroutine(CoAngryBossEntry());
         }
     }
 
-    // ¡Ú¡Ú¡Ú [ÃÖÁ¾ ¿¬Ãâ ½ÃÄö½º] ¡Ú¡Ú¡Ú
+    // â˜…â˜…â˜… [ìµœì¢… ì—°ì¶œ ì‹œí€€ìŠ¤] â˜…â˜…â˜…
     IEnumerator CoAngryBossEntry()
     {
-        Debug.Log("¿¬Ãâ ½ÃÀÛ: º¸½º ³­ÀÔ");
+        Debug.Log("ì—°ì¶œ ì‹œì‘: ë³´ìŠ¤ ë‚œì…");
         arrow.Deactivate();
 
-        // 0. Á¶ÀÛ Á¦ÇÑ
+        // 0. ì¡°ì‘ ì œí•œ
         if (player != null)
         {
-            player.LockState(true);    // ÀÌµ¿ ¸ØÃã + Stand ÀÚ¼¼
-            player.isInvincible = true; // ¡Ú ¹«Àû ÄÑ±â (¸÷µéÀÌ ¶§·Áµµ ¾È ¾ÆÇÄ)
+            player.LockState(true);    // ì´ë™ ë©ˆì¶¤ + Stand ìì„¸
+            player.isInvincible = true; // â˜… ë¬´ì  ì¼œê¸° (ëª¹ë“¤ì´ ë•Œë ¤ë„ ì•ˆ ì•„í””)
         }
 
-        // ¡Ú [Ä«¸Ş¶ó] 1. DampingÀ» ³ô¿©¼­(2.0) ¾ÆÁÖ ºÎµå·´°Ô ÀÌµ¿ÇÏ°Ô º¯°æ
+        // â˜… [ì¹´ë©”ë¼] 1. Dampingì„ ë†’ì—¬ì„œ(2.0) ì•„ì£¼ ë¶€ë“œëŸ½ê²Œ ì´ë™í•˜ê²Œ ë³€ê²½
         AudioManager.instance.PlaySfx(AudioManager.Sfx.boss_summon);
         SetCameraDamping(2.0f);
 
-        // ¡Ú [Ä«¸Ş¶ó] 1. ¿ø·¡ º¸°í ÀÖ´ø ´ë»ó(ÇÃ·¹ÀÌ¾î) ÀúÀå & º¸½º À§Ä¡ ¹Ù¶óº¸±â
+        // â˜… [ì¹´ë©”ë¼] 1. ì›ë˜ ë³´ê³  ìˆë˜ ëŒ€ìƒ(í”Œë ˆì´ì–´) ì €ì¥ & ë³´ìŠ¤ ìœ„ì¹˜ ë°”ë¼ë³´ê¸°
         Transform originalTarget = null;
         if (virtualCam != null)
         {
-            originalTarget = virtualCam.Follow; // ¿ø·¡ Å¸°Ù(ÇÃ·¹ÀÌ¾î) ±â¾ï
-            virtualCam.Follow = bossSpawnPoint; // Ä«¸Ş¶ó´Â ÀÌÁ¦ º¸½º ¼ÒÈ¯ À§Ä¡¸¦ ºñÃã
+            originalTarget = virtualCam.Follow; // ì›ë˜ íƒ€ê²Ÿ(í”Œë ˆì´ì–´) ê¸°ì–µ
+            virtualCam.Follow = bossSpawnPoint; // ì¹´ë©”ë¼ëŠ” ì´ì œ ë³´ìŠ¤ ì†Œí™˜ ìœ„ì¹˜ë¥¼ ë¹„ì¶¤
         }
 
-        // ½ºÅ³ ¿ÀºêÁ§Æ®, ½ºÅ©¸³Æ® off
+        // ìŠ¤í‚¬ ì˜¤ë¸Œì íŠ¸, ìŠ¤í¬ë¦½íŠ¸ off
         foreach (var obj in skillObjects) { if (obj != null) obj.SetActive(false); }
         foreach (var script in skillScripts) { if (script != null) script.enabled = false; }
 
-        // 1. UI »ç¶óÁü & ¹è°æ»ö º¯°æ ½ÃÀÛ
-        StartCoroutine(ChangeBackgroundColor(2.0f)); // ¹è°æ»ö ¼­¼­È÷ º¯°æ (2ÃÊ)
-        yield return StartCoroutine(SlideUI(false)); // UI »ç¶óÁü (1ÃÊ)
+        // 1. UI ì‚¬ë¼ì§ & ë°°ê²½ìƒ‰ ë³€ê²½ ì‹œì‘
+        StartCoroutine(ChangeBackgroundColor(2.0f)); // ë°°ê²½ìƒ‰ ì„œì„œíˆ ë³€ê²½ (2ì´ˆ)
+        yield return StartCoroutine(SlideUI(false)); // UI ì‚¬ë¼ì§ (1ì´ˆ)
 
-        // ¡Ú [ÇÙ½É Ãß°¡] Ä«¸Ş¶ó°¡ ºÎµå·´°Ô µµÂøÇÒ ¶§±îÁö 0.5ÃÊ Á¤µµ '¿©¹éÀÇ ¹Ì'¸¦ ÁÜ
-        // DampingÀ» ³ô¿´À¸´Ï ÀÌµ¿ÇÏ´Â µ¥ ½Ã°£ÀÌ °É¸®±â ¶§¹®
+        // â˜… [í•µì‹¬ ì¶”ê°€] ì¹´ë©”ë¼ê°€ ë¶€ë“œëŸ½ê²Œ ë„ì°©í•  ë•Œê¹Œì§€ 0.5ì´ˆ ì •ë„ 'ì—¬ë°±ì˜ ë¯¸'ë¥¼ ì¤Œ
+        // Dampingì„ ë†’ì˜€ìœ¼ë‹ˆ ì´ë™í•˜ëŠ” ë° ì‹œê°„ì´ ê±¸ë¦¬ê¸° ë•Œë¬¸
         yield return new WaitForSeconds(0.5f);
 
-        // 2. [¸¶¹ıÁø] µîÀå
+        // 2. [ë§ˆë²•ì§„] ë“±ì¥
         SpriteRenderer magicSprite = null;
         Color magicOriginalColor = Color.white;
 
@@ -351,7 +373,7 @@ public class GameManager : MonoBehaviour
             magicCircle.localScale = Vector3.zero;
             magicCircle.gameObject.SetActive(true);
 
-            // ¾ËÆÄ°ª ÃÊ±âÈ­
+            // ì•ŒíŒŒê°’ ì´ˆê¸°í™”
             magicSprite = magicCircle.GetComponent<SpriteRenderer>();
             if (magicSprite != null)
             {
@@ -360,7 +382,7 @@ public class GameManager : MonoBehaviour
                 magicSprite.color = c;
             }
 
-            float magicDuration = 1.5f; // 1.5ÃÊ µ¿¾È »ı¼º
+            float magicDuration = 1.5f; // 1.5ì´ˆ ë™ì•ˆ ìƒì„±
             float timer = 0f;
 
             while (timer < magicDuration)
@@ -368,19 +390,19 @@ public class GameManager : MonoBehaviour
                 timer += Time.deltaTime;
                 float t = timer / magicDuration;
 
-                // Å©±â: 0 -> 1.5¹è
+                // í¬ê¸°: 0 -> 1.5ë°°
                 magicCircle.localScale = Vector3.one * Mathf.Lerp(0f, 1.5f, t);
-                magicCircle.Rotate(0, 0, 180 * Time.deltaTime);// È¸Àü
+                magicCircle.Rotate(0, 0, 180 * Time.deltaTime);// íšŒì „
 
                 yield return null;
             }
 
-            // ¡Ú¡Ú¡Ú B. [Ãß°¡µÊ] ¹à¾ÆÁö´Â ´Ü°è (0.5ÃÊ) ¡Ú¡Ú¡Ú
-            // ¿¡³ÊÁö°¡ ¸ğÀÌ¸é¼­ ÇÏ¾é°Ô ºû³ª°í È¸Àü ¼Óµµ »¡¶óÁü
+            // â˜…â˜…â˜… B. [ì¶”ê°€ë¨] ë°ì•„ì§€ëŠ” ë‹¨ê³„ (0.5ì´ˆ) â˜…â˜…â˜…
+            // ì—ë„ˆì§€ê°€ ëª¨ì´ë©´ì„œ í•˜ì–—ê²Œ ë¹›ë‚˜ê³  íšŒì „ ì†ë„ ë¹¨ë¼ì§
             float brightenDuration = 0.5f;
             timer = 0f;
 
-            // ¸ñÇ¥: ¿ÏÀü ÇÏ¾á»ö (ºû³ª´Â ´À³¦)
+            // ëª©í‘œ: ì™„ì „ í•˜ì–€ìƒ‰ (ë¹›ë‚˜ëŠ” ëŠë‚Œ)
             Color brightColor = new Color(1f, 1f, 1f, 1f);
 
             while (timer < brightenDuration)
@@ -388,34 +410,34 @@ public class GameManager : MonoBehaviour
                 timer += Time.deltaTime;
                 float t = timer / brightenDuration;
 
-                // ¿ø·¡»ö -> ÇÏ¾á»öÀ¸·Î º¯°æ (Á¡Á¡ ¹à¾ÆÁü)
+                // ì›ë˜ìƒ‰ -> í•˜ì–€ìƒ‰ìœ¼ë¡œ ë³€ê²½ (ì ì  ë°ì•„ì§)
                 if (magicSprite != null)
                     magicSprite.color = Color.Lerp(magicOriginalColor, brightColor, t);
 
-                // È¸Àü ¼Óµµ 3¹è Áõ°¡ (¿ì¿õ~ ÇÏ´Â ´À³¦)
+                // íšŒì „ ì†ë„ 3ë°° ì¦ê°€ (ìš°ì›…~ í•˜ëŠ” ëŠë‚Œ)
                 magicCircle.Rotate(0, 0, 500 * Time.deltaTime);
                 yield return null;
             }
         }
 
-        // 3. [Ãæ°İÆÄ] Àâ¸÷ Á¤¸®
+        // 3. [ì¶©ê²©íŒŒ] ì¡ëª¹ ì •ë¦¬
         if (shockwaveEffect != null)
         {
             shockwaveEffect.position = bossSpawnPoint.position;
             shockwaveEffect.localScale = Vector3.zero;
             shockwaveEffect.gameObject.SetActive(true);
 
-            // Àâ¸÷ Á¤¸® ½ÇÇà
+            // ì¡ëª¹ ì •ë¦¬ ì‹¤í–‰
             ClearFieldMonsters();
 
-            float duration = 0.5f; // 0.5ÃÊ¸¸¿¡ ÆÅ! Ä¿Áü
+            float duration = 0.5f; // 0.5ì´ˆë§Œì— íŒ! ì»¤ì§
             float timer = 0f;
             while (timer < duration)
             {
                 timer += Time.deltaTime;
                 float t = timer / duration;
-                shockwaveEffect.localScale = Vector3.one * Mathf.Lerp(0f, 60f, t); // 60¹è È®´ë
-                // ¡Ú Ãæ°İÆÄ Ä¿Áö´Â µ¿¾È¿¡µµ ¸¶¹ıÁø °è¼Ó È¸Àü
+                shockwaveEffect.localScale = Vector3.one * Mathf.Lerp(0f, 60f, t); // 60ë°° í™•ëŒ€
+                // â˜… ì¶©ê²©íŒŒ ì»¤ì§€ëŠ” ë™ì•ˆì—ë„ ë§ˆë²•ì§„ ê³„ì† íšŒì „
                 if (magicCircle != null) magicCircle.Rotate(0, 0, 180 * Time.deltaTime);
 
                 yield return null;
@@ -427,31 +449,31 @@ public class GameManager : MonoBehaviour
             ClearFieldMonsters();
         }
 
-        // 4. [º¸½º µîÀå - ½Ç·ç¿§ È¿°ú]
+        // 4. [ë³´ìŠ¤ ë“±ì¥ - ì‹¤ë£¨ì—£ íš¨ê³¼]
         if (boss != null)
         {
             boss.transform.position = bossSpawnPoint.position;
             boss.SetActive(true);
-            // ¡Ú [Ãß°¡] º¸½º µîÀå ½Ã°£ ±â·Ï (½ºÇÇµå·¯³Ê ¾÷Àû¿ë)
+            // â˜… [ì¶”ê°€] ë³´ìŠ¤ ë“±ì¥ ì‹œê°„ ê¸°ë¡ (ìŠ¤í”¼ë“œëŸ¬ë„ˆ ì—…ì ìš©)
             AchievementManager.instance.OnBossSpawn();
 
             BossMonster bm = boss.GetComponent<BossMonster>();
-            if (bm != null) bm.BossInit(); // ÃÊ±âÈ­
+            if (bm != null) bm.BossInit(); // ì´ˆê¸°í™”
 
-            // º¸½º ½ºÇÁ¶óÀÌÆ® °¡Á®¿À±â
+            // ë³´ìŠ¤ ìŠ¤í”„ë¼ì´íŠ¸ ê°€ì ¸ì˜¤ê¸°
             SpriteRenderer bossSprite = boss.GetComponent<SpriteRenderer>();
             if (bossSprite != null)
             {
-                // ¡Ú ½ÃÀÛ: ¿ÏÀü °ËÁ¤»ö (½Ç·ç¿§)
+                // â˜… ì‹œì‘: ì™„ì „ ê²€ì •ìƒ‰ (ì‹¤ë£¨ì—£)
                 bossSprite.color = Color.black;
 
-                // µîÀå ÀÌÆåÆ® (Æø¹ß)
+                // ë“±ì¥ ì´í™íŠ¸ (í­ë°œ)
                 if (bossSpawnEffect != null)
                     Instantiate(bossSpawnEffect, bossSpawnPoint.position, Quaternion.identity);
 
-                StartCoroutine(ShakeCinemachine(0.5f, 3.0f)); // Äç!
+                StartCoroutine(ShakeCinemachine(0.5f, 3.0f)); // ì¾…!
 
-                // °ËÁ¤»ö -> ¿ø·¡ »öÀ¸·Î 1.5ÃÊ µ¿¾È ¼­¼­È÷ µ¹¾Æ¿È
+                // ê²€ì •ìƒ‰ -> ì›ë˜ ìƒ‰ìœ¼ë¡œ 1.5ì´ˆ ë™ì•ˆ ì„œì„œíˆ ëŒì•„ì˜´
                 float colorDuration = 1.5f;
                 float colorTimer = 0f;
                 while (colorTimer < colorDuration)
@@ -459,21 +481,21 @@ public class GameManager : MonoBehaviour
                     colorTimer += Time.deltaTime;
                     float t = colorTimer / colorDuration;
 
-                    // Color.black¿¡¼­ Color.white(±âº»)·Î Lerp
+                    // Color.blackì—ì„œ Color.white(ê¸°ë³¸)ë¡œ Lerp
                     bossSprite.color = Color.Lerp(Color.black, Color.white, t);
-                    // ¸¶¹ıÁø: °è¼Ó È¸Àü
+                    // ë§ˆë²•ì§„: ê³„ì† íšŒì „
                     if (magicCircle != null) magicCircle.Rotate(0, 0, 360 * Time.deltaTime);
                     yield return null;
                 }
-                // È®½ÇÇÏ°Ô Èò»öÀ¸·Î ¸¶¹«¸®
+                // í™•ì‹¤í•˜ê²Œ í°ìƒ‰ìœ¼ë¡œ ë§ˆë¬´ë¦¬
                 bossSprite.color = Color.white;
             }
         }
 
-        // °á°è »ı¼º
+        // ê²°ê³„ ìƒì„±
         if (bossBarrier != null) bossBarrier.SetActive(true);
 
-        // ¡Ú [º¯°æÁ¡ 3] º¸½º Æû Àâ´Â ½Ã°£ (1ÃÊ) µ¿¾È¿¡µµ ¸¶¹ıÁø È¸Àü À¯Áö
+        // â˜… [ë³€ê²½ì  3] ë³´ìŠ¤ í¼ ì¡ëŠ” ì‹œê°„ (1ì´ˆ) ë™ì•ˆì—ë„ ë§ˆë²•ì§„ íšŒì „ ìœ ì§€
         float waitDuration = 1.0f;
         float waitTimer = 0f;
         while (waitTimer < waitDuration)
@@ -483,38 +505,45 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        // ¡Ú¡Ú¡Ú [º¯°æÁ¡ 4] µåµğ¾î ¿©±â¼­ ¸¶¹ıÁø »ç¶óÁü! (ÀüÅõ ½ÃÀÛ Á÷Àü) ¡Ú¡Ú¡Ú
+        // â˜…â˜…â˜… [ë³€ê²½ì  4] ë“œë””ì–´ ì—¬ê¸°ì„œ ë§ˆë²•ì§„ ì‚¬ë¼ì§! (ì „íˆ¬ ì‹œì‘ ì§ì „) â˜…â˜…â˜…
         if (magicCircle != null)
         {
-            // 1ÃÊ µ¿¾È ºÎµå·´°Ô »ç¶óÁü (ÀüÅõ ½ÃÀÛ°ú °ãÃÄ¼­ ÀÚ¿¬½º·¯¿ò)
+            // 1ì´ˆ ë™ì•ˆ ë¶€ë“œëŸ½ê²Œ ì‚¬ë¼ì§ (ì „íˆ¬ ì‹œì‘ê³¼ ê²¹ì³ì„œ ìì—°ìŠ¤ëŸ¬ì›€)
             StartCoroutine(FadeOutMagicCircle(magicCircle, 1.0f));
         }
 
-        // 5. ÀüÅõ ½ÃÀÛ & UI º¹±¸
+        yield return new WaitForSeconds(1.0f);
+
+        // ëŒ€ì‚¬ ì¶œë ¥ í•¨ìˆ˜ ì‹¤í–‰ (ëŒ€ì‚¬ê°€ ë‹¤ ëë‚  ë•Œê¹Œì§€ ì—¬ê¸°ì„œ ì½”ë“œ ë©ˆì¶¤)
+        yield return StartCoroutine(CoPlayBossDialogue());
+
+        yield return new WaitForSeconds(1.0f);
+
+        // 5. ì „íˆ¬ ì‹œì‘ & UI ë³µêµ¬
         isBossPhase = true;
         StartCoroutine(SlideUI(true));
 
-        // UI°¡ ½½¶óÀÌµåµÇ¾î ³»·Á¿Â µÚ¿¡ ³»¿ëÀ» ¹Ù²ß´Ï´Ù.
-        // ¡Ú¡Ú¡Ú [¿©±â Ãß°¡] UI ¸ğµå º¯°æ (°æÇèÄ¡¹Ù -> º¸½º¹Ù) ¡Ú¡Ú¡Ú
+        // UIê°€ ìŠ¬ë¼ì´ë“œë˜ì–´ ë‚´ë ¤ì˜¨ ë’¤ì— ë‚´ìš©ì„ ë°”ê¿‰ë‹ˆë‹¤.
+        // â˜…â˜…â˜… [ì—¬ê¸° ì¶”ê°€] UI ëª¨ë“œ ë³€ê²½ (ê²½í—˜ì¹˜ë°” -> ë³´ìŠ¤ë°”) â˜…â˜…â˜…
         SwitchToBossUI(true);
 
         StartCoroutine(SlideUI(true));
 
 
-        // ¡Ú [Ä«¸Ş¶ó] 2. ´Ù½Ã ÇÃ·¹ÀÌ¾î¸¦ ºñÃßµµ·Ï º¹±¸
+        // â˜… [ì¹´ë©”ë¼] 2. ë‹¤ì‹œ í”Œë ˆì´ì–´ë¥¼ ë¹„ì¶”ë„ë¡ ë³µêµ¬
         if (virtualCam != null && originalTarget != null)
         {
             virtualCam.Follow = originalTarget;
-            SetCameraDamping(0f); // ´Ù½Ã ºü¸´ºü¸´ÇÏ°Ô
+            SetCameraDamping(0f); // ë‹¤ì‹œ ë¹ ë¦¿ë¹ ë¦¿í•˜ê²Œ
         }
 
-        // ¡Ú [Á¶ÀÛ ÇØÁ¦] ÇÃ·¹ÀÌ¾î ´Ù½Ã ¿òÁ÷ÀÌ°Ô ÇÏ±â & ½ºÅ³ º¹±¸
+        // â˜… [ì¡°ì‘ í•´ì œ] í”Œë ˆì´ì–´ ë‹¤ì‹œ ì›€ì§ì´ê²Œ í•˜ê¸° & ìŠ¤í‚¬ ë³µêµ¬
         if (player != null)
         {
             player.LockState(false);
-            player.isInvincible = false; // ÀÌÁ¦ ¸ÂÀ¸¸é ¾ÆÇÄ
+            player.isInvincible = false; // ì´ì œ ë§ìœ¼ë©´ ì•„í””
         }
-        // ¿ÀºêÁ§Æ® ¹× ½ºÅ©¸³Æ® È°¼ºÈ­
+        // ì˜¤ë¸Œì íŠ¸ ë° ìŠ¤í¬ë¦½íŠ¸ í™œì„±í™”
         foreach (var obj in skillObjects) { if (obj != null) obj.SetActive(true); }
         foreach (var script in skillScripts) { if (script != null) script.enabled = true; }
 
@@ -523,12 +552,12 @@ public class GameManager : MonoBehaviour
             BossMonster bm = boss.GetComponent<BossMonster>();
             if (bm != null)
             {
-                bm.StartBattle(); // ÀÌ ÇÔ¼ö°¡ ½ÇÇàµÇ¾î¾ß isBattleReady = true°¡ µÊ
+                bm.StartBattle(); // ì´ í•¨ìˆ˜ê°€ ì‹¤í–‰ë˜ì–´ì•¼ isBattleReady = trueê°€ ë¨
             }
         }
     }
 
-    // ¡Ú¡Ú¡Ú ¸¶¹ıÁø ÆäÀÌµå ¾Æ¿ô ÇÔ¼ö ¡Ú¡Ú¡Ú
+    // â˜…â˜…â˜… ë§ˆë²•ì§„ í˜ì´ë“œ ì•„ì›ƒ í•¨ìˆ˜ â˜…â˜…â˜…
     IEnumerator FadeOutMagicCircle(Transform target, float duration)
     {
         SpriteRenderer sr = target.GetComponent<SpriteRenderer>();
@@ -546,30 +575,30 @@ public class GameManager : MonoBehaviour
             timer += Time.deltaTime;
             float t = timer / duration;
 
-            // Åõ¸íµµ: 1 -> 0
+            // íˆ¬ëª…ë„: 1 -> 0
             float newAlpha = Mathf.Lerp(1f, 0f, t);
             sr.color = new Color(startColor.r, startColor.g, startColor.b, newAlpha);
 
-            // »ç¶óÁö´Â µ¿¾È¿¡µµ È¸Àü (ÀÚ¿¬½º·¯¿ò)
+            // ì‚¬ë¼ì§€ëŠ” ë™ì•ˆì—ë„ íšŒì „ (ìì—°ìŠ¤ëŸ¬ì›€)
             target.Rotate(0, 0, 180 * Time.deltaTime);
 
             yield return null;
         }
 
-        // ´Ù »ç¶óÁö¸é ²ô±â
+        // ë‹¤ ì‚¬ë¼ì§€ë©´ ë„ê¸°
         target.gameObject.SetActive(false);
 
-        // ¡Ú ´ÙÀ½¹ø ½ÇÇàÀ» À§ÇØ ¾ËÆÄ°ª º¹±¸ (Áß¿ä)
+        // â˜… ë‹¤ìŒë²ˆ ì‹¤í–‰ì„ ìœ„í•´ ì•ŒíŒŒê°’ ë³µêµ¬ (ì¤‘ìš”)
         sr.color = new Color(startColor.r, startColor.g, startColor.b, 1f);
     }
 
-    // ¹è°æ»ö º¯°æ ÄÚ·çÆ¾
+    // ë°°ê²½ìƒ‰ ë³€ê²½ ì½”ë£¨í‹´
     IEnumerator ChangeBackgroundColor(float duration)
     {
         if (backgroundTilemap == null) yield break;
 
         Color startColor = Color.white;
-        Color endColor = bossPhaseBgColor; // Ä¢Ä¢ÇÑ º¸¶ó»ö
+        Color endColor = bossPhaseBgColor; // ì¹™ì¹™í•œ ë³´ë¼ìƒ‰
         float timer = 0f;
 
         while (timer < duration)
@@ -583,19 +612,19 @@ public class GameManager : MonoBehaviour
     }
 
 
-    // UI¸¦ ºÎµå·´°Ô ¹Ğ¾î³»´Â ÇÔ¼ö
+    // UIë¥¼ ë¶€ë“œëŸ½ê²Œ ë°€ì–´ë‚´ëŠ” í•¨ìˆ˜
     IEnumerator SlideUI(bool show)
     {
         float timer = 0f;
         Vector2 startTop = topUIPanel.anchoredPosition;
         Vector2 startBottom = bottomUIPanel.anchoredPosition;
 
-        // ¸ñÇ¥ À§Ä¡ ¼³Á¤ (show°¡ true¸é ¿øÀ§Ä¡(0), false¸é È­¸é ¹ÛÀ¸·Î)
-        // È­¸é ³ôÀÌ(1080 °¡Á¤)º¸´Ù Á» ´õ ¹Ğ¾î¹ö¸² (+300)
+        // ëª©í‘œ ìœ„ì¹˜ ì„¤ì • (showê°€ trueë©´ ì›ìœ„ì¹˜(0), falseë©´ í™”ë©´ ë°–ìœ¼ë¡œ)
+        // í™”ë©´ ë†’ì´(1080 ê°€ì •)ë³´ë‹¤ ì¢€ ë” ë°€ì–´ë²„ë¦¼ (+300)
         Vector2 targetTop = show ? new Vector2(0, 0) : new Vector2(0, 300);
         Vector2 targetBottom = show ? new Vector2(0, 0) : new Vector2(0, -300);
 
-        // ¸¸¾à ÇöÀç À§Ä¡°¡ ÀÌ¹Ì ¸ñÇ¥¶ó¸é ÆĞ½º (¾ÈÀüÀåÄ¡)
+        // ë§Œì•½ í˜„ì¬ ìœ„ì¹˜ê°€ ì´ë¯¸ ëª©í‘œë¼ë©´ íŒ¨ìŠ¤ (ì•ˆì „ì¥ì¹˜)
         if (!show && startTop.y > 100) { yield break; }
 
         while (timer < uiSlideDuration)
@@ -603,7 +632,7 @@ public class GameManager : MonoBehaviour
             timer += Time.deltaTime;
             float t = timer / uiSlideDuration;
 
-            // SmoothStep: ºÎµå·´°Ô Ãâ¹ßÇØ¼­ ºÎµå·´°Ô µµÂø
+            // SmoothStep: ë¶€ë“œëŸ½ê²Œ ì¶œë°œí•´ì„œ ë¶€ë“œëŸ½ê²Œ ë„ì°©
             t = t * t * (3f - 2f * t);
 
             if (topUIPanel != null)
@@ -616,7 +645,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Ä«¸Ş¶ó Èçµé±â
+    // ì¹´ë©”ë¼ í”ë“¤ê¸°
     IEnumerator ShakeCinemachine(float duration, float intensity)
     {
         if (virtualCam == null) yield break;
@@ -631,15 +660,96 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // ÇÊµå¿¡ ÀÖ´Â Àâ¸÷µé Á¦°Å (º¸½º µîÀå ½Ã ¹æÇØ ¾È µÇ°Ô)
+    // â˜…â˜…â˜… [ì¶”ê°€] ë³´ìŠ¤ ëŒ€ì‚¬ ì¶œë ¥ ì½”ë£¨í‹´ â˜…â˜…â˜…
+    // â˜…â˜…â˜… [ìˆ˜ì •ë¨] í˜ì´ë“œ ì¸/ì•„ì›ƒ + íƒ€ì íš¨ê³¼ ìë§‰ ì‹œìŠ¤í…œ â˜…â˜…â˜…
+    // â˜…â˜…â˜… [ìˆ˜ì •ë¨] ìŠ¤í˜ì´ìŠ¤ë°” ìŠ¤í‚µ ê¸°ëŠ¥ì´ ì¶”ê°€ëœ ëŒ€ì‚¬ ì‹œìŠ¤í…œ â˜…â˜…â˜…
+    IEnumerator CoPlayBossDialogue()
+    {
+        if (dialoguePanel == null) yield break;
+
+        // 0. íˆ¬ëª…ë„ ì¡°ì ˆì„ ìœ„í•œ CanvasGroup ê°€ì ¸ì˜¤ê¸°
+        CanvasGroup cg = dialoguePanel.GetComponent<CanvasGroup>();
+        if (cg == null) cg = dialoguePanel.AddComponent<CanvasGroup>();
+
+        // ì´ˆê¸°í™”
+        dialoguePanel.SetActive(true);
+        cg.alpha = 0f;
+        dialogueText.text = "";
+
+        // 1. [í˜ì´ë“œ ì¸]
+        float fadeDuration = 0.5f;
+        float timer = 0f;
+        while (timer < fadeDuration)
+        {
+            timer += Time.deltaTime;
+            cg.alpha = Mathf.Lerp(0f, 1f, timer / fadeDuration);
+            yield return null;
+        }
+        cg.alpha = 1f;
+
+        // 2. [ëŒ€ì‚¬ ì¶œë ¥ ë£¨í”„]
+        if (bossLines != null)
+        {
+            foreach (string line in bossLines)
+            {
+                dialogueText.text = ""; // í…ìŠ¤íŠ¸ ì´ˆê¸°í™”
+
+                // A. íƒ€ì ì¹˜ëŠ” íš¨ê³¼ (ê¸€ì ë‹¨ìœ„)
+                foreach (char letter in line.ToCharArray())
+                {
+                    // â˜… ìŠ¤í‚µ: ìŠ¤í˜ì´ìŠ¤ ë°” ëˆ„ë¥´ë©´ ì¦‰ì‹œ ì™„ì„±
+                    if (Input.GetKeyDown(KeyCode.Space))
+                    {
+                        dialogueText.text = line; // ì „ì²´ ë¬¸ì¥ ë³´ì—¬ì¤Œ
+                        break; // íƒ€ì ë£¨í”„ íƒˆì¶œ
+                    }
+
+                    dialogueText.text += letter;
+                    yield return new WaitForSeconds(typingSpeed);
+                }
+
+                // (í˜¹ì‹œ ëª¨ë¥¼ í‚¤ ì¤‘ë³µ ì…ë ¥ ë°©ì§€ë¥¼ ìœ„í•´ í•œ í”„ë ˆì„ ëŒ€ê¸°)
+                yield return null;
+
+                // B. ë‹¤ ì³ì§„ í›„ ì½ëŠ” ì‹œê°„ (ëŒ€ê¸°)
+                // ë‹¨ìˆœíˆ WaitForSecondsë¥¼ ì“°ë©´ ì…ë ¥ì„ ëª» ë°›ìœ¼ë¯€ë¡œ whileë¬¸ ì‚¬ìš©
+                float waitTimer = 0f;
+                while (waitTimer < readDelay)
+                {
+                    // â˜… ìŠ¤í‚µ: ìŠ¤í˜ì´ìŠ¤ ë°” ëˆ„ë¥´ë©´ ì½ëŠ” ì‹œê°„ ë¬´ì‹œí•˜ê³  ë‹¤ìŒìœ¼ë¡œ
+                    if (Input.GetKeyDown(KeyCode.Space))
+                    {
+                        break; // ëŒ€ê¸° ë£¨í”„ íƒˆì¶œ
+                    }
+
+                    waitTimer += Time.deltaTime;
+                    yield return null;
+                }
+            }
+        }
+
+        // 3. [í˜ì´ë“œ ì•„ì›ƒ]
+        timer = 0f;
+        while (timer < fadeDuration)
+        {
+            timer += Time.deltaTime;
+            cg.alpha = Mathf.Lerp(1f, 0f, timer / fadeDuration);
+            yield return null;
+        }
+        cg.alpha = 0f;
+
+        dialoguePanel.SetActive(false);
+    }
+
+    // í•„ë“œì— ìˆëŠ” ì¡ëª¹ë“¤ ì œê±° (ë³´ìŠ¤ ë“±ì¥ ì‹œ ë°©í•´ ì•ˆ ë˜ê²Œ)
     void ClearFieldMonsters()
     {
-        // "Enemy" ÅÂ±×¸¦ °¡Áø ¸ğµç ¿ÀºêÁ§Æ®¸¦ Ã£¾Æ¼­ Á¦°Å (ÅÂ±× ¼³Á¤ ÇÊ¿ä)
+        // "Enemy" íƒœê·¸ë¥¼ ê°€ì§„ ëª¨ë“  ì˜¤ë¸Œì íŠ¸ë¥¼ ì°¾ì•„ì„œ ì œê±° (íƒœê·¸ ì„¤ì • í•„ìš”)
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
 
         foreach (GameObject enemyObj in enemies)
         {
-            // ¡Ú [ÇÙ½É 1] º¸½º´Â Àı´ë °Çµå¸®¸é ¾È µÊ! (¾ÈÀüÀåÄ¡)
+            // â˜… [í•µì‹¬ 1] ë³´ìŠ¤ëŠ” ì ˆëŒ€ ê±´ë“œë¦¬ë©´ ì•ˆ ë¨! (ì•ˆì „ì¥ì¹˜)
             if (enemyObj == boss) continue;
 
             MonsterBase monster = enemyObj.GetComponent<MonsterBase>();
@@ -656,7 +766,7 @@ public class GameManager : MonoBehaviour
                 Destroy(enemyObj);
             }
         }
-        Debug.Log("ÇÊµå ¸ó½ºÅÍ Á¤¸® ¿Ï·á");
+        Debug.Log("í•„ë“œ ëª¬ìŠ¤í„° ì •ë¦¬ ì™„ë£Œ");
     }
 
     void StartTowerPhase(TowerType type)
@@ -705,7 +815,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
         arrow.Deactivate();
-        // ¡Ú [Ãß°¡] ¾÷Àû ¸Å´ÏÀú¿¡°Ô Å¸¿ö ¹æ¾î ¼º°ø ¾Ë¸²
+        // â˜… [ì¶”ê°€] ì—…ì  ë§¤ë‹ˆì €ì—ê²Œ íƒ€ì›Œ ë°©ì–´ ì„±ê³µ ì•Œë¦¼
         AchievementManager.instance.OnTowerDefended();
     }
 
@@ -725,9 +835,9 @@ public class GameManager : MonoBehaviour
     {
         if (!isLive) return;
 
-        Debug.Log($"[°æÇèÄ¡ È¹µæ] µé¾î¿Â ¾ç: {amount} | ÇöÀç EXP: {exp} | ¸ñÇ¥ EXP: {nextExp[level]}");
+        Debug.Log($"[ê²½í—˜ì¹˜ íšë“] ë“¤ì–´ì˜¨ ì–‘: {amount} | í˜„ì¬ EXP: {exp} | ëª©í‘œ EXP: {nextExp[level]}");
 
-        if (level >= maxLevel) return; // ¸¸·¾ÀÌ¸é °æÇèÄ¡ ¾È ¸ÔÀ½
+        if (level >= maxLevel) return; // ë§Œë ™ì´ë©´ ê²½í—˜ì¹˜ ì•ˆ ë¨¹ìŒ
 
         exp += amount;
         /*
@@ -738,7 +848,8 @@ public class GameManager : MonoBehaviour
             uiLevelUp.Show();
         }
         */
-        // °æÇèÄ¡ Åë ²Ë Ã¡À¸¸é ·¹º§¾÷ (¹İº¹¹®ÀÎ ÀÌÀ¯´Â ÇÑ¹ø¿¡ 2¾÷ ÇÒ ¼öµµ ÀÖ¾î¼­)
+        // ê²½í—˜ì¹˜ í†µ ê½‰ ì°¼ìœ¼ë©´ ë ˆë²¨ì—… (ë°˜ë³µë¬¸ì¸ ì´ìœ ëŠ” í•œë²ˆì— 2ì—… í•  ìˆ˜ë„ ìˆì–´ì„œ)
+        /*
         while (exp >= nextExp[level])
         {
             exp -= nextExp[level];
@@ -747,9 +858,19 @@ public class GameManager : MonoBehaviour
 
             if (level >= maxLevel)
             {
-                exp = 0; // ¸¸·¾ °æÇèÄ¡¹Ù Ã³¸®
+                exp = 0; // ë§Œë ™ ê²½í—˜ì¹˜ë°” ì²˜ë¦¬
                 break;
             }
+        }
+        */
+        if (exp >= nextExp[level])
+        {
+            exp -= nextExp[level];
+            level++;
+            uiLevelUp.Show();
+
+            // ì—¬ê¸°ì„œ ë” ì´ìƒ ë°˜ë³µí•˜ì§€ ì•Šê³  í•¨ìˆ˜ë¥¼ ëëƒ…ë‹ˆë‹¤.
+            // ë‚¨ì€ ê²½í—˜ì¹˜ëŠ” exp ë³€ìˆ˜ì— ê·¸ëŒ€ë¡œ ë‚¨ì•„ìˆìŠµë‹ˆë‹¤.
         }
     }
 
@@ -757,20 +878,47 @@ public class GameManager : MonoBehaviour
     {
         Living = false;
         Time.timeScale = 0f;
+        AudioListener.pause = true;
     }
     public void Resume()
     {
+        // 1. ë ˆë²¨ì—… ì°½ ì²´í¬
+        if (uiLevelUp != null && uiLevelUp.transform.localScale.x > 0.1f)
+        {
+            return;
+        }
+
+        // 2. ì•„í‹°íŒ©íŠ¸ ì„ íƒì°½ ì²´í¬
+        if (uiSelectArt != null)
+        {
+            // ë‘ ë°©ì‹ ëª¨ë‘ ëŒ€ì‘í•˜ê¸° ìœ„í•´ "ì¼œì ¸ ìˆê³ (Active) && í¬ê¸°ë„ ì›ë˜ëŒ€ë¡œë¼ë©´(Scale > 0)"ìœ¼ë¡œ ì²´í¬
+            if (uiSelectArt.gameObject.activeSelf && uiSelectArt.transform.localScale.x > 0.1f)
+            {
+                return;
+            }
+        }
+
         Living = true;
         Time.timeScale = 1f;
+
+        AudioListener.pause = false;
     }
 
     public void OnTowerDefenseSuccess()
     {
         AudioManager.instance.PlaySfx(AudioManager.Sfx.point_clear);
         Instantiate(chestPrefab, tower.transform.position + Vector3.right * 2f, Quaternion.identity);
+        if (tower != null)
+        {
+            Tower towerScript = tower.GetComponent<Tower>();
+            if (towerScript != null)
+            {
+                towerScript.PlaySuccessEffect();
+            }
+        }
     }
 
-    // ¡Ú [½Å±Ô] Ä«¸Ş¶ó ºÎµå·¯¿ò(Damping) Á¶Àı ÇÔ¼ö
+    // â˜… [ì‹ ê·œ] ì¹´ë©”ë¼ ë¶€ë“œëŸ¬ì›€(Damping) ì¡°ì ˆ í•¨ìˆ˜
     void SetCameraDamping(float dampingValue)
     {
         if (virtualCam == null) return;
@@ -779,13 +927,13 @@ public class GameManager : MonoBehaviour
 
         if (composer != null)
         {
-            // ½Å¹öÀü¿¡¼­´Â DampingÀÌ Vector3·Î ÅëÇÕµÇ¾ú½À´Ï´Ù.
+            // ì‹ ë²„ì „ì—ì„œëŠ” Dampingì´ Vector3ë¡œ í†µí•©ë˜ì—ˆìŠµë‹ˆë‹¤.
             composer.Damping = new Vector3(dampingValue, dampingValue, 0);
         }
         else
         {
-            // È¤½Ã "Follow" ¸ğµå¸¦ ¾²°í ÀÖ´Ù¸é ÀÌ°É·Î Àâ¾Æ¾ß ÇÕ´Ï´Ù.
-            // (Position ControlÀÌ "Follow"ÀÏ °æ¿ì)
+            // í˜¹ì‹œ "Follow" ëª¨ë“œë¥¼ ì“°ê³  ìˆë‹¤ë©´ ì´ê±¸ë¡œ ì¡ì•„ì•¼ í•©ë‹ˆë‹¤.
+            // (Position Controlì´ "Follow"ì¼ ê²½ìš°)
             var follow = virtualCam.GetComponent<CinemachineFollow>();
             if (follow != null)
             {
@@ -794,59 +942,59 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // ¡Ú [¼öÁ¤] ½ÇÆĞ ¿øÀÎÀ» ÅØ½ºÆ®·Î ¹ŞÀ½
+    // â˜… [ìˆ˜ì •] ì‹¤íŒ¨ ì›ì¸ì„ í…ìŠ¤íŠ¸ë¡œ ë°›ìŒ
     public void GameOver(string reason, bool isTowerDeath = false)
     {
         isLive = false;
         if (isTowerDeath)
         {
-            // Å¸¿ö°¡ ÅÍÁ³À» ¶§ (ÁÜÀÎ, ½Ã°£ Á¤Áö ¿¬Ãâ)
+            // íƒ€ì›Œê°€ í„°ì¡Œì„ ë•Œ (ì¤Œì¸, ì‹œê°„ ì •ì§€ ì—°ì¶œ)
             StartCoroutine(CoTowerDeathRoutine(reason));
         }
         else
         {
-            // ÇÃ·¹ÀÌ¾î°¡ Á×¾úÀ» ¶§ (Ä«¸Ş¶ó °íÁ¤, Á¶ÀÛ/½ºÅ³ Àá±İ)
+            // í”Œë ˆì´ì–´ê°€ ì£½ì—ˆì„ ë•Œ (ì¹´ë©”ë¼ ê³ ì •, ì¡°ì‘/ìŠ¤í‚¬ ì ê¸ˆ)
             StartCoroutine(CoPlayerDeathRoutine(reason));
         }
     }
-    // [°æ·Î 1] ÇÃ·¹ÀÌ¾î »ç¸Á ¿¬Ãâ (´ã¹éÇÏ°Ô)
+    // [ê²½ë¡œ 1] í”Œë ˆì´ì–´ ì‚¬ë§ ì—°ì¶œ (ë‹´ë°±í•˜ê²Œ)
     IEnumerator CoPlayerDeathRoutine(string reason)
     {
-        // 1. ÇÃ·¹ÀÌ¾î Á¶ÀÛ/ÀÌµ¿ Àá±İ & ¹«Àû
+        // 1. í”Œë ˆì´ì–´ ì¡°ì‘/ì´ë™ ì ê¸ˆ & ë¬´ì 
         if (player != null)
         {
-            player.LockState(true);      // ÀÌµ¿/°ø°İ ºÒ°¡
-            player.isInvincible = true;  // Ãß°¡ ÇÇ°İ ¹æÁö
+            player.LockState(true);      // ì´ë™/ê³µê²© ë¶ˆê°€
+            player.isInvincible = true;  // ì¶”ê°€ í”¼ê²© ë°©ì§€
 
-            // ¹Ì²ô·¯Áü ¹æÁö (¿ÏÀü Á¤Áö)
+            // ë¯¸ë„ëŸ¬ì§ ë°©ì§€ (ì™„ì „ ì •ì§€)
             Rigidbody2D playerRb = player.GetComponent<Rigidbody2D>();
             if (playerRb != null) playerRb.linearVelocity = Vector2.zero;
         }
 
-        // 2. ½ºÅ³ ²ô±â (°ø°İ Áß´Ü)
+        // 2. ìŠ¤í‚¬ ë„ê¸° (ê³µê²© ì¤‘ë‹¨)
         DisableAllSkills();
 
-        // 3. »ç¸Á ¸ğ¼ÇÀ» ºÁ¾ß ÇÏ¹Ç·Î ½Ã°£Àº ¹Ù·Î ¸ØÃßÁö ¾Ê°í 2ÃÊ Á¤µµ ´ë±â
-        // (Time.timeScaleÀº 1 »óÅÂ À¯Áö)
+        // 3. ì‚¬ë§ ëª¨ì…˜ì„ ë´ì•¼ í•˜ë¯€ë¡œ ì‹œê°„ì€ ë°”ë¡œ ë©ˆì¶”ì§€ ì•Šê³  2ì´ˆ ì •ë„ ëŒ€ê¸°
+        // (Time.timeScaleì€ 1 ìƒíƒœ ìœ ì§€)
         yield return new WaitForSeconds(2.0f);
 
-        // 4. ÀÌÁ¦ UI ¶ç¿ì°í ½Ã°£ Á¤Áö
+        // 4. ì´ì œ UI ë„ìš°ê³  ì‹œê°„ ì •ì§€
         ShowGameOverUI(reason);
     }
 
-    // [°æ·Î 2] Å¸¿ö ÆÄ±« ¿¬Ãâ (È­·ÁÇÏ°Ô)
+    // [ê²½ë¡œ 2] íƒ€ì›Œ íŒŒê´´ ì—°ì¶œ (í™”ë ¤í•˜ê²Œ)
     IEnumerator CoTowerDeathRoutine(string reason)
     {
-        // 1. ½Ã°£ Á¤Áö
+        // 1. ì‹œê°„ ì •ì§€
         Time.timeScale = 0f;
 
-        // ¡Ú¡Ú¡Ú [¼öÁ¤ ÇÙ½É] ¡Ú¡Ú¡Ú
-        // ¹°¸® Ãæµ¹(FixedUpdate)·Î ÀÎÇØ ÀÌ ÇÔ¼ö°¡ µé¾î¿ÔÀ» ¶§, 
-        // ¹Ù·Î Ä«¸Ş¶ó¸¦ °Çµå¸®¸é ¿¡·¯°¡ ³³´Ï´Ù.
-        // ÇÑ ÇÁ·¹ÀÓ ½¬¾îÁÖ¸é ¹°¸® ¿¬»êÀÌ ³¡³ª°í Update Å¸ÀÌ¹ÖÀ¸·Î ³Ñ¾î°¡¼­ ¾ÈÀüÇØÁı´Ï´Ù.
+        // â˜…â˜…â˜… [ìˆ˜ì • í•µì‹¬] â˜…â˜…â˜…
+        // ë¬¼ë¦¬ ì¶©ëŒ(FixedUpdate)ë¡œ ì¸í•´ ì´ í•¨ìˆ˜ê°€ ë“¤ì–´ì™”ì„ ë•Œ, 
+        // ë°”ë¡œ ì¹´ë©”ë¼ë¥¼ ê±´ë“œë¦¬ë©´ ì—ëŸ¬ê°€ ë‚©ë‹ˆë‹¤.
+        // í•œ í”„ë ˆì„ ì‰¬ì–´ì£¼ë©´ ë¬¼ë¦¬ ì—°ì‚°ì´ ëë‚˜ê³  Update íƒ€ì´ë°ìœ¼ë¡œ ë„˜ì–´ê°€ì„œ ì•ˆì „í•´ì§‘ë‹ˆë‹¤.
         yield return null;
 
-        // ¡Ú [¼öÁ¤ 1] 'UnscaledTime' ´ë½Å 'ManualUpdate'·Î ¼³Á¤
+        // â˜… [ìˆ˜ì • 1] 'UnscaledTime' ëŒ€ì‹  'ManualUpdate'ë¡œ ì„¤ì •
         CinemachineBrain brain = Camera.main.GetComponent<CinemachineBrain>();
         if (brain != null)
         {
@@ -874,7 +1022,7 @@ public class GameManager : MonoBehaviour
                 lensSettings.OrthographicSize = Mathf.Lerp(startSize, targetSize, t);
                 virtualCam.Lens = lensSettings;
 
-                // ¡Ú [¼öÁ¤ 2] ¿©±â¼­ °­Á¦·Î Ä«¸Ş¶ó¸¦ °»½Å½ÃÅ´
+                // â˜… [ìˆ˜ì • 2] ì—¬ê¸°ì„œ ê°•ì œë¡œ ì¹´ë©”ë¼ë¥¼ ê°±ì‹ ì‹œí‚´
                 if (brain != null) brain.ManualUpdate();
 
                 yield return null;
@@ -882,82 +1030,126 @@ public class GameManager : MonoBehaviour
             lensSettings.OrthographicSize = targetSize;
             virtualCam.Lens = lensSettings;
 
-            // ¸¶Áö¸·À¸·Î ÇÑ ¹ø ´õ °»½ÅÇØ¼­ È®½ÇÇÏ°Ô ¸ÂÃã
+            // ë§ˆì§€ë§‰ìœ¼ë¡œ í•œ ë²ˆ ë” ê°±ì‹ í•´ì„œ í™•ì‹¤í•˜ê²Œ ë§ì¶¤
             if (brain != null) brain.ManualUpdate();
         }
 
         if (tower != null)
         {
-            // Å¸¿ö ½ºÅ©¸³Æ®¿¡ ÀÖ´Â ÆÄ±« ÇÔ¼ö È£Ãâ
+            // íƒ€ì›Œ ìŠ¤í¬ë¦½íŠ¸ì— ìˆëŠ” íŒŒê´´ í•¨ìˆ˜ í˜¸ì¶œ
             AudioManager.instance.PlaySfx(AudioManager.Sfx.point_break);
             tower.GetComponent<Tower>().PlayDestructionEffect();
         }
 
-        // 3. °¨»ó Å¸ÀÓ
+        // 3. ê°ìƒ íƒ€ì„
         yield return new WaitForSecondsRealtime(2.3f);
 
-        // 4. UI ¶ç¿ì±â
+        // 4. UI ë„ìš°ê¸°
         ShowGameOverUI(reason);
     }
 
-    // [°øÅë] ½ºÅ³ ²ô±â ÇÔ¼ö ºĞ¸®
+    // [ê³µí†µ] ìŠ¤í‚¬ ë„ê¸° í•¨ìˆ˜ ë¶„ë¦¬
     void DisableAllSkills()
     {
         foreach (var obj in skillObjects) { if (obj != null) obj.SetActive(false); }
         foreach (var script in skillScripts) { if (script != null) script.enabled = false; }
     }
 
-    // [°øÅë] °ÔÀÓ¿À¹ö UI Ç¥½Ã ÇÔ¼ö ºĞ¸®
+    // [ê³µí†µ] ê²Œì„ì˜¤ë²„ UI í‘œì‹œ í•¨ìˆ˜ (í˜ì´ë“œ íš¨ê³¼ ì¶”ê°€)
     void ShowGameOverUI(string reason)
     {
-        Time.timeScale = 0f; // È®½ÇÇÏ°Ô Á¤Áö
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Gameover);
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
+
+            // í…ìŠ¤íŠ¸ ì„¤ì •
             if (gameOverReasonText != null)
-            {
                 gameOverReasonText.text = reason;
-            }
+
+            // 2. í˜ì´ë“œ ì¸ ì½”ë£¨í‹´ ì‹œì‘
+            StartCoroutine(CoFadeInGameOverUI());
+        }
+        else
+        {
+            // íŒ¨ë„ ì—†ìœ¼ë©´ ê·¸ëƒ¥ ì‹œê°„ ë©ˆì¶¤
+            Time.timeScale = 0f;
         }
     }
 
-    // ¡Ú º¸½ºÀü UI ¸ğµå·Î ÀüÈ¯ÇÏ´Â ÇÔ¼ö
+    IEnumerator CoFadeInGameOverUI()
+    {
+        CanvasGroup cg = gameOverPanel.GetComponent<CanvasGroup>();
+        if (cg == null)
+        {
+            // CanvasGroup ì—†ìœ¼ë©´ ê·¸ëƒ¥ ë°”ë¡œ ë©ˆì¶¤
+            Time.timeScale = 0f;
+            yield break;
+        }
+
+        // ì´ˆê¸°í™”
+        cg.alpha = 0f;
+        cg.blocksRaycasts = true; // ì´ì œ ë²„íŠ¼ ëˆŒë ¤ì•¼ í•¨
+
+        float duration = 1.5f; // 1.5ì´ˆ ë™ì•ˆ ì²œì²œíˆ ë‚˜íƒ€ë‚¨
+        float timer = 0f;
+
+        // â˜… ì¤‘ìš”: UIê°€ ë‚˜íƒ€ë‚˜ëŠ” ë™ì•ˆì—ë„ ë’¤ì— ê²Œì„ í™”ë©´ì€ ë³´ì—¬ì•¼ í•˜ë‹ˆê¹Œ 
+        // ì‹œê°„ì€ ì•„ì§ ë©ˆì¶”ì§€ ì•Šê±°ë‚˜, ë©ˆì¶˜ ìƒíƒœì—ì„œ í˜ì´ë“œë§Œ ì§„í–‰í•´ì•¼ í•¨.
+        // ì—¬ê¸°ì„œëŠ” "ìŠ¬ë¡œìš° ëª¨ì…˜"ì„ ê±¸ë©´ì„œ UIê°€ ëœ¨ê²Œ í•´ë³´ê² ìŠµë‹ˆë‹¤.
+        Time.timeScale = 0.1f; // ì•„ì£¼ ëŠë¦¬ê²Œ íë¦„ (ê¸´ë°•ê° ì¡°ì„±)
+
+        while (timer < duration)
+        {
+            // Realtimeì„ ì¨ì•¼ Time.timeScaleì— ì˜í–¥ ì•ˆ ë°›ìŒ
+            timer += Time.unscaledDeltaTime;
+            cg.alpha = Mathf.Lerp(0f, 1f, timer / duration);
+            yield return null;
+        }
+
+        cg.alpha = 1f;
+
+        // 3. ì™„ì „íˆ ë‹¤ ëœ¨ë©´ ì‹œê°„ ì •ì§€
+        Time.timeScale = 0f;
+    }
+
+    // â˜… ë³´ìŠ¤ì „ UI ëª¨ë“œë¡œ ì „í™˜í•˜ëŠ” í•¨ìˆ˜
     public void SwitchToBossUI(bool isBossMode)
     {
-        // º¸½ºÀüÀÌ¸é -> °æÇèÄ¡¹Ù ²ô°í, º¸½º¹Ù ÄÑ±â
+        // ë³´ìŠ¤ì „ì´ë©´ -> ê²½í—˜ì¹˜ë°” ë„ê³ , ë³´ìŠ¤ë°” ì¼œê¸°
         if (expBarObject != null)
             expBarObject.SetActive(!isBossMode);
 
         if (bossHpSlider != null)
         {
             bossHpSlider.gameObject.SetActive(isBossMode);
-            // ÄÑÁú ¶§ Ã¼·Â ²Ë Âù »óÅÂ·Î ÃÊ±âÈ­
+            // ì¼œì§ˆ ë•Œ ì²´ë ¥ ê½‰ ì°¬ ìƒíƒœë¡œ ì´ˆê¸°í™”
             if (isBossMode) bossHpSlider.value = 1f;
         }
     }
 
-    // ¡Ú º¸½º Ã¼·Â ¾÷µ¥ÀÌÆ® ÇÔ¼ö (º¸½º°¡ ¸ÂÀ» ¶§¸¶´Ù È£Ãâ)
+    // â˜… ë³´ìŠ¤ ì²´ë ¥ ì—…ë°ì´íŠ¸ í•¨ìˆ˜ (ë³´ìŠ¤ê°€ ë§ì„ ë•Œë§ˆë‹¤ í˜¸ì¶œ)
     public void UpdateBossHealthUI(float currentHp, float maxHp)
     {
         if (bossHpSlider == null) return;
+        if (currentHp < 0) currentHp = 0;
         bossHpSlider.value = currentHp / maxHp;
 
-        // [Ãß°¡] ÅØ½ºÆ® °»½Å (¿¹: 5000 / 10000)
+        // [ì¶”ê°€] í…ìŠ¤íŠ¸ ê°±ì‹  (ì˜ˆ: 5000 / 10000)
         if (bossHpText != null)
         {
-            // F0Àº ¼Ò¼öÁ¡À» ¾ø¾Ö´Â Æ÷¸ËÀÔ´Ï´Ù (±ò²ûÇÏ°Ô Á¤¼ö¸¸ Ç¥½Ã)
+            // F0ì€ ì†Œìˆ˜ì ì„ ì—†ì• ëŠ” í¬ë§·ì…ë‹ˆë‹¤ (ê¹”ë”í•˜ê²Œ ì •ìˆ˜ë§Œ í‘œì‹œ)
             bossHpText.text = $"{currentHp:F0} / {maxHp:F0}";
         }
     }
 
-    // º¸½º°¡ Á×¾úÀ» ¶§ È£Ãâ
+    // ë³´ìŠ¤ê°€ ì£½ì—ˆì„ ë•Œ í˜¸ì¶œ
     public void GameClear()
     {
-        // ÀÌ¹Ì ¿£µù ÁøÇà ÁßÀÌ¸é ¹«½Ã
+        // ì´ë¯¸ ì—”ë”© ì§„í–‰ ì¤‘ì´ë©´ ë¬´ì‹œ
         if (!isLive) return;
 
-        isLive = false; // °ÔÀÓ ·ÎÁ÷ Á¤Áö (½Ã°£Àº Èå¸§)
+        isLive = false; // ê²Œì„ ë¡œì§ ì •ì§€ (ì‹œê°„ì€ íë¦„)
         StartCoroutine(CoGameClearSequence());
     }
 
@@ -965,24 +1157,24 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Game Clear! Ending Sequence Start.");
 
-        // 1. [ÇÃ·¹ÀÌ¾î Á¤Áö] Á¶ÀÛ ¸ØÃã & ¹«Àû & ½ºÅ³ ²ô±â
+        // 1. [í”Œë ˆì´ì–´ ì •ì§€] ì¡°ì‘ ë©ˆì¶¤ & ë¬´ì  & ìŠ¤í‚¬ ë„ê¸°
         if (player != null)
         {
             player.LockState(true);
             player.isInvincible = true;
-            // ÇÃ·¹ÀÌ¾î ¹°¸® ¼Óµµ ¿ÏÀü Á¤Áö
+            // í”Œë ˆì´ì–´ ë¬¼ë¦¬ ì†ë„ ì™„ì „ ì •ì§€
             Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
             if (rb != null) rb.linearVelocity = Vector2.zero;
         }
-        DisableAllSkills(); // ½ºÅ³ ¿ÀºêÁ§Æ® ²ô±â
+        DisableAllSkills(); // ìŠ¤í‚¬ ì˜¤ë¸Œì íŠ¸ ë„ê¸°
 
-        // 2. [UI À¯Áö] UI ¼û±è ÄÚµå´Â Á¦°ÅÇß½À´Ï´Ù. (Ã¼·Â¹Ù µî ±×´ë·Î º¸ÀÓ)
+        // 2. [UI ìœ ì§€] UI ìˆ¨ê¹€ ì½”ë“œëŠ” ì œê±°í–ˆìŠµë‹ˆë‹¤. (ì²´ë ¥ë°” ë“± ê·¸ëŒ€ë¡œ ë³´ì„)
 
-        // 3. [º¸½º »ç¸Á ¸ğ¼Ç °¨»ó] 
-        // º¸½º »ç¸Á ¾Ö´Ï¸ŞÀÌ¼Ç ±æÀÌ¸¸Å­ ´ë±â (¿¹: 3ÃÊ)
+        // 3. [ë³´ìŠ¤ ì‚¬ë§ ëª¨ì…˜ ê°ìƒ] 
+        // ë³´ìŠ¤ ì‚¬ë§ ì• ë‹ˆë©”ì´ì…˜ ê¸¸ì´ë§Œí¼ ëŒ€ê¸° (ì˜ˆ: 3ì´ˆ)
         yield return new WaitForSeconds(3.0f);
 
-        // 4. [È­ÀÌÆ® ¾Æ¿ô] È­¸éÀÌ Á¡Á¡ ÇÏ¾é°Ô ¹à¾ÆÁü
+        // 4. [í™”ì´íŠ¸ ì•„ì›ƒ] í™”ë©´ì´ ì ì  í•˜ì–—ê²Œ ë°ì•„ì§
         if (fadeImage != null)
         {
             fadeImage.gameObject.SetActive(true);
@@ -992,30 +1184,30 @@ public class GameManager : MonoBehaviour
             while (t < fadeDuration)
             {
                 t += Time.deltaTime;
-                // ¾ËÆÄ°ª 0(Åõ¸í) -> 1(ºÒÅõ¸í Èò»ö)
+                // ì•ŒíŒŒê°’ 0(íˆ¬ëª…) -> 1(ë¶ˆíˆ¬ëª… í°ìƒ‰)
                 fadeImage.color = new Color(1, 1, 1, t / fadeDuration);
                 yield return null;
             }
-            // È®½ÇÇÏ°Ô Èò»ö °íÁ¤
+            // í™•ì‹¤í•˜ê²Œ í°ìƒ‰ ê³ ì •
             fadeImage.color = new Color(1, 1, 1, 1);
         }
         else
         {
-            // ÆäÀÌµå ÀÌ¹ÌÁö°¡ ¾ø´Ù¸é ±×³É ´ë±â
+            // í˜ì´ë“œ ì´ë¯¸ì§€ê°€ ì—†ë‹¤ë©´ ê·¸ëƒ¥ ëŒ€ê¸°
             yield return new WaitForSeconds(1.0f);
         }
 
-        // 5. [¾À ÀüÈ¯] ¿£µù ÄÆ¾À ¾ÀÀ¸·Î ÀÌµ¿
+        // 5. [ì”¬ ì „í™˜] ì—”ë”© ì»·ì”¬ ì”¬ìœ¼ë¡œ ì´ë™
         SceneManager.LoadScene(endingSceneName);
     }
 
-    // ¡Ú [Ãß°¡] Àç½ÃÀÛ ÇÔ¼ö (¹öÆ°¿¡ ¿¬°áÇÒ °Í)
+    // â˜… [ì¶”ê°€] ì¬ì‹œì‘ í•¨ìˆ˜ (ë²„íŠ¼ì— ì—°ê²°í•  ê²ƒ)
     public void Retry()
     {
-        // ½Ã°£ ´Ù½Ã Èå¸£°Ô ÇÏ±â (Áß¿ä! ¾È ÇÏ¸é Àç½ÃÀÛÇØµµ ¸ØÃçÀÖÀ½)
+        // ì‹œê°„ ë‹¤ì‹œ íë¥´ê²Œ í•˜ê¸° (ì¤‘ìš”! ì•ˆ í•˜ë©´ ì¬ì‹œì‘í•´ë„ ë©ˆì¶°ìˆìŒ)
         Time.timeScale = 1f;
 
-        // ÇöÀç ¾À ´Ù½Ã ·Îµå (ÃÊ±âÈ­)
+        // í˜„ì¬ ì”¬ ë‹¤ì‹œ ë¡œë“œ (ì´ˆê¸°í™”)
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 

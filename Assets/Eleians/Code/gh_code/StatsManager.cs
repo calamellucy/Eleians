@@ -25,6 +25,7 @@ public class StatsManager : MonoBehaviour
     public float CritDamage;
     public float DamageTakenMultiplier = 1f; // 받는 피해량 계수
     public float ReflectDamage = 0f; // 반사 데미지
+   
 
     [Header("Base Stats")]
     public float baseAttack = 100;
@@ -51,6 +52,7 @@ public class StatsManager : MonoBehaviour
     // ★ [추가] 이전 MaxHP를 기억하기 위한 변수
     private float _prevMaxHP = 0f;
 
+    public float extraSpeedMultiplier = 1f;
 
     void Awake()
     {
@@ -67,10 +69,23 @@ public class StatsManager : MonoBehaviour
         // GameManager에서 레벨업 할 때 RecalculateStats()를 호출하는 게 정석이지만
         // 편의상 여기서 계속 갱신해도 됩니다. (단, 아래 로직으로)
         // RecalculateStats();
+        // if (IceShield.instance.active == true) MovementSpeed = baseMoveSpeed * artifactSpeedMult * 2f;
+        // else MovementSpeed = baseMoveSpeed * artifactSpeedMult;
+        
     }
 
     public void RecalculateStats()
     {
+        IceShieldSkill ice = GameManager.instance.player.GetComponent<IceShieldSkill>();
+        if (ice != null && ice.active)
+        {
+            extraSpeedMultiplier = 3f;
+        }
+        else
+        {
+            extraSpeedMultiplier = 1f;
+        }
+            
         // 1. 기본 + 원소 스탯 계산
         float elemAttack = baseAttack + FireCnt * 4f;
         float elemHP = baseMaxHP + IceCnt * 8f;
@@ -85,7 +100,7 @@ public class StatsManager : MonoBehaviour
 
         // MaxHP = elemHP; // HP는 현재 체력이 아니라 최대 체력이 변하는 것
         AttackSpeed = elemAtkSpd * (1f + artifactAtkSpdMult);
-        MovementSpeed = baseMoveSpeed * (1f + artifactSpeedMult);
+        float totalSpeed = baseMoveSpeed * (1f + artifactSpeedMult);
         CritChance = Mathf.Clamp01(elemCrit + artifactCritChanceAdd);
         CritDamage = baseCritDamage + artifactCritDmgAdd;
         DamageTakenMultiplier = 1f + artifactDmgTakenMult;
@@ -113,6 +128,9 @@ public class StatsManager : MonoBehaviour
             GameManager.instance.maxHealth = MaxHP;
         }
 
+        totalSpeed *= extraSpeedMultiplier;
+
+        MovementSpeed = totalSpeed;
         GameManager.instance.player.speed = MovementSpeed;
     }
 

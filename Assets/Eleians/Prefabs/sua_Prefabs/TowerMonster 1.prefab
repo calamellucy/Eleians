@@ -326,7 +326,7 @@ MonoBehaviour:
   effectLightning: {fileID: 3990068786228531}
   target: {fileID: 0}
   projectilePrefab: {fileID: 3635255534534366405, guid: 2d0ad8e8648fe1245bceedd1482aa6ec, type: 3}
-  attackRange: 5
+  attackRange: 3
   attackInterval: 3
 --- !u!114 &-7511661982642411223
 MonoBehaviour:
