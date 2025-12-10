@@ -270,6 +270,7 @@ public class GameManager : MonoBehaviour
                 // 타워 페이즈 진입
                 isTowerPhase = true;
                 phaseTimer = 0f;
+                VignetteEffectController.Instance.SetTension(true);
 
                 arrowActivatedThisPhase = false;
 
@@ -291,6 +292,7 @@ public class GameManager : MonoBehaviour
                 // 타워 페이즈 종료
                 isTowerPhase = false;
                 phaseTimer = 0f;
+                VignetteEffectController.Instance.SetTension(false);
 
                 if (towerIndex < towerPhaseOrder.Count)
                 {

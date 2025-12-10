@@ -154,6 +154,13 @@ public class Player : MonoBehaviour
 
         StartCoroutine(HitFlashRoutine());
 
+        /*
+        if (GameManager.instance.health < 30)
+        {
+            VignetteEffectController.Instance.SetLowHealth(true);
+        }
+        */
+
         // [추가] 맞았을 때 발동하는 아티팩트가 있다면 여기서 호출 (예: 반사 데미지)
         // ArtifactManager.instance.OnPlayerHit();
 
@@ -186,6 +193,13 @@ public class Player : MonoBehaviour
             Mathf.Clamp(GameManager.instance.health, 0f, GameManager.instance.maxHealth);
 
         //Debug.Log("HEAL!!");
+
+        /*
+        if (GameManager.instance.health >= 20)
+        {
+            VignetteEffectController.Instance.SetLowHealth(false);
+        }
+        */
 
         // 힐 이펙트, 힐 텍스트 같은 것 원하면 여기에 추가하면 된다
         // ★★★ 이펙트 생성 ★★★
