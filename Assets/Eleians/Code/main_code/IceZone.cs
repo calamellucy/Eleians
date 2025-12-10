@@ -13,7 +13,7 @@ public class IceZone : MonoBehaviour
     public float healMissingHpRatio = 0.05f;
 
     [Header("Damage Settings")]
-    public float damageInterval = 0.2f;
+    public float damageInterval = 0.5f;
     public float damageBase = 10f;
     public float damageMaxHpRatio = 0.04f;
 
@@ -93,7 +93,10 @@ public class IceZone : MonoBehaviour
                     }
 
                     float monsterMaxHp = monster.maxHealth;
-                    float dmg = damageBase + (monsterMaxHp * damageMaxHpRatio);
+                    float dmg = (damageBase + (monsterMaxHp * damageMaxHpRatio)) / 2f;
+
+                    if (dmg > 1000f)
+                        dmg = 1000f;
 
                     monster.ApplyDamageWithoutKonckback(dmg);
                     // 필요하면 여기서도 로그 출력 가능

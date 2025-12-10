@@ -12,6 +12,7 @@ public class EscMenu : MonoBehaviour
     [Header("★ 매니저 연결")]
     public StatusUIManager statusManager;        // 상태창 매니저
     public SkillExplanationManager skillManager; // 설명창 매니저
+    public GameObject gameRuleUI;
 
     void Awake() { rect = GetComponent<RectTransform>(); }
 
@@ -23,6 +24,11 @@ public class EscMenu : MonoBehaviour
 
     void Update()
     {
+        if (gameRuleUI != null && gameRuleUI.activeSelf)
+        {
+            return;
+        }
+
         // ESC 키 입력
         if (Input.GetKeyDown(KeyCode.Escape))
         {
