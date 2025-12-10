@@ -151,8 +151,6 @@ public class GameManager : MonoBehaviour
             // 몹 잡는 속도도 빨라지므로 체감상 템포는 유지됨.
             float expCalc = baseExp * Mathf.Pow(i + 1, currentGrowth);
 
-            if (level > 30) growth = 1.6f;
-
             // 정수로 변환 시 5단위나 10단위로 끊어주면 깔끔함 (선택사항)
             nextExp[i] = Mathf.RoundToInt(expCalc);
         }
@@ -240,6 +238,7 @@ public class GameManager : MonoBehaviour
                     }
                 }
             }
+            /*
             else
             {
                 BossMonster bm = boss.GetComponent<BossMonster>();
@@ -251,6 +250,7 @@ public class GameManager : MonoBehaviour
                     AchievementManager.instance.OnBossKilled();
                 }
             }
+            */
 
         }
         else
@@ -1148,6 +1148,12 @@ public class GameManager : MonoBehaviour
     {
         // 이미 엔딩 진행 중이면 무시
         if (!isLive) return;
+
+        // ★★★ [수정 핵심] isLive를 끄기 전에 업적 달성 체크를 먼저 해야 함! ★★★
+        if (AchievementManager.instance != null)
+        {
+            AchievementManager.instance.OnBossKilled();
+        }
 
         isLive = false; // 게임 로직 정지 (시간은 흐름)
         StartCoroutine(CoGameClearSequence());
