@@ -42,6 +42,7 @@ public class IceShieldSkill : MonoBehaviour
     {
         active = true;
         StatsManager.instance.RecalculateStats();
+        VignetteEffectController.Instance.SetHighSpeed(true);
 
         // ===== 원본 스탯 저장 =====
         //originalSpeed = player.speed;
@@ -86,5 +87,6 @@ public class IceShieldSkill : MonoBehaviour
 
         active = false;
         StatsManager.instance.RecalculateStats();
+        VignetteEffectController.Instance.SetHighSpeed(false);
     }
 }
