@@ -37,17 +37,17 @@ public class EventClear : MonoBehaviour
         {
             ShowMessage(artifactMessage);
             if(time<700)
-                AudioManager.instance.TurnOffAudio(1.5f, AudioManager.Bgm.Base);
+                AudioManager.instance.TurnOffAudio(1f, AudioManager.Bgm.Base);
             else
-                AudioManager.instance.TurnOffAudio(1.5f, AudioManager.Bgm.Null);
+                AudioManager.instance.TurnOffAudio(1f, AudioManager.Bgm.Null);
         }
         else if(time == 150 || time == 330 || time == 510 || time == 690)
         {
             ShowMessage(defendMessage);
         }
-        else if (time == 140 || time == 320 || time == 500 || time == 680)
+        else if (time == 149 || time == 329 || time == 519 || time == 689)
         {
-            AudioManager.instance.TurnOffAudio(5f, AudioManager.Bgm.Battle);
+            AudioManager.instance.TurnOffAudio(1f, AudioManager.Bgm.Battle);
         }
         // 2. 보스 등장 예고 메시지 (722초)
         else if (time == 721)

@@ -897,6 +897,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DataManager
       objectReference: {fileID: 0}
+    - target: {fileID: 6627552407961644384, guid: 6cf0840486451184fb9fa2eb4b03f6f8, type: 3}
+      propertyPath: achievementUnlocks.Array.size
+      value: 16
+      objectReference: {fileID: 0}
     - target: {fileID: 8103388268260589629, guid: 6cf0840486451184fb9fa2eb4b03f6f8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 789.42224
@@ -1204,7 +1208,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e94a99f5bcc27d74889f75432bd9fc98, type: 3}
   - {fileID: 8300000, guid: 9e37cecc72fbdba4c937025967f02e6d, type: 3}
   - {fileID: 8300000, guid: 5a65b90bbeb7b4d44ae1161d6c968369, type: 3}
-  - {fileID: 8300000, guid: 3b8e44c23c0372745a071fb96ed5581c, type: 3}
+  - {fileID: 8300000, guid: 958e522867084a440a552abaa0ef09f8, type: 3}
   - {fileID: 8300000, guid: fe9f877a9bcd5c64b97c7bd5657fff99, type: 3}
   - {fileID: 8300000, guid: ed6b59278563dae47a749a2c436890a0, type: 3}
   - {fileID: 8300000, guid: ac79af62188667a4c8279193b4a4328f, type: 3}
