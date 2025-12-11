@@ -454,6 +454,9 @@ public class GameManager : MonoBehaviour
         // 4. [보스 등장 - 실루엣 효과]
         if (boss != null)
         {
+            // ★ 청개구리 업적 즉시 중단 (보스 소환됨)
+            AchievementManager.instance.checkBlueFrog = false;
+
             boss.transform.position = bossSpawnPoint.position;
             boss.SetActive(true);
             // ★ [추가] 보스 등장 시간 기록 (스피드러너 업적용)
