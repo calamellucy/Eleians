@@ -6,6 +6,7 @@ public class GameScenesMove : MonoBehaviour
     public void GameScenesCtrl()
     {
         SceneManager.LoadScene("IntroScene"); //어떤 씬 이름으로 이동할지
+        AudioManager.instance.TurnOffAudio(0.5f, AudioManager.Bgm.Cutscene);
 
     }
 
