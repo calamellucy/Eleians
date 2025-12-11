@@ -270,6 +270,7 @@ public class EndingManager : MonoBehaviour
                 yield break;
             }
             subtitleText.text += letter;
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.type);
             yield return new WaitForSeconds(typingSpeed);
         }
     }

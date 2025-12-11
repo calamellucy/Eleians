@@ -513,7 +513,7 @@ public class GameManager : MonoBehaviour
         }
 
         yield return new WaitForSeconds(1.0f);
-
+        AudioManager.instance.PlayBgm(AudioManager.Bgm.Boss);
         // 대사 출력 함수 실행 (대사가 다 끝날 때까지 여기서 코드 멈춤)
         yield return StartCoroutine(CoPlayBossDialogue());
 
@@ -705,6 +705,7 @@ public class GameManager : MonoBehaviour
                     }
 
                     dialogueText.text += letter;
+                    AudioManager.instance.PlaySfx(AudioManager.Sfx.type);
                     yield return new WaitForSeconds(typingSpeed);
                 }
 
@@ -878,7 +879,6 @@ public class GameManager : MonoBehaviour
     {
         Living = false;
         Time.timeScale = 0f;
-        AudioListener.pause = true;
     }
     public void Resume()
     {
@@ -900,8 +900,6 @@ public class GameManager : MonoBehaviour
 
         Living = true;
         Time.timeScale = 1f;
-
-        AudioListener.pause = false;
     }
 
     public void OnTowerDefenseSuccess()
@@ -1148,13 +1146,13 @@ public class GameManager : MonoBehaviour
     {
         // 이미 엔딩 진행 중이면 무시
         if (!isLive) return;
-
+        AudioManager.instance.TurnOffAudio(5f, AudioManager.Bgm.Win);
         // ★★★ [수정 핵심] isLive를 끄기 전에 업적 달성 체크를 먼저 해야 함! ★★★
         if (AchievementManager.instance != null)
         {
             AchievementManager.instance.OnBossKilled();
         }
-
+        
         isLive = false; // 게임 로직 정지 (시간은 흐름)
         StartCoroutine(CoGameClearSequence());
     }

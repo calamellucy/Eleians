@@ -42,7 +42,6 @@ public class SkillUIManager : MonoBehaviour
         if (StatsManager.instance == null) return;
 
         int currentCount = 0;
-        string msg = "";
 
         switch (skillType)
         {
