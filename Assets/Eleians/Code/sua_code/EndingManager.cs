@@ -4,25 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-// (CutsceneDialog, CutsceneStep 클래스는 이미 정의되어 있다고 가정합니다. 
-// 만약 IntroManager와 같은 파일에 있다면 이 부분은 지워도 됩니다.)
-/*
-[System.Serializable]
-public class CutsceneDialog
-{
-    [TextArea(3, 5)]
-    public string text;
-    public float waitTime = 2f;
-}
-
-[System.Serializable]
-public class CutsceneStep
-{
-    public Sprite slideImage;
-    public List<CutsceneDialog> dialogs;
-}
-*/
-
 public class EndingManager : MonoBehaviour
 {
     [Header("Phase 1: Cutscene UI")]
@@ -30,6 +11,7 @@ public class EndingManager : MonoBehaviour
     public Text subtitleText;
     public AspectRatioFitter imageFitter;
     public Image fadePanel;
+    public Button skipButton;
 
     [Header("Phase 2: Credits UI")]
     public GameObject creditsObject;   // 크레딧 배경 오브젝트 (검은 배경 추천)
@@ -40,6 +22,8 @@ public class EndingManager : MonoBehaviour
 
     public float creditDisplayTime = 2.0f; // 한 문구가 떠있는 시간
     public float textFadeDuration = 1.0f;  // 텍스트가 나타나/사라지는 시간
+
+    public GameObject returnPromptObject;
 
     [Header("Phase 3: Result UI")]
     public GameObject resultPanel; // 결과 화면 패널
@@ -55,6 +39,7 @@ public class EndingManager : MonoBehaviour
 
     private bool isSkippingTyping = false;
     private bool isSkippingCredits = false;
+    private bool isSkippingCutscene = false;
 
     void Start()
     {
@@ -67,9 +52,17 @@ public class EndingManager : MonoBehaviour
         if (creditsObject != null) creditsObject.SetActive(false);
         if (resultPanel != null) resultPanel.SetActive(false);
 
+        if (returnPromptObject != null) returnPromptObject.SetActive(false);
+
         // 버튼 리스너 연결
         if (toMainButton != null)
             toMainButton.onClick.AddListener(GoToMainMenu);
+
+        if (skipButton != null)
+        {
+            skipButton.onClick.AddListener(SkipCutscene);
+            skipButton.gameObject.SetActive(true); // 컷씬 중엔 보여줌
+        }
 
         // 전체 엔딩 시퀀스 시작
         StartCoroutine(PlayEndingSequence());
@@ -90,17 +83,22 @@ public class EndingManager : MonoBehaviour
         }
     }
 
-    // ★ 전체 흐름을 관리하는 메인 코루틴
+    // ★ [신규] 스킵 버튼이 눌리면 호출됨
+    public void SkipCutscene()
+    {
+        isSkippingCutscene = true;
+    }
+
     IEnumerator PlayEndingSequence()
     {
-        // 1단계: 컷씬 재생 (IntroManager 로직 재사용)
+        // 1. 컷씬 재생
         yield return StartCoroutine(PlayCutscenePhase());
 
-        // 2단계: 엔딩 크레딧 재생
-        yield return StartCoroutine(PlayCreditsPhase());
+        // 컷씬 끝났으니 스킵 버튼 숨기기
+        if (skipButton != null) skipButton.gameObject.SetActive(false);
 
-        // 3단계: 결과 화면 표시
-        ShowResultPhase();
+        // 2. 크레딧 재생
+        yield return StartCoroutine(PlayCreditsPhase());
     }
 
     // =================================================================
@@ -119,11 +117,16 @@ public class EndingManager : MonoBehaviour
 
         foreach (CutsceneStep step in cutsceneSteps)
         {
+            if (isSkippingCutscene) break;
+
             // 이미지 교체 로직
             if (step.slideImage != null && displayImage.sprite != step.slideImage)
             {
                 subtitleText.text = "";
                 yield return StartCoroutine(Fade(0, 1)); // 페이드 아웃
+
+                if (isSkippingCutscene) break;
+
                 SetImage(step.slideImage);
                 yield return StartCoroutine(Fade(1, 0)); // 페이드 인
             }
@@ -131,7 +134,8 @@ public class EndingManager : MonoBehaviour
             // 대사 출력 로직
             foreach (CutsceneDialog dialog in step.dialogs)
             {
-                isSkippingTyping = false;
+                if (isSkippingTyping) isSkippingTyping = false; // 초기화
+                if (isSkippingCutscene) break;
                 yield return StartCoroutine(TypeEffect(dialog.text));
 
                 isSkippingTyping = false;
@@ -142,13 +146,26 @@ public class EndingManager : MonoBehaviour
                 {
                     timer += Time.deltaTime;
                     if (Input.GetKeyDown(KeyCode.Space)) break;
+                    if (isSkippingCutscene) break;
                     yield return null;
                 }
+
+                if (isSkippingCutscene) break; // 대사 루프 탈출
             }
+
+            if (isSkippingCutscene) break; // 대사 루프 탈출
         }
 
-        // 컷씬 끝날 때 페이드 아웃 (화면 검게)
-        yield return StartCoroutine(Fade(0, 1));
+        // 스킵으로 나왔든, 정상 종료든 화면을 어둡게 하고 자막을 지움
+        if (isSkippingCutscene)
+        {
+            // 즉시 어둡게 (뚝 끊기는 느낌 방지하려면 짧은 페이드)
+            yield return StartCoroutine(Fade(fadePanel.color.a, 1f)); // 현재 상태 -> 1
+        }
+        else
+        {
+            yield return StartCoroutine(Fade(0, 1));
+        }
 
         // 자막 비우기
         subtitleText.text = "";
@@ -161,61 +178,69 @@ public class EndingManager : MonoBehaviour
     {
         if (creditsObject == null || creditText == null) yield break;
 
-        // 1. 크레딧 오브젝트 켜기
         creditsObject.SetActive(true);
-        creditText.text = ""; // 처음엔 빈 칸
+        creditText.text = "";
 
-        // 텍스트 투명도 초기화 (안 보이게)
         Color c = creditText.color;
         c.a = 0f;
         creditText.color = c;
 
-        // 2. 화면 페이드 인 (검은 화면 -> 크레딧 배경)
-        yield return StartCoroutine(Fade(1, 0));
+        yield return StartCoroutine(Fade(1, 0)); // 배경 밝아짐
 
-        // 3. 한 줄씩 나타났다 사라지기 반복
-        foreach (string line in creditLines)
+        // ★ for문으로 변경 (마지막 인덱스 체크를 위해)
+        for (int i = 0; i < creditLines.Count; i++)
         {
-            // 텍스트 교체
+            string line = creditLines[i];
             creditText.text = line;
 
-            // (1) 텍스트 페이드 인 (나타나기)
+            // (1) 텍스트 나타나기
             yield return StartCoroutine(FadeText(0, 1));
 
-            // (2) 대기 (스페이스바 누르면 빨리 넘어감)
+            // ★★★ [핵심] 마지막 줄인가? ★★★
+            if (i == creditLines.Count - 1)
+            {
+                // 마지막 줄이면 사라지지 않고 대기
+                Debug.Log("엔딩 크레딧 끝. 입력 대기 중...");
+
+                // 안내 문구 페이드 인 호출
+                if (returnPromptObject != null)
+                {
+                    returnPromptObject.SetActive(true);
+                    // 1초 동안 부드럽게 나타나게 함
+                    StartCoroutine(FadeInObject(returnPromptObject, 1.0f));
+                }
+
+                // 클릭(터치) 대기
+                // (스페이스바 스킵 방지를 위해 잠시 0.5초 텀을 둠)
+                yield return new WaitForSeconds(0.5f);
+
+                // 무한 대기: 클릭할 때까지
+                while (!Input.GetMouseButtonDown(0) && !Input.anyKeyDown)
+                {
+                    yield return null;
+                }
+
+                // 클릭하면 메인으로 이동
+                GoToMainMenu();
+                yield break; // 코루틴 종료
+            }
+
+            // (2) 마지막 줄이 아니면 대기 후 사라짐
             float timer = 0f;
-            float wait = isSkippingCredits ? 0.3f : creditDisplayTime; // 스킵 시 짧게 대기
+            float wait = isSkippingCredits ? 0.3f : creditDisplayTime;
 
             while (timer < wait)
             {
                 timer += Time.deltaTime;
-                // 스킵 중이면 대기 시간 실시간 단축
                 if (isSkippingCredits && timer > 0.3f) break;
                 yield return null;
             }
 
-            // (3) 텍스트 페이드 아웃 (사라지기)
+            // (3) 텍스트 사라지기
             yield return StartCoroutine(FadeText(1, 0));
         }
-
-        // 4. 모든 텍스트가 끝났으면 화면 다시 어둡게 (Phase 종료)
-        yield return StartCoroutine(Fade(0, 1));
-
-        creditsObject.SetActive(false);
     }
 
-    // =================================================================
-    // Phase 3: 결과 화면 로직
-    // =================================================================
-    void ShowResultPhase()
-    {
-        if (resultPanel != null)
-        {
-            resultPanel.SetActive(true);
-            // 결과 화면 나올 때 부드럽게 밝아지기
-            StartCoroutine(Fade(1, 0));
-        }
-    }
 
     // =================================================================
     // Helper Functions (공통 기능)
@@ -245,6 +270,7 @@ public class EndingManager : MonoBehaviour
                 yield break;
             }
             subtitleText.text += letter;
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.type);
             yield return new WaitForSeconds(typingSpeed);
         }
     }
@@ -270,7 +296,6 @@ public class EndingManager : MonoBehaviour
         fadePanel.color = color;
     }
 
-    // ★★★ [신규] 텍스트 전용 페이드 함수 ★★★
     IEnumerator FadeText(float startAlpha, float endAlpha)
     {
         if (creditText == null) yield break;
@@ -292,5 +317,45 @@ public class EndingManager : MonoBehaviour
         }
         color.a = endAlpha;
         creditText.color = color;
+    }
+
+    // ★★★ [신규] 안내 문구 오브젝트(Text 혹은 CanvasGroup) 페이드 인 함수 ★★★
+    IEnumerator FadeInObject(GameObject obj, float duration)
+    {
+        // 1. CanvasGroup이 있다면 그걸로 조절 (추천 방식)
+        CanvasGroup cg = obj.GetComponent<CanvasGroup>();
+        if (cg != null)
+        {
+            cg.alpha = 0f; // 시작은 투명
+            float timer = 0f;
+            while (timer < duration)
+            {
+                timer += Time.deltaTime;
+                cg.alpha = Mathf.Lerp(0f, 1f, timer / duration);
+                yield return null;
+            }
+            cg.alpha = 1f;
+            yield break;
+        }
+
+        // 2. CanvasGroup이 없고 Text만 있다면 Text 색상 조절
+        Text txt = obj.GetComponent<Text>();
+        if (txt != null)
+        {
+            Color c = txt.color;
+            c.a = 0f;
+            txt.color = c;
+
+            float timer = 0f;
+            while (timer < duration)
+            {
+                timer += Time.deltaTime;
+                c.a = Mathf.Lerp(0f, 1f, timer / duration);
+                txt.color = c;
+                yield return null;
+            }
+            c.a = 1f;
+            txt.color = c;
+        }
     }
 }

@@ -9,6 +9,11 @@ public class EventClear : MonoBehaviour
     public string bossWarningMessage = "중앙에서 어둠의 기운이 진동합니다";
     public string defendMessage = "원소 거점을 수호하세요!";
 
+    private void Start()
+    {
+        AudioManager.instance.PlayBgm(AudioManager.Bgm.Base);
+    }
+
     void Update()
     {
         // 게임 매니저가 없으면 실행 안 함
@@ -31,14 +36,23 @@ public class EventClear : MonoBehaviour
         if (time == 180 || time == 360 || time == 540 || time == 720)
         {
             ShowMessage(artifactMessage);
+            if(time<700)
+                AudioManager.instance.TurnOffAudio(1f, AudioManager.Bgm.Base);
+            else
+                AudioManager.instance.TurnOffAudio(1f, AudioManager.Bgm.Null);
         }
         else if(time == 150 || time == 330 || time == 510 || time == 690)
         {
             ShowMessage(defendMessage);
         }
-        // 2. 보스 등장 예고 메시지 (722초)
-        else if (time == 722)
+        else if (time == 149 || time == 329 || time == 519 || time == 689)
         {
+            AudioManager.instance.TurnOffAudio(1f, AudioManager.Bgm.Battle);
+        }
+        // 2. 보스 등장 예고 메시지 (722초)
+        else if (time == 721)
+        {
+           
             ShowMessage(bossWarningMessage);
         }
     }

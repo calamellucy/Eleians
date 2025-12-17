@@ -115,7 +115,7 @@ public class Seori : MonoBehaviour
         }
 
         // 진화 옵션 계산
-        speed = 240f;
+        speed = 240f * StatsManager.instance.AttackSpeed;
         damage = (atk * 0.4f) * Mathf.Pow(1.04f, earthCount);
         count = 1 + (int)(iceCount * 0.2f);
         range = 1 + fireCount * 0.05f;

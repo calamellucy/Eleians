@@ -68,7 +68,7 @@ public class MonsterBase : MonoBehaviour
 
         rigid.bodyType = RigidbodyType2D.Dynamic;
         rigid.simulated = true;
-        rigid.linearVelocity = Vector2.zero;
+        rigid.linearVelocity = Vector2.zero; // Unity 6 대응
         rigid.angularVelocity = 0f;
 
         coll.enabled = true;
@@ -167,13 +167,12 @@ public class MonsterBase : MonoBehaviour
         if (health <= 0)
         {
             ArtifactManager.instance.OnEnemyKilled(this);
-            Die(true); // 에러 났던 부분 (이제 정상 작동함)
+            Die(true);
             return;
         }
 
         if (!IsSuperArmor)
         {
-            // anim.SetTrigger("hit");
             StartCoroutine(HitFlashRoutine());
         }
 
@@ -187,7 +186,7 @@ public class MonsterBase : MonoBehaviour
                 ApplySlow(0.3f);
                 break;
             case ElementType.Earth:
-                KnockBack(target.position); // 에러 났던 부분 (이제 정상 작동함)
+                KnockBack(); // ★ 수정됨: 매개변수 없이 호출
                 break;
             case ElementType.Lightning:
                 StartCoroutine(StunRoutine());
@@ -208,21 +207,12 @@ public class MonsterBase : MonoBehaviour
         // 1. 빨간색으로 변경
         spriter.color = Color.red;
 
-        // 2. 0.1초 대기 (깜빡!)
+        // 2. 0.2초 대기 (깜빡!)
         yield return new WaitForSeconds(0.2f);
 
         // 3. 원래 색으로 복구
-        // (단, 이미 죽었거나 다른 효과가 적용 중일 수 있으므로 살아있을 때만)
         if (isLive)
         {
-            // 혹시 얼음(슬로우) 상태라면 파란색으로, 아니면 흰색으로 복구
-            // (슬로우 상태 유지를 위해 체크 로직 추가함)
-            /*
-            if (slowMultiplier < 1f)
-                spriter.color = new Color(0.6f, 0.6f, 1f); // 파란색 (얼음)
-            else
-                spriter.color = Color.white; // 기본색
-            */
             spriter.color = Color.white;
         }
     }
@@ -258,7 +248,7 @@ public class MonsterBase : MonoBehaviour
 
         isStunned = true;
         if (effectLightning != null) effectLightning.SetActive(true);
-        rigid.linearVelocity = Vector2.zero;
+        rigid.linearVelocity = Vector2.zero; // Unity 6 대응
 
         yield return new WaitForSeconds(0.15f * (StatsManager.instance.FireCnt * 0.05f + 1f));
 
@@ -277,28 +267,41 @@ public class MonsterBase : MonoBehaviour
         if (effectIce != null) effectIce.SetActive(true);
     }
 
-    // --- [흙] 넉백 ---
-    protected virtual void KnockBack(Vector3 from)
+    // --- [흙] 넉백 (수정됨) ---
+    // ★ 매개변수 제거 (플레이어 위치 자동 추적)
+    protected virtual void KnockBack()
     {
-        StartCoroutine(KnockBackRoutine(from));
+        StartCoroutine(KnockBackRoutine());
     }
 
-    protected IEnumerator KnockBackRoutine(Vector3 from)
+    protected IEnumerator KnockBackRoutine()
     {
         if (!isLive) yield break;
 
         isKnockback = true;
+
+        // ★ 넉백 전 이동 관성 제거 (중요!)
+        rigid.linearVelocity = Vector2.zero;
+
         yield return new WaitForFixedUpdate();
 
         if (!isLive) yield break;
 
-        Vector2 dir = (transform.position - from).normalized;
-        float force = 4f;
+        // ★ 플레이어 위치를 기준으로 반대 방향 계산
+        // (GameManager에 player가 있다고 가정)
+        Vector3 playerPos = GameManager.instance.player.transform.position;
+        Vector2 dir = (transform.position - playerPos).normalized;
+
+        float force = 3f;
         rigid.AddForce(dir * force, ForceMode2D.Impulse);
 
         yield return new WaitForSeconds(0.1f);
 
         if (!isLive) yield break;
+
+        // 넉백 끝난 후 다시 속도 0으로 (깔끔한 정지)
+        rigid.linearVelocity = Vector2.zero;
+
         isKnockback = false;
     }
 
@@ -324,7 +327,7 @@ public class MonsterBase : MonoBehaviour
 
         spriter.color = Color.white;
         rigid.simulated = false;
-        rigid.linearVelocity = Vector2.zero;
+        rigid.linearVelocity = Vector2.zero; // Unity 6 대응
         rigid.angularVelocity = 0f;
         coll.enabled = false;
 

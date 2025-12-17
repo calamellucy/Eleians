@@ -269,7 +269,7 @@ MonoBehaviour:
         \uADE0\uD615\uC744 \uBB34\uB108\uB728\uB824 \uC138\uC0C1\uC744 \n\uD63C\uB3C8\uC5D0
         \uBE60\uB728\uB9AC\uB824 \uD55C\uB2E4."
       waitTime: 3
-  - slideImage: {fileID: -8276245627806900309, guid: 6eb5f9d0137aa0646a0062728ec5de40, type: 3}
+  - slideImage: {fileID: -51121650007899843, guid: 2c86f6d820d213947a37ba0f9df70cc4, type: 3}
     dialogs:
     - text: "\uC5B4\uB460 \uB9C8\uBC95\uC0AC\uC758 \uACF5\uACA9\uC73C\uB85C \uADE0\uD615\uC5D0
         \uAE08\uC774 \uAC00\uAE30 \uC2DC\uC791\uD588\uACE0, \uADF8 \uD2C8\uC73C\uB85C

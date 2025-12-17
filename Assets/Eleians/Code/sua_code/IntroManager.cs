@@ -142,6 +142,9 @@ public class IntroManager : MonoBehaviour
             }
 
             subtitleText.text += letter;
+            if (letter != ' ')
+                AudioManager.instance.PlaySfx(AudioManager.Sfx.type);
+
             yield return new WaitForSeconds(typingSpeed);
         }
     }

@@ -43,10 +43,6 @@ public class StatusUIManager : MonoBehaviour
             // 혹시 연결 안 됐을 때 갇히지 않게 비상용
             Time.timeScale = 1f;
         }
-
-        // 클릭음
-        if (AudioManager.instance != null)
-            AudioManager.instance.PlaySfx(AudioManager.Sfx.click);
     }
 
     // --- [값 갱신 로직] ---
@@ -59,7 +55,7 @@ public class StatusUIManager : MonoBehaviour
         if (hpText != null) hpText.text = string.Format("{0} / {1}", Mathf.RoundToInt(gm.health), Mathf.RoundToInt(stats.MaxHP));
         if (atkText != null) atkText.text = stats.Attack.ToString("F1");
         if (atkSpdText != null) atkSpdText.text = stats.AttackSpeed.ToString("F2");
-        if (critRateText != null) critRateText.text = string.Format("{0:F0}%", stats.CritChance * 100f);
+        if (critRateText != null) critRateText.text = string.Format("{0:F1}%", stats.CritChance * 100f);
         if (critDmgText != null) critDmgText.text = string.Format("{0:F0}%", stats.CritDamage * 100f);
     }
 }

@@ -22,5 +22,6 @@ public class LvUp : MonoBehaviour
         rect.localScale = Vector3.zero;
         GameManager.instance.Resume();
         sk4.GiveLevelSystemToSkill4();
+        GameManager.instance.GetExp(0);
     }
 }

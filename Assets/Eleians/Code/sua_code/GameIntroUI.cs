@@ -34,7 +34,7 @@ public class GameIntroUI : MonoBehaviour
     {
         // 현재 페이지 끄기
         pages[currentPageIndex].SetActive(false);
-
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.click);
         // 다음 페이지로
         currentPageIndex++;
 
