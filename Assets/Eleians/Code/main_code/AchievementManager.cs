@@ -34,7 +34,7 @@ public class AchievementManager : MonoBehaviour
     private int fireSkillUseCnt = 0;   // È­Æø¼ú »ç¿ë È½¼ö
     private int iceChargeHitCount = 0; // ºùº® µ¹Áø Å¸°Ý È½¼ö
 
-    public bool checkBlueFrog = false;
+    private bool checkBlueFrog = false;
     private float blueFrogTimer = 0f;
 
 
@@ -373,7 +373,7 @@ public class AchievementManager : MonoBehaviour
         }
     }
 
-    public void CheckBlueFrog()
+    void CheckBlueFrog()
     {
         if (!checkBlueFrog) return;
         float dist = Vector2.Distance(GameManager.instance.player.transform.position, Vector3.zero);
